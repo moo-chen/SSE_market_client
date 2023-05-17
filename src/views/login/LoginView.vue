@@ -7,12 +7,12 @@
           <b-form>
             <b-form-group label='手机号'>
               <b-form-input
-                v-model='$v.user.telephone.$model'
+                v-model='$v.user.phone.$model'
                 type='number'
                 placeholder='输入手机号'
-                :state="validateState('telephone')"
+                :state="validateState('phone')"
               ></b-form-input>
-              <b-form-invalid-feedback :state="validateState('telephone')">
+              <b-form-invalid-feedback :state="validateState('phone')">
                 手机号不符合要求
               </b-form-invalid-feedback>
             </b-form-group>
@@ -57,16 +57,16 @@ export default {
   data() {
     return {
       user: {
-        telephone: '',
+        phone: '',
         password: '',
       },
     };
   },
   validations: {
     user: {
-      telephone: {
+      phone: {
         required,
-        telephone: customValidator.telephoneValidator,
+        phone: customValidator.telephoneValidator,
       },
       password: {
         required,

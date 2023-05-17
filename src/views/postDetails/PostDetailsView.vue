@@ -2,7 +2,7 @@
   <div>
     <b-button variant="primary" class="back_button"
       @click="goback" style="margin-left: 60px;">
-      <b-icon-reply class="mr-2"></b-icon-reply>返回
+      <b-icon-reply class="mr-2"></b-icon-reply>返回!
     </b-button>
   <div class='postDetails' style="margin-left:200px">
     <b-card class='mx-auto my-5' style="max-width: 1500px;">
@@ -36,7 +36,35 @@
       </div>
     </b-card>
   </div>
+    <div style="margin-left:200px">
+      <b-card class="my-5">
+        <h3 class="mb-3">Comments</h3>
+        <div v-for="comment in pcomments" :key="comment.id">
+          <div class="d-flex mb-2">
+            <div class="flex-shrink-0 mr-3">
+              <b-avatar :src="comment.authorAvatar" size="2rem"></b-avatar>
+            </div>
+            <div>
+              <div class="font-weight-bold">{{ comment.author }}</div>
+              <div class="text-muted">{{ formatDate(comment.commentTime) }}</div>
+              <div>{{ comment.content }}</div>
+            </div>
+          </div>
+          <hr>
+        </div>
+
+        <!-- 添加新评论（发表评论） -->
+        <form @submit.prevent="addComment" class="mt-3">
+          <b-form-group>
+            <b-form-textarea v-model="newCommentContent" placeholder="Leave a comment..." rows="3">
+            </b-form-textarea>
+          </b-form-group>
+          <b-button type="submit" variant="primary">Post Comment</b-button>
+        </form>
+      </b-card>
+    </div>
   </div>
+
 </template>
 
 <script>
@@ -62,6 +90,21 @@ export default {
         isLiked: '',
         showMenu: '',
       },
+      pcomments: [{
+        id: 1,
+        author: 'John Doe',
+        authorAvatar: 'https://picsum.photos/50',
+        commentTime: '2023-05-15T12:34:56.789Z',
+        content: 'This is a sample comment.',
+      },
+      {
+        id: 2,
+        author: 'Jane Smith',
+        authorAvatar: 'https://picsum.photos/50',
+        commentTime: '2023-05-16T09:23:45.678Z',
+        content: 'I agree with John. Another sample comment here.',
+      }],
+      newCommentContent: '',
     };
   },
   created() {
