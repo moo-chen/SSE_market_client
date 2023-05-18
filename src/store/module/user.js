@@ -26,10 +26,10 @@ const userModule = {
   actions: {
     // context是浏览器store上下文对象，用于保存token
     // { name, telephone, password }为传送给后端的数据的结构体变量
-    register(context, { phone, password }) {
+    register(context, { name, phone, password }) {
       return new Promise((resolve, reject) => {
         // userService.register()为发送网络请求的函数，用于向后端发送注册信息
-        userService.register({ phone, password }).then((res) => {
+        userService.register({ name, phone, password }).then((res) => {
           // 保存token
           context.commit('SET_TOKEN', res.data.data.token);
           return userService.info();
