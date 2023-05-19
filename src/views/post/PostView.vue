@@ -52,7 +52,7 @@ export default {
   methods: {
     ...mapActions('postModule', { Post: 'post' }),
     post() {
-      this.posts.userTelephone = this.userInfo.telephone;
+      this.posts.userTelephone = this.userInfo.phone;
       // 请求
       this.Post(this.posts)
         .then(() => {
