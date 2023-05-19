@@ -16,7 +16,7 @@
           <b-list-group-item v-if="this.post.authorTelephone !== userInfo.telephone">
             <b-icon-exclamation-triangle class="mr-2"></b-icon-exclamation-triangle>举报
           </b-list-group-item>
-          <b-list-group-item v-if="this.post.authorTelephone === userInfo.telephone">
+          <b-list-group-item v-if="this.post.authorTelephone === userInfo.phone">
             <b-icon-trash class="mr-2"></b-icon-trash>删除
           </b-list-group-item>
       </b-list-group>
@@ -124,7 +124,7 @@ export default {
       // 在本地缓存在直接读取postID
       this.partition = JSON.parse(localStorage.getItem('Partition'));
     }
-    const userTelephone = this.userInfo.telephone;
+    const userTelephone = this.userInfo.phone;
     // 根据该id向后端发送请求，获取该帖子的详细信息，并展示在页面上
     this.postShowDetails({ userTelephone, postID: this.post.postID })
       .then((post) => {
@@ -165,7 +165,7 @@ export default {
       }月${d.getDate()}日 ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}:${String(d.getSeconds()).padStart(2, '0')}`;
     },
     like() {
-      const userTelephone = this.userInfo.telephone;
+      const userTelephone = this.userInfo.phone;
       // 请求
       this.postLike({
         userTelephone, postID: this.post.postID, isLiked: this.post.isLiked,

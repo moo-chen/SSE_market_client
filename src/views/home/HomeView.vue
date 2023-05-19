@@ -16,10 +16,10 @@
             <b-list-group-item>
               <b-icon-star class="mr-2"></b-icon-star>收藏
             </b-list-group-item>
-            <b-list-group-item v-if="post.authorTelephone !== userInfo.telephone">
+            <b-list-group-item v-if="post.authorTelephone !== userInfo.phone">
               <b-icon-exclamation-triangle class="mr-2"></b-icon-exclamation-triangle>举报
             </b-list-group-item>
-            <b-list-group-item v-if="post.authorTelephone === userInfo.telephone">
+            <b-list-group-item v-if="post.authorTelephone === userInfo.phone">
               <b-icon-trash class="mr-2"></b-icon-trash>删除
             </b-list-group-item>
           </b-list-group>
@@ -91,7 +91,7 @@ export default {
       this.$router.replace({ name: 'partitions' });
     },
     async browsePosts() {
-      this.userTelephone = this.userInfo.telephone;
+      this.userTelephone = this.userInfo.phone;
       // 从后端返回一个结构体变量的方法
       try {
         // 向后端发送请求并获取帖子列表
@@ -133,7 +133,7 @@ export default {
       updatedPost.like += post.isLiked ? -1 : 1;
       // 用更新后的 post 对象替换原先的 post 对象
       this.posts.splice(this.posts.indexOf(post), 1, updatedPost);
-      this.userTelephone = this.userInfo.telephone;
+      this.userTelephone = this.userInfo.phone;
       this.postID = post.id;
       this.isLiked = post.isLiked;
       // 请求
