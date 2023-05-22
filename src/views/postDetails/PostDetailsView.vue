@@ -1,9 +1,11 @@
 <template>
+  <!--返回按键-->
   <div>
     <b-button variant="primary" class="back_button"
       @click="goback" style="margin-left: 60px;">
       <b-icon-reply class="mr-2"></b-icon-reply>返回!
     </b-button>
+  <!--显示帖子的具体内容-->
   <div class='postDetails' style="margin-left:200px">
     <b-card class='mx-auto my-5' style="max-width: 1500px;">
       <div class="text-muted" style="margin-left:850px;" @click.stop>
@@ -13,7 +15,7 @@
           <b-list-group-item>
             <b-icon-star class="mr-2"></b-icon-star>收藏
           </b-list-group-item>
-          <b-list-group-item v-if="this.post.authorTelephone !== userInfo.telephone">
+          <b-list-group-item v-if="this.post.authorTelephone !== userInfo.phone">
             <b-icon-exclamation-triangle class="mr-2"></b-icon-exclamation-triangle>举报
           </b-list-group-item>
           <b-list-group-item v-if="this.post.authorTelephone === userInfo.phone">
@@ -32,51 +34,120 @@
           @click.stop="like(post)" :class="{ 'text-danger': post.isLiked }"></b-icon>
           {{ post.like }}
         </div>
-        <div class='text-muted'><b-icon icon='chat-dots-fill'></b-icon> {{ post.comment }}</div>
+        <div class='text-muted'><b-icon icon='chat-dots-fill'></b-icon> {{ len(comments) }}</div>
       </div>
     </b-card>
-  </div>
-    <div style="margin-left:200px">
-      <b-card class="my-5">
-        <h3 class="mb-3">Comments</h3>
-        <div v-for="comment in pcomments" :key="comment.id">
-          <div class="d-flex mb-2">
-            <div class="flex-shrink-0 mr-3">
-              <b-avatar :src="comment.authorAvatar" size="2rem"></b-avatar>
-            </div>
-            <div>
-              <div class="font-weight-bold">{{ comment.author }}</div>
-              <div class="text-muted">{{ formatDate(comment.commentTime) }}</div>
-              <div>{{ comment.content }}</div>
-            </div>
-          </div>
-          <hr>
-        </div>
-
-        <!-- 添加新评论（发表评论） -->
-        <form @submit.prevent="addComment" class="mt-3">
-          <b-form-group>
-            <b-form-textarea v-model="newCommentContent" placeholder="Leave a comment..." rows="3">
-            </b-form-textarea>
-          </b-form-group>
-          <b-button type="submit" variant="primary">Post Comment</b-button>
-        </form>
-      </b-card>
+    <b-button @click="post.showCommentForm
+            = !post.showCommentForm" variant="primary">
+      {{ post.showCommentForm ? '隐藏评论' : '评论' }}
+    </b-button>
+    <!--显示帖子评论窗口-->
+    <div v-if="post.showCommentForm">
+        <b-form-group>
+          <b-form-textarea v-model="pcomment.content"
+                           placeholder="请写下你的精彩评论..." rows="3">
+          </b-form-textarea>
+        </b-form-group>
+        <b-button @click="pcommentPost" variant="primary">提交评论</b-button>
     </div>
   </div>
-
+ <!--显示和发表帖子评论、评论的评论-->
+  <div class='comment' style="margin-left: 200px" >
+    <div v-for="(comment, index) in visibleComments" :key="index">
+      <b-card class="my-1">
+        <h4 class="mb-3">Comment {{ index + 1 }}</h4>
+        <div class="d-flex mb-2">
+          <div class="flex-shrink-0 mr-3">
+            <b-avatar :src="comment.authorAvatar" size="2rem"></b-avatar>
+          </div>
+          <div>
+            <div class="font-weight-bold">{{ comment.author }}</div>
+            <div class="text-muted">{{ formatDate(comment.commentTime) }}</div>
+            <div>{{ comment.content }}</div>
+            <div class='d-flex justify-content-between align-items-center mt-3'>
+              <div class="text-muted">
+                <b-icon :icon="comment.isLiked ? 'heart-fill' : 'heart'"
+                        @click.stop="pclike(index)" :class="{ 'text-danger': comment.isLiked }">
+                </b-icon>
+                {{ comment.likeNum }}
+              </div>
+              <div class='text-muted'>
+                <b-icon icon='chat-dots-fill'></b-icon> {{ len(comment.subComments) }}
+              </div>
+            </div>
+            <b-button @click="comment.showReplyForm
+            = !comment.showReplyForm"
+                      variant="primary">
+              {{ comment.showReplyForm ? '隐藏评论' : '评论' }}
+            </b-button>
+            <!--如果点击了评论，将显示评论窗口-->
+            <div v-if="comment.showReplyForm">
+              <form @submit.prevent="ccommentPost(index)">
+                <b-form-group>
+                  <b-form-textarea v-model="ccomment.content"
+                                   placeholder="请写下你的精彩评论..." rows="3">
+                  </b-form-textarea>
+                </b-form-group>
+                <b-button type="submit" variant="primary">提交评论</b-button>
+              </form>
+            </div>
+            <!-- 评论的评论 -->
+            <div v-for="(subComment, subIndex) in visibleSubComments(index)" :key="subIndex">
+              <hr>
+              <div class="d-flex mb-2">
+                <div class="flex-shrink-0 mr-3">
+                  <b-avatar :src="subComment.authorAvatar" size="2rem"></b-avatar>
+                </div>
+                <div>
+                  <div class="font-weight-bold">{{ subComment.author }}</div>
+                  <div class="text-muted">{{ formatDate(subComment.commentTime) }}</div>
+                  <div>{{ subComment.content }}</div>
+                </div>
+                <div class="text-muted">
+                  <b-icon :icon="subComment.isLiked ? 'heart-fill' : 'heart'"
+                          @click.stop="cclike(index,subIndex)"
+                          :class="{ 'text-danger': subComment.isLiked }">
+                  </b-icon>
+                  {{ subComment.likeNum }}
+                </div>
+              </div>
+            </div>
+            <b-button v-if="comment.subComments.length > 5" @click="showAllReplies(index)">
+              {{ comment.showAllReplies ? '折叠评论' : '展开全部评论' }}
+            </b-button>
+          </div>
+        </div>
+      </b-card>
+    </div>
+    <b-button v-if="visibleComments.length < comments.length" @click="showAllComments()">
+      {{ allComments ? '折叠评论' : '展开全部评论' }}
+    </b-button>
+  </div>
+  </div>
 </template>
 
 <script>
 
 import { mapState, mapActions } from 'vuex';
+import { len } from 'vuelidate/lib/validators/common';
 
 export default {
-  computed: mapState({
-    userInfo: (state) => state.userModule.userInfo,
-  }),
+  computed: {
+    // 计算属性，根据当前展示的评论数和每次展示的评论数量，返回可见的评论
+    visibleComments() {
+      if (this.allComments === true) {
+        return this.comments;
+      }
+      return this.comments.slice(0, 10);
+    },
+    ...mapState({
+      userInfo: (state) => state.userModule.userInfo,
+    }),
+  },
   data() {
     return {
+      allComments: false,
+      userTelephone: '',
       partition: '',
       post: {
         postID: '',
@@ -89,22 +160,35 @@ export default {
         postTime: '',
         isLiked: '',
         showMenu: '',
+        showCommentForm: '',
       },
-      pcomments: [{
-        id: 1,
-        author: 'John Doe',
-        authorAvatar: 'https://picsum.photos/50',
-        commentTime: '2023-05-15T12:34:56.789Z',
-        content: 'This is a sample comment.',
+      comments: [],
+      //   pcommentID: '',
+      //   author: 'John Doe',
+      //   authorAvatar: 'https://placehold.it/50x50',
+      //   commentTime: '2023-05-18T10:30:00.000Z',
+      //   content: 'This is a great post!',
+      //   subComments: [
+      //     {
+      //       authorAvatar: 'https',
+      //       author: 'John Doe',
+      //       commentTime: '2023-05-18T10:30:00.000Z',
+      //       content: 'This is a great post!',
+      //     },
+      //   ],
+      //   showReplyForm: false,
+      // },
+      // // more top-level comments...
+      pcomment: {
+        userTelephone: '',
+        postID: '',
+        content: '',
       },
-      {
-        id: 2,
-        author: 'Jane Smith',
-        authorAvatar: 'https://picsum.photos/50',
-        commentTime: '2023-05-16T09:23:45.678Z',
-        content: 'I agree with John. Another sample comment here.',
-      }],
-      newCommentContent: '',
+      ccomment: {
+        userTelephone: '',
+        pcommentID: '',
+        content: '',
+      },
     };
   },
   created() {
@@ -121,12 +205,12 @@ export default {
       // 将partition保存在本地缓存中
       localStorage.setItem('Partition', JSON.stringify(this.$route.params.partition));
     } else {
-      // 在本地缓存在直接读取postID
+      // 在本地缓存在直接读取partition
       this.partition = JSON.parse(localStorage.getItem('Partition'));
     }
-    const userTelephone = this.userInfo.phone;
+    this.userTelephone = this.userInfo.phone;
     // 根据该id向后端发送请求，获取该帖子的详细信息，并展示在页面上
-    this.postShowDetails({ userTelephone, postID: this.post.postID })
+    this.postShowDetails({ userTelephone: this.userTelephone, postID: this.post.postID })
       .then((post) => {
         this.post.postID = post.data.PostID;
         this.post.author = post.data.UserName;
@@ -142,6 +226,7 @@ export default {
       .catch((err) => {
         console.error(err);
       });
+    this.pcommentsShow();
   },
   beforeRouteLeave(to, from, next) {
     // 返回上一页面时清空本地缓存
@@ -149,8 +234,21 @@ export default {
     next();
   },
   methods: {
+    len,
     ...mapActions('postModule', { postShowDetails: 'showDetails' }),
     ...mapActions('postModule', { postLike: 'like' }),
+    ...mapActions('commentModule', { showPcomments: 'showPcomments' }),
+    ...mapActions('commentModule', { postPcomment: 'postPcomment' }),
+    ...mapActions('commentModule', { postCcomment: 'postCcomment' }),
+    ...mapActions('commentModule', { pcommentlike: 'pcommentLike' }),
+    ...mapActions('commentModule', { ccommentlike: 'ccommentLike' }),
+    showAllReplies(index) {
+      // 将评论的所有子评论都显示出来
+      this.comments[index].showAllReplies = !this.comments[index].showAllReplies;
+    },
+    showAllComments() {
+      this.allComments = !this.allComments;// 将帖子所有评论都展示出来
+    },
     goback() {
       this.$router.replace({ name: 'home', params: { partition: this.partition } });
     },
@@ -163,6 +261,36 @@ export default {
       return `${d.getFullYear()}年${
         d.getMonth() + 1
       }月${d.getDate()}日 ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}:${String(d.getSeconds()).padStart(2, '0')}`;
+    },
+    pclike(index) {
+      this.pcommentlike({
+        userTelephone: this.userTelephone,
+        pcommentID: this.comments[index].pcommentID,
+        isLiked: this.comments[index].isLiked,
+      }).then(() => {
+      }).catch((err) => {
+        console.error(err);
+      });
+      // 更新点赞状态及点赞数
+      this.comments[index].isLiked = !this.comments[index].isLiked;
+      if (this.comments[index].isLiked) this.comments[index].likeNum += 1;
+      else this.comments[index].likeNum -= 1;
+    },
+    cclike(index, subIndex) {
+      this.ccommentlike({
+        userTelephone: this.userTelephone,
+        ccommentID: this.comments[index].subComments[subIndex].ccommentID,
+        isLiked: this.comments[index].subComments[subIndex].isLiked,
+      }).then(() => {
+      }).catch((err) => {
+        console.error(err);
+      });
+      // 更新点赞状态及点赞数
+      // eslint-disable-next-line max-len
+      this.comments[index].subComments[subIndex].isLiked = !this.comments[index].subComments[subIndex].isLiked;
+      // eslint-disable-next-line max-len
+      if (this.comments[index].subComments[subIndex].isLiked) this.comments[index].subComments[subIndex].likeNum += 1;
+      else this.comments[index].subComments[subIndex].likeNum -= 1;
     },
     like() {
       const userTelephone = this.userInfo.phone;
@@ -177,6 +305,80 @@ export default {
       this.post.isLiked = !this.post.isLiked;
       if (this.post.isLiked) this.post.like += 1;
       else this.post.like -= 1;
+    },
+    async pcommentsShow() {
+      const postid = this.post.postID;
+      // 请求
+      try {
+        const { data } = await this.showPcomments({
+          userTelephone: this.userTelephone, postID: postid,
+        });
+        this.comments = data.map((pcomment) => ({
+          pcommentID: pcomment.PcommentID,
+          author: pcomment.Author,
+          authorAvatar: pcomment.AuthorAvatar,
+          commentTime: pcomment.CommentTime,
+          content: pcomment.Content,
+          likeNum: pcomment.LikeNum,
+          subComments: pcomment.SubComments,
+          isLiked: pcomment.IsLiked,
+          showReplyForm: false,
+          showAllReplies: false,
+        })).sort((a, b) => new Date(b.commentTime) - new Date(a.commentTime));
+        // this.comments = data;
+      } catch (err) {
+        console.error(err);
+      }
+    },
+    // 发表帖子评论
+    pcommentPost() {
+      this.pcomment.postID = this.post.postID;
+      this.pcomment.userTelephone = this.userTelephone;
+      this.postPcomment(this.pcomment).then(() => {
+        this.$bvToast.toast('评论成功', {
+          title: '系统提醒',
+          variant: 'primary',
+          solid: true,
+        });
+        setTimeout(() => {
+          this.pcommentsShow();
+        }, 1000);
+      })
+        .catch((err) => {
+          this.$bvToast.toast(err.msg, {
+            title: '发帖失败',
+            variant: 'danger',
+            solid: true,
+          });
+        });
+    },
+    ccommentPost(index) {
+      const comment = this.comments[index];
+      this.ccomment.pcommentID = comment.pcommentID;
+      this.ccomment.userTelephone = this.userTelephone;
+      this.postCcomment(this.ccomment).then(() => {
+        this.$bvToast.toast('发帖成功', {
+          title: '系统提醒',
+          variant: 'primary',
+          solid: true,
+        });
+        setTimeout(() => {
+          this.pcommentsShow();
+        }, 1000);
+      })
+        .catch((err) => {
+          this.$bvToast.toast(err.response.data.msg, {
+            title: '发帖失败',
+            variant: 'danger',
+            solid: true,
+          });
+        });
+    },
+    visibleSubComments(index) {
+      if (this.comments[index].showAllReplies === true) {
+        return this.comments[index].subComments;
+      }
+      return this.comments[index].subComments.slice(0, 5);
     },
   },
 };

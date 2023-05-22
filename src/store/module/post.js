@@ -26,7 +26,7 @@ const postModule = {
         });
       });
     },
-
+    // 帖子点赞
     like(context, { userTelephone, postID, isLiked }) {
       return new Promise((resolve, reject) => {
         postService.like({ userTelephone, postID, isLiked }).then((res) => {
@@ -37,6 +37,7 @@ const postModule = {
       });
     },
 
+    // 显示帖子详情
     showDetails(context, { userTelephone, postID }) {
       return new Promise((resolve, reject) => {
         postService.showDetails({ userTelephone, postID }).then((res) => {
@@ -46,7 +47,6 @@ const postModule = {
         });
       });
     },
-
   },
 };
 

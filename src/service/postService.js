@@ -20,7 +20,7 @@ const browse = ({ userTelephone, partition }) => {
   return request.post('auth/browse', { userTelephone, partition });
 };
 
-// 点赞
+// 帖子点赞
 const like = ({ userTelephone, postID, isLiked }) => {
   return request.post('auth/updateLike', { userTelephone, postID, isLiked });
 };
@@ -35,4 +35,5 @@ export default {
   browse,
   like,
   showDetails,
+
 };
