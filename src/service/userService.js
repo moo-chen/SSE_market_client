@@ -38,6 +38,11 @@ const like = ({ userTelephone, postID, isLiked }) => {
   return request.post('auth/updateLike', { userTelephone, postID, isLiked });
 };
 
+// 收藏
+const save = ({ userTelephone, postID, isSaved }) => {
+  return request.post('auth/updateSave', { userTelephone, postID, isSaved });
+};
+
 // 获取帖子详情
 const showDetails = ({ postId }) => {
   return request.post('auth/showDetails', { postId });
@@ -56,4 +61,5 @@ export default {
   like,
   showDetails,
   info,
+  save,
 };

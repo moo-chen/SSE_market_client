@@ -1,54 +1,54 @@
 <template>
   <div class="home-view">
     <b-button variant="primary" v-if="this.partition != '主页'" class="back_button"
-      @click="goback" style="margin-left: 60px;">
+      active@click="goback" style="margin-left: 60px;">
       <b-icon-reply class="mr-2"></b-icon-reply>返回
     </b-button>
     <b-row>
-      <b-col v-for="post in posts" :key="post.id" cols="12" md="12" lg="12" class="mb-3">
-        <b-card class="px-3 py-2 card-shadow"
+    <b-col v-for="post in posts" :key="post.id" cols="12" md="12" lg="12" class="mb-3">
+      <b-card class="px-3 py-2 card-shadow"
         @click="$router.push({ name: 'postDetails',
         params: { id: post.id, partition: partition }})">
-          <div class="text-muted" style="margin-left:820px;" @click.stop>
-            <b-icon icon="three-dots-vertical" @click.stop="toggleMenu(post)"></b-icon></div>
-            <b-list-group v-if="post.showMenu" style="width:100px;height:1.25rem;margin-left: 850px;
-            margin-top: -20px;font-size: 0.9rem;" @click.stop>
-            <b-list-group-item>
-              <b-icon class="mr-2" :icon="post.isSaved ? 'star-fill' : 'star'"
+        <div class="text-muted" style="margin-left:820px;" @click.stop>
+          <b-icon icon="three-dots-vertical" @click.stop="toggleMenu(post)"></b-icon></div>
+        <b-list-group v-if="post.showMenu" style="width:100px;height:1.25rem;margin-left: 850px;
+          margin-top: -20px;font-size: 0.9rem;" @click.stop>
+          <b-list-group-item>
+            <b-icon class="mr-2" :icon="post.isSaved ? 'star-fill' : 'star'"
               @click.stop="save(post)" :class="{ 'text-warning': post.isSaved }"></b-icon>收藏
-            </b-list-group-item>
-            <b-list-group-item v-if="post.authorTelephone !== userInfo.phone">
-              <b-icon-exclamation-triangle class="mr-2"></b-icon-exclamation-triangle>举报
-            </b-list-group-item>
-            <b-list-group-item v-if="post.authorTelephone === userInfo.phone">
-              <b-icon-trash class="mr-2"></b-icon-trash>删除
-            </b-list-group-item>
-          </b-list-group>
-          <b-row class="mt-0">
-            <b-col md="4" class="mb-2">
-              <div class="author-box" @click.stop>
-                {{ post.author }}
-              </div>
-            </b-col>
-          </b-row>
-          <b-card-title>{{ post.title }}</b-card-title>
-          <b-card-text>{{ post.content }}</b-card-text>
-          <div class="d-flex justify-content-between">
-            <small class="text-muted">{{ formatDate(post.postTime) }}</small>
-          </div>
-          <div class="d-flex justify-content-between align-items-center mt-3">
-            <div class="text-muted">
-              <b-icon :icon="post.isLiked ? 'heart-fill' : 'heart'"
+          </b-list-group-item>
+          <b-list-group-item v-if="post.authorTelephone !== userInfo.phone">
+            <b-icon-exclamation-triangle class="mr-2"></b-icon-exclamation-triangle>举报
+          </b-list-group-item>
+          <b-list-group-item v-if="post.authorTelephone === userInfo.phone">
+            <b-icon-trash class="mr-2"></b-icon-trash>删除
+          </b-list-group-item>
+        </b-list-group>
+        <b-row class="mt-0">
+          <b-col md="4" class="mb-2">
+            <div class="author-box" @click.stop>
+              {{ post.author }}
+            </div>
+          </b-col>
+        </b-row>
+        <b-card-title>{{ post.title }}</b-card-title>
+        <b-card-text>{{ post.content }}</b-card-text>
+        <div class="d-flex justify-content-between">
+          <small class="text-muted">{{ formatDate(post.postTime) }}</small>
+        </div>
+        <div class="d-flex justify-content-between align-items-center mt-3">
+          <div class="text-muted">
+            <b-icon :icon="post.isLiked ? 'heart-fill' : 'heart'"
               @click.stop="like(post)" :class="{ 'text-danger': post.isLiked }"></b-icon>
               {{ post.like }}
-            </div>
-            <div class="text-muted"><b-icon icon="chat-dots-fill"></b-icon> {{ post.comment }}</div>
           </div>
+          <div class="text-muted"><b-icon icon="chat-dots-fill"></b-icon> {{ post.comment }}</div>
+        </div>
         </b-card>
       </b-col>
-    </b-row>
-  </div>
-</template>
+      </b-row>
+    </div>
+  </template>
 
 <script>
 
@@ -64,8 +64,8 @@ export default {
       posts: [],
       userTelephone: '',
       postID: '',
-      isSaved: '',
       isLiked: '',
+      isSaved: '',
     };
   },
   created() {
@@ -101,8 +101,10 @@ export default {
         const { data } = await this.postBrowse({
           userTelephone: this.userTelephone, partition: this.partition,
         });
+        // 根据用户电话号码过滤帖子列表
+        const filteredData = data.filter((post) => post.UserTelephone === this.userTelephone);
         // 将获取到的帖子列表数据赋值给 posts 变量
-        this.posts = data.map((post) => ({
+        this.posts = filteredData.map((post) => ({
           id: post.PostID,
           author: post.UserName,
           authorTelephone: post.UserTelephone,

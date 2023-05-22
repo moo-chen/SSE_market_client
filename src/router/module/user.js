@@ -11,6 +11,16 @@ const userRoutes = [
     name: 'login',
     component: () => import('@/views/login/LoginView.vue'),
   },
+  {
+    path: '/save',
+    name: 'save',
+    component: () => import('@/views/save/SaveView.vue'),
+  },
+  {
+    path: '/history',
+    name: 'history',
+    component: () => import('@/views/history/HistoryView.vue'),
+  },
 ];
 
 export default userRoutes;

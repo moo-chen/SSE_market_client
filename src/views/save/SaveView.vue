@@ -5,13 +5,13 @@
       <b-icon-reply class="mr-2"></b-icon-reply>返回
     </b-button>
     <b-row>
-      <b-col v-for="post in posts" :key="post.id" cols="12" md="12" lg="12" class="mb-3">
-        <b-card class="px-3 py-2 card-shadow"
-        @click="$router.push({ name: 'postDetails',
-        params: { id: post.id, partition: partition }})">
+    <b-col v-for="post in posts" :key="post.id" cols="12" md="12" lg="12" class="mb-3">
+      <b-card class="px-3 py-2 card-shadow"
+          @click="$router.push({ name: 'postDetails',
+          params: { id: post.id, partition: partition }})">
           <div class="text-muted" style="margin-left:820px;" @click.stop>
-            <b-icon icon="three-dots-vertical" @click.stop="toggleMenu(post)"></b-icon></div>
-            <b-list-group v-if="post.showMenu" style="width:100px;height:1.25rem;margin-left: 850px;
+              <b-icon icon="three-dots-vertical" @click.stop="toggleMenu(post)"></b-icon></div>
+          <b-list-group v-if="post.showMenu" style="width:100px;height:1.25rem;margin-left: 850px;
             margin-top: -20px;font-size: 0.9rem;" @click.stop>
             <b-list-group-item>
               <b-icon class="mr-2" :icon="post.isSaved ? 'star-fill' : 'star'"
@@ -39,13 +39,13 @@
           <div class="d-flex justify-content-between align-items-center mt-3">
             <div class="text-muted">
               <b-icon :icon="post.isLiked ? 'heart-fill' : 'heart'"
-              @click.stop="like(post)" :class="{ 'text-danger': post.isLiked }"></b-icon>
-              {{ post.like }}
+                @click.stop="like(post)" :class="{ 'text-danger': post.isLiked }"></b-icon>
+                {{ post.like }}
             </div>
             <div class="text-muted"><b-icon icon="chat-dots-fill"></b-icon> {{ post.comment }}</div>
           </div>
-        </b-card>
-      </b-col>
+      </b-card>
+    </b-col>
     </b-row>
   </div>
 </template>
@@ -64,8 +64,8 @@ export default {
       posts: [],
       userTelephone: '',
       postID: '',
-      isSaved: '',
       isLiked: '',
+      isSaved: '',
     };
   },
   created() {
@@ -101,8 +101,10 @@ export default {
         const { data } = await this.postBrowse({
           userTelephone: this.userTelephone, partition: this.partition,
         });
+        // 根据是否被收藏过滤帖子列表
+        const filteredData = data.filter((post) => post.IsSaved === true);
         // 将获取到的帖子列表数据赋值给 posts 变量
-        this.posts = data.map((post) => ({
+        this.posts = filteredData.map((post) => ({
           id: post.PostID,
           author: post.UserName,
           authorTelephone: post.UserTelephone,

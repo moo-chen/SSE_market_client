@@ -69,6 +69,16 @@ const userModule = {
       localStorage.removeItem('Partition');
       window.location.reload();
     },
+
+    save(context, { userTelephone, postID, isSaved }) {
+      return new Promise((resolve, reject) => {
+        userService.save({ userTelephone, postID, isSaved }).then((res) => {
+          resolve(res);
+        }).catch((err) => {
+          reject(err);
+        });
+      });
+    },
   },
 };
 
