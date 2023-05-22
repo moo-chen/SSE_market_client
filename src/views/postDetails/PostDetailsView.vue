@@ -2,7 +2,7 @@
   <div>
     <b-button variant="primary" class="back_button"
       @click="goback" style="margin-left: 60px;">
-      <b-icon-reply class="mr-2"></b-icon-reply>返回!
+      <b-icon-reply class="mr-2"></b-icon-reply>返回
     </b-button>
   <div class='postDetails' style="margin-left:200px">
     <b-card class='mx-auto my-5' style="max-width: 1500px;">
@@ -11,7 +11,8 @@
       <b-list-group v-if="this.post.showMenu" style="width:100px;height:1.25rem;margin-left: 880px;
         margin-top: -20px;font-size: 0.9rem;" @click.stop>
           <b-list-group-item>
-            <b-icon-star class="mr-2"></b-icon-star>收藏
+            <b-icon class="mr-2" :icon="post.isSaved ? 'star-fill' : 'star'"
+            @click.stop="save()" :class="{ 'text-warning': post.isSaved }"></b-icon>收藏
           </b-list-group-item>
           <b-list-group-item v-if="this.post.authorTelephone !== userInfo.telephone">
             <b-icon-exclamation-triangle class="mr-2"></b-icon-exclamation-triangle>举报
@@ -29,7 +30,7 @@
       <div class='d-flex justify-content-between align-items-center mt-3'>
         <div class="text-muted">
           <b-icon :icon="post.isLiked ? 'heart-fill' : 'heart'"
-          @click.stop="like(post)" :class="{ 'text-danger': post.isLiked }"></b-icon>
+          @click.stop="like()" :class="{ 'text-danger': post.isLiked }"></b-icon>
           {{ post.like }}
         </div>
         <div class='text-muted'><b-icon icon='chat-dots-fill'></b-icon> {{ post.comment }}</div>
@@ -87,6 +88,7 @@ export default {
         like: '',
         comment: '',
         postTime: '',
+        isSaved: '',
         isLiked: '',
         showMenu: '',
       },
@@ -136,6 +138,7 @@ export default {
         this.post.like = post.data.Like;
         this.post.comment = post.data.Comment;
         this.post.postTime = post.data.PostTime;
+        this.post.isSaved = post.data.IsSaved;
         this.post.isLiked = post.data.IsLiked;
         this.post.showMenu = false;
       })
@@ -151,6 +154,7 @@ export default {
   methods: {
     ...mapActions('postModule', { postShowDetails: 'showDetails' }),
     ...mapActions('postModule', { postLike: 'like' }),
+    ...mapActions('userModule', { postSave: 'save' }),
     goback() {
       this.$router.replace({ name: 'home', params: { partition: this.partition } });
     },
@@ -163,6 +167,18 @@ export default {
       return `${d.getFullYear()}年${
         d.getMonth() + 1
       }月${d.getDate()}日 ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}:${String(d.getSeconds()).padStart(2, '0')}`;
+    },
+    save() {
+      const userTelephone = this.userInfo.phone;
+      // 请求
+      this.postSave({
+        userTelephone, postID: this.post.postID, isSaved: this.post.isSaved,
+      }).then(() => {
+      }).catch((err) => {
+        console.error(err);
+      });
+      // 更新点赞状态及点赞数
+      this.post.isSaved = !this.post.isSaved;
     },
     like() {
       const userTelephone = this.userInfo.phone;

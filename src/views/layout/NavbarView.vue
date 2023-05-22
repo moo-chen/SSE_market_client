@@ -74,8 +74,8 @@
           :class="{ active: $route.path === '/profile' }" style="font-size: 18px;">
             <b-icon-table class="mr-3"></b-icon-table>个人信息
           </b-list-group-item>
-          <b-list-group-item v-if="showProfiles" to="/collect"
-          :class="{ active: $route.path === '/collect' }" style="font-size: 18px;">
+          <b-list-group-item v-if="showProfiles" to="/save"
+          :class="{ active: $route.path === '/save' }" style="font-size: 18px;">
             <b-icon-star-fill class="mr-3"></b-icon-star-fill>我的收藏
           </b-list-group-item>
           <b-list-group-item v-if="showProfiles" to="/history"
