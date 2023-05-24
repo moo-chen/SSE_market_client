@@ -10,10 +10,11 @@
           <b-navbar-form>
             <b-input-group v-if="this.$route.name === 'home'">
               <b-form-input style="width: 600px; border-radius: 5px;"
-              placeholder="搜索"></b-form-input>
+              placeholder="搜索" v-model="searchinfo"></b-form-input>
               <b-input-group-append>
                 <b-button style="margin-left:20px; border-radius: 5px;"
-                variant="dark">
+                variant="dark"
+                @click="refreshPageAndNavigate">
                 <b-icon-search class="mr-2"></b-icon-search>搜索
               </b-button>
               </b-input-group-append>
@@ -121,6 +122,7 @@ export default {
       showPartitions: false,
       showSettings: false,
       showProfiles: false,
+      searchinfo: '',
     };
   },
   methods: {
@@ -134,6 +136,10 @@ export default {
     },
     togglePartitions() {
       this.showPartitions = !this.showPartitions;
+    },
+    refreshPageAndNavigate() {
+      this.$router.push({ name: 'home', query: { searchinfo: this.searchinfo } });
+      this.$router.go(0);
     },
   },
 };

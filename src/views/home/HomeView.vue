@@ -17,12 +17,23 @@
               <b-icon class="mr-2" :icon="post.isSaved ? 'star-fill' : 'star'"
               @click.stop="save(post)" :class="{ 'text-warning': post.isSaved }"></b-icon>收藏
             </b-list-group-item>
-            <b-list-group-item v-if="post.authorTelephone !== userInfo.phone">
+            <b-list-group-item v-if="post.authorTelephone !== userInfo.phone"
+              @click.stop="showReportModal = true">
               <b-icon-exclamation-triangle class="mr-2"></b-icon-exclamation-triangle>举报
             </b-list-group-item>
-            <b-list-group-item v-if="post.authorTelephone === userInfo.phone">
-              <b-icon-trash class="mr-2"></b-icon-trash>删除
+            <b-modal v-model="showReportModal" title="举报" @hidden="clearReportReason"
+              @ok="submitReport(post)" ok-title="Submit">
+              <b-form-textarea v-model="reportReason" placeholder="请输入举报原因" rows="8">
+              </b-form-textarea>
+            </b-modal>
+            <b-list-group-item v-if="post.authorTelephone === userInfo.phone"
+              @click.stop="showDeleteModal = true">
+              <b-icon-trash class="mr-2" ></b-icon-trash>删除
             </b-list-group-item>
+            <b-modal v-model="showDeleteModal" title="确认删除" ok-title="Confirm"
+              @ok="postdelete(post)">
+              <p>你确定要删除这个帖子吗？</p>
+            </b-modal>
           </b-list-group>
           <b-row class="mt-0">
             <b-col md="4" class="mb-2">
@@ -66,6 +77,10 @@ export default {
       postID: '',
       isSaved: '',
       isLiked: '',
+      searchinfo: '',
+      showDeleteModal: false,
+      showReportModal: false,
+      reportReason: '',
     };
   },
   created() {
@@ -78,6 +93,7 @@ export default {
     } else {
       this.partition = '主页';
     }
+    this.searchinfo = this.$route.query.searchinfo;
     // 在页面创建时默认加载主页帖子列表
     this.browsePosts();
   },
@@ -90,6 +106,8 @@ export default {
     ...mapActions('postModule', { postBrowse: 'browse' }),
     ...mapActions('postModule', { postLike: 'like' }),
     ...mapActions('userModule', { postSave: 'save' }),
+    ...mapActions('postModule', { deletepost: 'deletepost' }),
+    ...mapActions('postModule', { submitreport: 'submitreport' }),
     goback() {
       this.$router.replace({ name: 'partitions' });
     },
@@ -99,7 +117,7 @@ export default {
       try {
         // 向后端发送请求并获取帖子列表
         const { data } = await this.postBrowse({
-          userTelephone: this.userTelephone, partition: this.partition,
+          userTelephone: this.userTelephone, partition: this.partition, searchinfo: this.searchinfo,
         });
         // 将获取到的帖子列表数据赋值给 posts 变量
         this.posts = data.map((post) => ({
@@ -163,6 +181,38 @@ export default {
       }).catch((err) => {
         console.error(err);
       });
+    },
+    postdelete(post) {
+      this.postID = post.id;
+      this.deletepost({
+        postID: this.postID,
+      }).then(() => {
+        this.$router.go(0);
+      }).catch((err) => {
+        console.error(err);
+      });
+    },
+    submitReport(post) {
+      this.postID = post.id;
+      this.userTelephone = this.userInfo.phone;
+      this.submitreport({
+        TargetID: this.postID, userTelephone: this.userTelephone, Reason: this.reportReason,
+      }).then(() => {
+        this.$bvToast.toast('举报发送成功', {
+          title: '系统提醒',
+          variant: 'primary',
+          solid: true,
+        });
+      }).catch((err) => {
+        this.$bvToast.toast(err.response.data.msg, {
+          title: '数据验证错误',
+          variant: 'danger',
+          solid: true,
+        });
+      });
+    },
+    clearReportReason() {
+      this.reportReason = '';
     },
   },
 };

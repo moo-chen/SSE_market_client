@@ -17,9 +17,9 @@ const postModule = {
       });
     },
 
-    browse(context, { userTelephone, partition }) {
+    browse(context, { userTelephone, partition, searchinfo }) {
       return new Promise((resolve, reject) => {
-        postService.browse({ userTelephone, partition }).then((res) => {
+        postService.browse({ userTelephone, partition, searchinfo }).then((res) => {
           resolve(res);
         }).catch((err) => {
           reject(err);
@@ -30,6 +30,26 @@ const postModule = {
     like(context, { userTelephone, postID, isLiked }) {
       return new Promise((resolve, reject) => {
         postService.like({ userTelephone, postID, isLiked }).then((res) => {
+          resolve(res);
+        }).catch((err) => {
+          reject(err);
+        });
+      });
+    },
+
+    deletepost(context, { postID }) {
+      return new Promise((resolve, reject) => {
+        postService.deletepost({ postID }).then((res) => {
+          resolve(res);
+        }).catch((err) => {
+          reject(err);
+        });
+      });
+    },
+
+    submitreport(context, { TargetID, userTelephone, Reason }) {
+      return new Promise((resolve, reject) => {
+        postService.submitreport({ TargetID, userTelephone, Reason }).then((res) => {
           resolve(res);
         }).catch((err) => {
           reject(err);
