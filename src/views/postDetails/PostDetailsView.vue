@@ -14,12 +14,23 @@
             <b-icon class="mr-2" :icon="post.isSaved ? 'star-fill' : 'star'"
             @click.stop="save()" :class="{ 'text-warning': post.isSaved }"></b-icon>收藏
           </b-list-group-item>
-          <b-list-group-item v-if="this.post.authorTelephone !== userInfo.telephone">
+          <b-list-group-item v-if="this.post.authorTelephone !== userInfo.phone"
+            @click.stop="showReportModal = true">
             <b-icon-exclamation-triangle class="mr-2"></b-icon-exclamation-triangle>举报
           </b-list-group-item>
-          <b-list-group-item v-if="this.post.authorTelephone === userInfo.phone">
+          <b-modal v-model="showReportModal" title="举报" @hidden="clearReportReason"
+            @ok="submitReport" ok-title="Submit">
+            <b-form-textarea v-model="reportReason" placeholder="请输入举报原因" rows="8">
+            </b-form-textarea>
+          </b-modal>
+          <b-list-group-item v-if="this.post.authorTelephone === userInfo.phone"
+            @click.stop="showDeleteModal = true">
             <b-icon-trash class="mr-2"></b-icon-trash>删除
           </b-list-group-item>
+          <b-modal v-model="showDeleteModal" title="确认删除" ok-title="Confirm"
+            @ok="postdelete(post)">
+            <p>你确定要删除这个帖子吗？</p>
+          </b-modal>
       </b-list-group>
       <div class='author-box mb-2'>{{ post.author }}</div>
       <h2 class='title-font-size mb-3'>{{ post.title }}</h2>
@@ -79,6 +90,9 @@ export default {
   data() {
     return {
       partition: '',
+      showDeleteModal: false,
+      showReportModal: false,
+      reportReason: '',
       post: {
         postID: '',
         author: '',
@@ -155,6 +169,8 @@ export default {
     ...mapActions('postModule', { postShowDetails: 'showDetails' }),
     ...mapActions('postModule', { postLike: 'like' }),
     ...mapActions('userModule', { postSave: 'save' }),
+    ...mapActions('postModule', { deletepost: 'deletepost' }),
+    ...mapActions('postModule', { submitreport: 'submitreport' }),
     goback() {
       this.$router.replace({ name: 'home', params: { partition: this.partition } });
     },
@@ -193,6 +209,35 @@ export default {
       this.post.isLiked = !this.post.isLiked;
       if (this.post.isLiked) this.post.like += 1;
       else this.post.like -= 1;
+    },
+    postdelete() {
+      this.deletepost({
+        postID: this.post.postID,
+      }).then(() => {
+        this.$router.go(-1);
+      }).catch((err) => {
+        console.error(err);
+      });
+    },
+    submitReport() {
+      this.submitreport({
+        TargetID: this.post.postID, userTelephone: this.userInfo.phone, Reason: this.reportReason,
+      }).then(() => {
+        this.$bvToast.toast('举报发送成功', {
+          title: '系统提醒',
+          variant: 'primary',
+          solid: true,
+        });
+      }).catch((err) => {
+        this.$bvToast.toast(err.response.data.msg, {
+          title: '数据验证错误',
+          variant: 'danger',
+          solid: true,
+        });
+      });
+    },
+    clearReportReason() {
+      this.reportReason = '';
     },
   },
 };

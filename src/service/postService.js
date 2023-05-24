@@ -25,6 +25,14 @@ const like = ({ userTelephone, postID, isLiked }) => {
   return request.post('auth/updateLike', { userTelephone, postID, isLiked });
 };
 
+const deletepost = ({ postID }) => {
+  return request.post('auth/deletePost', { postID });
+};
+
+const submitreport = ({ TargetID, userTelephone, Reason }) => {
+  return request.post('auth/submitReport', { TargetID, userTelephone, Reason });
+};
+
 // 获取帖子详情
 const showDetails = ({ userTelephone, postID }) => {
   return request.post('auth/showDetails', { userTelephone, postID });
@@ -34,5 +42,7 @@ export default {
   post,
   browse,
   like,
+  deletepost,
+  submitreport,
   showDetails,
 };

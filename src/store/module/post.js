@@ -37,6 +37,26 @@ const postModule = {
       });
     },
 
+    deletepost(context, { postID }) {
+      return new Promise((resolve, reject) => {
+        postService.deletepost({ postID }).then((res) => {
+          resolve(res);
+        }).catch((err) => {
+          reject(err);
+        });
+      });
+    },
+
+    submitreport(context, { TargetID, userTelephone, Reason }) {
+      return new Promise((resolve, reject) => {
+        postService.submitreport({ TargetID, userTelephone, Reason }).then((res) => {
+          resolve(res);
+        }).catch((err) => {
+          reject(err);
+        });
+      });
+    },
+
     showDetails(context, { userTelephone, postID }) {
       return new Promise((resolve, reject) => {
         postService.showDetails({ userTelephone, postID }).then((res) => {
