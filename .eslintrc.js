@@ -8,7 +8,7 @@ module.exports = {
     parser: '@babel/eslint-parser',
   },
   rules: {
-    // 'linebreak-style': ["error", "windows"],
+    'linebreak-style': ["error", "windows"],
     'global-require': 'off',
     'arrow-body-style': ['off'],
     'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
