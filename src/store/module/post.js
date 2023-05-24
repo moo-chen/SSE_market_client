@@ -17,9 +17,9 @@ const postModule = {
       });
     },
 
-    browse(context, { userTelephone, partition }) {
+    browse(context, { userTelephone, partition, searchinfo }) {
       return new Promise((resolve, reject) => {
-        postService.browse({ userTelephone, partition }).then((res) => {
+        postService.browse({ userTelephone, partition, searchinfo }).then((res) => {
           resolve(res);
         }).catch((err) => {
           reject(err);

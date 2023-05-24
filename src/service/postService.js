@@ -16,8 +16,8 @@ const post = ({
 };
 
 // 看帖
-const browse = ({ userTelephone, partition }) => {
-  return request.post('auth/browse', { userTelephone, partition });
+const browse = ({ userTelephone, partition, searchinfo }) => {
+  return request.post('auth/browse', { userTelephone, partition, searchinfo });
 };
 
 // 点赞
