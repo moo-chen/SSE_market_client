@@ -34,13 +34,14 @@
           @click.stop="like(post)" :class="{ 'text-danger': post.isLiked }"></b-icon>
           {{ post.like }}
         </div>
-        <div class='text-muted'><b-icon icon='chat-dots-fill'></b-icon> {{ len(comments) }}</div>
+        <div class='text-muted'><b-icon icon='chat-dots-fill'></b-icon> {{ commentsNum }}</div>
       </div>
     </b-card>
     <b-button @click="post.showCommentForm
             = !post.showCommentForm" variant="primary">
       {{ post.showCommentForm ? '隐藏评论' : '评论' }}
     </b-button>
+
     <!--显示帖子评论窗口-->
     <div v-if="post.showCommentForm">
         <b-form-group>
@@ -51,8 +52,17 @@
         <b-button @click="pcommentPost" variant="primary">提交评论</b-button>
     </div>
   </div>
+
  <!--显示和发表帖子评论、评论的评论-->
   <div class='comment' style="margin-left: 200px" >
+    <!--排序-->
+    <div class="d-flex justify-content-end">
+      <b-button @click="sortkind='Date';comments=sortcomments(comments)"
+                variant="primary" class="mr-2 btn-sm">按时间排序</b-button>
+      <b-button @click="sortkind='heat';comments=sortcomments(comments)"
+                variant="primary" class="btn-sm">按热度排序</b-button>
+    </div>
+    <transition-group name="comment-list" tag="div">
     <div v-for="(comment, index) in visibleComments" :key="index">
       <b-card class="my-1">
         <h4 class="mb-3">Comment {{ index + 1 }}</h4>
@@ -64,6 +74,7 @@
             <div class="font-weight-bold">{{ comment.author }}</div>
             <div class="text-muted">{{ formatDate(comment.commentTime) }}</div>
             <div>{{ comment.content }}</div>
+            <!--显示每个评论的点赞和回复数-->
             <div class='d-flex justify-content-between align-items-center mt-3'>
               <div class="text-muted">
                 <b-icon :icon="comment.isLiked ? 'heart-fill' : 'heart'"
@@ -76,7 +87,7 @@
               </div>
             </div>
             <b-button @click="comment.showReplyForm
-            = !comment.showReplyForm"
+            = !comment.showReplyForm" class="mr-2 btn-sm"
                       variant="primary">
               {{ comment.showReplyForm ? '隐藏评论' : '评论' }}
             </b-button>
@@ -88,19 +99,34 @@
                                    placeholder="请写下你的精彩评论..." rows="3">
                   </b-form-textarea>
                 </b-form-group>
-                <b-button type="submit" variant="primary">提交评论</b-button>
+                <b-button type="submit" variant="primary">
+                  提交评论</b-button>
               </form>
             </div>
-            <!-- 评论的评论 -->
+            <!-- 显示评论的评论 -->
+            <b-button v-if="comment.subComments.length > 0"
+                      @click="showRepliesModal=true;showcommentsindex=index"
+                      variant="outline-primary"
+                      style="font-size: 12px;">
+              查看评论共{{len(comment.subComments)}}条
+            </b-button>
+            <b-modal hide-footer v-model="showRepliesModal" v-if="index===showcommentsindex">
+            <transition-group name="comment-list" tag="div">
             <div v-for="(subComment, subIndex) in visibleSubComments(index)" :key="subIndex">
               <hr>
-              <div class="d-flex mb-2">
+              <div class="d-lg-flex mb-2" @mouseover="isHovered = true;
+                nowSubIndex = subIndex;nowIndex = index"
+                   @mouseleave="isHovered = false;nowSubIndex = 0;replyshow=false;nowIndex=0"
+                   @focus="nowSubIndex = subIndex" @focusout="nowSubIndex = subIndex">
                 <div class="flex-shrink-0 mr-3">
                   <b-avatar :src="subComment.authorAvatar" size="2rem"></b-avatar>
                 </div>
                 <div>
                   <div class="font-weight-bold">{{ subComment.author }}</div>
                   <div class="text-muted">{{ formatDate(subComment.commentTime) }}</div>
+                  <div v-if="subComment.userTargetName !== ''">
+                    <span style="color: cadetblue">回复@{{ subComment.userTargetName }}:</span>
+                  </div>
                   <div>{{ subComment.content }}</div>
                 </div>
                 <div class="text-muted">
@@ -110,19 +136,43 @@
                   </b-icon>
                   {{ subComment.likeNum }}
                 </div>
+                <div v-if="isHovered && subIndex===nowSubIndex && index===nowIndex" >
+                  <b-button @click="replyshow = !replyshow"
+                            variant="outline-info">
+                    回复
+                  </b-button>
+                  <div v-if="replyshow && subIndex===nowSubIndex">
+                    <form @submit.prevent="ccommentPost(index,subComment.author)">
+                      <b-form-group>
+                        <b-form-textarea v-model="ccomment.content"
+                                         :placeholder="'回复@'+subComment.author" rows="3">
+                        </b-form-textarea>
+                      </b-form-group>
+                      <b-button type="submit" variant="primary">
+                        提交回复</b-button>
+                    </form>
+                  </div>
+                </div>
               </div>
             </div>
-            <b-button v-if="comment.subComments.length > 5" @click="showAllReplies(index)">
-              {{ comment.showAllReplies ? '折叠评论' : '展开全部评论' }}
-            </b-button>
+            </transition-group>
+              <b-button v-if="comment.subComments.length > 1"
+                        @click="showAllReplies(index)" variant="outline-primary"
+                        style="font-size: 12px;">
+                <div v-if="comment.showAllReplies">折叠评论</div>
+                <div v-else>展开全部评论共{{len(comment.subComments)}}条</div>
+              </b-button>
+            </b-modal >
           </div>
         </div>
       </b-card>
     </div>
+      </transition-group>
     <b-button v-if="visibleComments.length < comments.length" @click="showAllComments()">
       {{ allComments ? '折叠评论' : '展开全部评论' }}
     </b-button>
   </div>
+
   </div>
 </template>
 
@@ -143,9 +193,18 @@ export default {
     ...mapState({
       userInfo: (state) => state.userModule.userInfo,
     }),
+    commentsNum() {
+      let num = len(this.comments);
+      for (let i = 0; i < this.comments.length; i += 1) {
+        const comment = this.comments[i];
+        num += len(comment.subComments);
+      }
+      return num;
+    },
   },
   data() {
     return {
+      sortkind: 'Date',
       allComments: false,
       userTelephone: '',
       partition: '',
@@ -188,7 +247,16 @@ export default {
         userTelephone: '',
         pcommentID: '',
         content: '',
+        userTargetName: '',
       },
+      // 用来记录是否悬停在子评论上
+      isHovered: false,
+      nowSubIndex: 0,
+      nowIndex: 0,
+      replyshow: false,
+      // 用来修复发表评论后页面的跳转问题（尚未修复）
+      showcommentsindex: 0,
+      showRepliesModal: false, // 显示窗口
     };
   },
   created() {
@@ -313,7 +381,7 @@ export default {
         const { data } = await this.showPcomments({
           userTelephone: this.userTelephone, postID: postid,
         });
-        this.comments = data.map((pcomment) => ({
+        const comments = data.map((pcomment) => ({
           pcommentID: pcomment.PcommentID,
           author: pcomment.Author,
           authorAvatar: pcomment.AuthorAvatar,
@@ -324,11 +392,20 @@ export default {
           isLiked: pcomment.IsLiked,
           showReplyForm: false,
           showAllReplies: false,
-        })).sort((a, b) => new Date(b.commentTime) - new Date(a.commentTime));
+          heat: pcomment.LikeNum + len(pcomment.SubComments),
+        }));
+        this.comments = this.sortcomments(comments);
+        // .sort((a, b) => new Date(b.commentTime) - new Date(a.commentTime))
         // this.comments = data;
       } catch (err) {
         console.error(err);
       }
+    },
+    sortcomments(comments) {
+      if (this.sortkind === 'Date') {
+        return comments.sort((a, b) => new Date(b.commentTime) - new Date(a.commentTime));
+      }
+      return comments.sort((a, b) => b.heat - a.heat);
     },
     // 发表帖子评论
     pcommentPost() {
@@ -342,6 +419,7 @@ export default {
         });
         setTimeout(() => {
           this.pcommentsShow();
+          this.pcomment.content = '';
         }, 1000);
       })
         .catch((err) => {
@@ -352,23 +430,27 @@ export default {
           });
         });
     },
-    ccommentPost(index) {
+    // 发表评论的评论或者回复评论的评论
+    ccommentPost(index, author) {
       const comment = this.comments[index];
       this.ccomment.pcommentID = comment.pcommentID;
       this.ccomment.userTelephone = this.userTelephone;
+      this.ccomment.userTargetName = author;
       this.postCcomment(this.ccomment).then(() => {
-        this.$bvToast.toast('发帖成功', {
+        this.$bvToast.toast('回复成功', {
           title: '系统提醒',
           variant: 'primary',
           solid: true,
         });
         setTimeout(() => {
           this.pcommentsShow();
+          // 清空输入的内容
+          this.ccomment.content = '';
         }, 1000);
       })
         .catch((err) => {
           this.$bvToast.toast(err.response.data.msg, {
-            title: '发帖失败',
+            title: '回复失败',
             variant: 'danger',
             solid: true,
           });

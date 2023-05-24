@@ -23,10 +23,14 @@ const commentModule = {
         });
       });
     },
-    // 对评论的评论
-    postCcomment(context, { userTelephone, pcommentID, content }) {
+    // 对评论的评论或对评论的评论回复
+    postCcomment(context, {
+      userTelephone, pcommentID, content, userTargetName,
+    }) {
       return new Promise((resolve, reject) => {
-        commentService.postCcomment({ userTelephone, pcommentID, content }).then((res) => {
+        commentService.postCcomment({
+          userTelephone, pcommentID, content, userTargetName,
+        }).then((res) => {
           resolve(res);
         }).catch((err) => {
           reject(err);

@@ -10,9 +10,13 @@ const postPcomment = ({ userTelephone, postID, content }) => {
   return request.post('auth/postPcomment', { userTelephone, postID, content });
 };
 
-// 对评论进行评论
-const postCcomment = ({ userTelephone, pcommentID, content }) => {
-  return request.post('auth/postCcomment', { userTelephone, pcommentID, content });
+// 对评论进行评论或回复评论的评论
+const postCcomment = ({
+  userTelephone, pcommentID, content, userTargetName,
+}) => {
+  return request.post('auth/postCcomment', {
+    userTelephone, pcommentID, content, userTargetName,
+  });
 };
 
 // 帖子评论点赞
