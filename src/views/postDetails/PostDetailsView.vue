@@ -52,10 +52,10 @@
       {{ post.showCommentForm ? '隐藏评论' : '评论' }}
     </b-button>
   <!--显示帖子评论窗口-->
-  <div v-if="post.showCommentForm">
+  <div v-if="post.showCommentForm" style="margin-top:10px">
         <b-form-group>
           <b-form-textarea v-model="pcomment.content"
-                           placeholder="请写下你的精彩评论..." rows="3">
+          placeholder="请写下你的精彩评论..." rows="3">
           </b-form-textarea>
         </b-form-group>
         <b-button @click="pcommentPost" variant="primary">提交评论</b-button>
@@ -74,14 +74,12 @@
     <transition-group name="comment-list" tag="div">
     <div v-for="(comment, index) in visibleComments" :key="index">
       <b-card class="my-1">
-        <h4 class="mb-3">Comment {{ index + 1 }}</h4>
         <div class="d-flex mb-2">
           <div class="flex-shrink-0 mr-3">
             <b-avatar :src="comment.authorAvatar" size="2rem"></b-avatar>
           </div>
           <div>
             <div class="font-weight-bold">{{ comment.author }}</div>
-            <div class="text-muted">{{ formatDate(comment.commentTime) }}</div>
             <div>{{ comment.content }}</div>
             <!--显示每个评论的点赞和回复数-->
             <div class='d-flex justify-content-between align-items-center mt-3'>
@@ -91,17 +89,15 @@
                 </b-icon>
                 {{ comment.likeNum }}
               </div>
-              <div class='text-muted'>
-                <b-icon icon='chat-dots-fill'></b-icon> {{ len(comment.subComments) }}
-              </div>
             </div>
+            <div class="text-muted">{{ formatDate(comment.commentTime) }}</div>
             <b-button @click="comment.showReplyForm
             = !comment.showReplyForm" class="mr-2 btn-sm"
-                      variant="primary">
+            variant="primary" style="margin-top:10px">
               {{ comment.showReplyForm ? '隐藏评论' : '评论' }}
             </b-button>
             <!--如果点击了评论，将显示评论窗口-->
-            <div v-if="comment.showReplyForm">
+            <div v-if="comment.showReplyForm" style="margin-top:10px">
               <form @submit.prevent="ccommentPost(index)">
                 <b-form-group>
                   <b-form-textarea v-model="ccomment.content"
@@ -116,7 +112,7 @@
             <b-button v-if="comment.subComments.length > 0"
                       @click="showRepliesModal=true;showcommentsindex=index"
                       variant="outline-primary"
-                      style="font-size: 12px;">
+                      style="font-size: 12px;margin-top:10px">
               查看评论共{{len(comment.subComments)}}条
             </b-button>
             <b-modal hide-footer v-model="showRepliesModal" v-if="index===showcommentsindex">
@@ -132,11 +128,11 @@
                 </div>
                 <div>
                   <div class="font-weight-bold">{{ subComment.author }}</div>
-                  <div class="text-muted">{{ formatDate(subComment.commentTime) }}</div>
                   <div v-if="subComment.userTargetName !== ''">
                     <span style="color: cadetblue">回复@{{ subComment.userTargetName }}:</span>
                   </div>
                   <div>{{ subComment.content }}</div>
+                  <div class="text-muted">{{ formatDate(subComment.commentTime) }}</div>
                 </div>
                 <div class="text-muted">
                   <b-icon :icon="subComment.isLiked ? 'heart-fill' : 'heart'"
@@ -145,12 +141,13 @@
                   </b-icon>
                   {{ subComment.likeNum }}
                 </div>
-                <div v-if="isHovered && subIndex===nowSubIndex && index===nowIndex" >
+                <div v-if="isHovered && subIndex===nowSubIndex && index===nowIndex"
+                style="margin-left:10px">
                   <b-button @click="replyshow = !replyshow"
-                            variant="outline-info">
+                  variant="outline-info">
                     回复
                   </b-button>
-                  <div v-if="replyshow && subIndex===nowSubIndex">
+                  <div v-if="replyshow && subIndex===nowSubIndex" style="margin-top:10px">
                     <form @submit.prevent="ccommentPost(index,subComment.author)">
                       <b-form-group>
                         <b-form-textarea v-model="ccomment.content"
@@ -165,7 +162,7 @@
               </div>
             </div>
             </transition-group>
-              <b-button v-if="comment.subComments.length > 1"
+              <b-button v-if="comment.subComments.length > 1 && len(comment.subComments) > 5"
                         @click="showAllReplies(index)" variant="outline-primary"
                         style="font-size: 12px;">
                 <div v-if="comment.showAllReplies">折叠评论</div>
@@ -243,6 +240,7 @@ export default {
       },
       ccomment: {
         userTelephone: '',
+        postID: '',
         pcommentID: '',
         content: '',
         userTargetName: '',
@@ -476,6 +474,7 @@ export default {
     // 发表评论的评论或者回复评论的评论
     ccommentPost(index, author) {
       const comment = this.comments[index];
+      this.ccomment.postID = this.post.postID;
       this.ccomment.pcommentID = comment.pcommentID;
       this.ccomment.userTelephone = this.userTelephone;
       this.ccomment.userTargetName = author;

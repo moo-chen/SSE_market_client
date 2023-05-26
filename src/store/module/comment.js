@@ -25,11 +25,11 @@ const commentModule = {
     },
     // 对评论的评论或对评论的评论回复
     postCcomment(context, {
-      userTelephone, pcommentID, content, userTargetName,
+      userTelephone, postID, pcommentID, content, userTargetName,
     }) {
       return new Promise((resolve, reject) => {
         commentService.postCcomment({
-          userTelephone, pcommentID, content, userTargetName,
+          userTelephone, postID, pcommentID, content, userTargetName,
         }).then((res) => {
           resolve(res);
         }).catch((err) => {
