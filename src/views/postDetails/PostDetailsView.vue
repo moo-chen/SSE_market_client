@@ -258,10 +258,10 @@ export default {
     };
   },
   created() {
-    if (this.$route.params.id) {
-      this.post.postID = this.$route.params.id;
+    if (this.$route.query.id) {
+      this.post.postID = this.$route.query.id;
       // 将postID保存在本地缓存中
-      localStorage.setItem('PostID', JSON.stringify(this.$route.params.id));
+      localStorage.setItem('PostID', JSON.stringify(this.$route.query.id));
     } else {
       // 在本地缓存在直接读取postID
       this.post.postID = JSON.parse(localStorage.getItem('PostID'));

@@ -86,10 +86,10 @@ export default {
   created() {
     if (localStorage.getItem('Partition')) {
       this.partition = JSON.parse(localStorage.getItem('Partition'));
-    } else if (this.$route.params.partitions && this.$route.params.partitions !== '主页') {
-      this.partition = this.$route.params.partitions;
+    } else if (this.$route.query.partitions && this.$route.query.partitions !== '主页') {
+      this.partition = this.$route.query.partitions;
       // 将partition保存在本地缓存中
-      localStorage.setItem('Partition', JSON.stringify(this.$route.params.partitions));
+      localStorage.setItem('Partition', JSON.stringify(this.$route.query.partitions));
     } else {
       this.partition = '主页';
     }
