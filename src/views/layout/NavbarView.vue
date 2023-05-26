@@ -8,7 +8,8 @@
       <b-collapse is-nav id="nav_collapse">
         <b-navbar-nav style="margin-left:100px;">
           <b-navbar-form>
-            <b-input-group v-if="this.$route.name === 'home'">
+            <b-input-group v-if="this.$route.name === 'home' &&
+            !this.$route.query.partitions">
               <b-form-input style="width: 600px; border-radius: 5px;"
               placeholder="搜索" v-model="searchinfo"></b-form-input>
               <b-input-group-append>
@@ -64,14 +65,16 @@
             <b-icon-envelope-fill class="mr-3"></b-icon-envelope-fill>反馈
           </b-list-group-item>
           <b-list-group-item
-            style="font-size: 18px; display: flex; align-items: center;" @click="toggleProfiles">
+        :style="{ 'font-size': '18px', 'display': 'flex', 'align-items': 'center',
+        'background-color': showProfiles ? 'rgb(245, 245, 245)' : '' }"
+        @click="toggleProfiles">
             <b-icon-person-circle class="mr-3"></b-icon-person-circle>我的
             <b-icon-caret-right-fill v-if="!showProfiles" style="margin-left: auto;">
             </b-icon-caret-right-fill>
             <b-icon-caret-down-fill v-if="showProfiles" style="margin-left: auto;">
             </b-icon-caret-down-fill>
           </b-list-group-item>
-          <b-list-group-item v-if="showProfiles" to="/profile"
+          <b-list-group-item  class="childList" v-if="showProfiles" to="/profile"
           :class="{ active: $route.path === '/profile' }" style="font-size: 18px;">
             <b-icon-table class="mr-3"></b-icon-table>个人信息
           </b-list-group-item>
@@ -84,7 +87,9 @@
             <b-icon-clock-fill class="mr-3"></b-icon-clock-fill>历史记录
           </b-list-group-item>
           <b-list-group-item
-            style="font-size: 18px; display: flex; align-items: center;" @click="toggleSettings">
+          :style="{ 'font-size': '18px', 'display': 'flex', 'align-items': 'center',
+          'background-color': showSettings ? 'rgb(245, 245, 245)' : '' }"
+            @click="toggleSettings">
             <b-icon-gear-fill class="mr-3"></b-icon-gear-fill>设置
             <b-icon-caret-right-fill v-if="!showSettings" style="margin-left: auto;">
             </b-icon-caret-right-fill>
