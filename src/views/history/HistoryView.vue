@@ -1,54 +1,59 @@
 <template>
   <div class="home-view">
     <b-button variant="primary" v-if="this.partition != '主页'" class="back_button"
-      active@click="goback" style="margin-left: 60px;">
+      @click="goback" style="margin-left: 60px;">
       <b-icon-reply class="mr-2"></b-icon-reply>返回
     </b-button>
     <b-row>
-    <b-col v-for="post in posts" :key="post.id" cols="12" md="12" lg="12" class="mb-3">
-      <b-card class="px-3 py-2 card-shadow"
+      <b-col v-for="post in posts" :key="post.id" cols="12" md="12" lg="12" class="mb-3">
+        <b-card class="px-3 py-2 card-shadow"
         @click="$router.push({ name: 'postDetails',
-        params: { id: post.id, partition: partition }})">
-        <div class="text-muted" style="margin-left:820px;" @click.stop>
-          <b-icon icon="three-dots-vertical" @click.stop="toggleMenu(post)"></b-icon></div>
-        <b-list-group v-if="post.showMenu" style="width:100px;height:1.25rem;margin-left: 850px;
-          margin-top: -20px;font-size: 0.9rem;" @click.stop>
-          <b-list-group-item>
-            <b-icon class="mr-2" :icon="post.isSaved ? 'star-fill' : 'star'"
+        params: { id: post.id, partition: partition }, query: { title: post.title }})">
+          <div class="text-muted" style="margin-left:820px;" @click.stop>
+            <b-icon icon="three-dots-vertical" @click.stop="toggleMenu(post)"></b-icon></div>
+            <b-list-group v-if="post.showMenu" style="width:100px;height:1.25rem;margin-left: 850px;
+            margin-top: -20px;font-size: 0.9rem;" @click.stop>
+            <b-list-group-item>
+              <b-icon class="mr-2" :icon="post.isSaved ? 'star-fill' : 'star'"
               @click.stop="save(post)" :class="{ 'text-warning': post.isSaved }"></b-icon>收藏
-          </b-list-group-item>
-          <b-list-group-item v-if="post.authorTelephone !== userInfo.phone">
-            <b-icon-exclamation-triangle class="mr-2"></b-icon-exclamation-triangle>举报
-          </b-list-group-item>
-          <b-list-group-item v-if="post.authorTelephone === userInfo.phone">
-            <b-icon-trash class="mr-2"></b-icon-trash>删除
-          </b-list-group-item>
-        </b-list-group>
-        <b-row class="mt-0">
-          <b-col md="4" class="mb-2">
-            <div class="author-box" @click.stop>
-              {{ post.author }}
-            </div>
-          </b-col>
-        </b-row>
-        <b-card-title>{{ post.title }}</b-card-title>
-        <b-card-text>{{ post.content }}</b-card-text>
-        <div class="d-flex justify-content-between">
-          <small class="text-muted">{{ formatDate(post.postTime) }}</small>
-        </div>
-        <div class="d-flex justify-content-between align-items-center mt-3">
-          <div class="text-muted">
-            <b-icon :icon="post.isLiked ? 'heart-fill' : 'heart'"
+            </b-list-group-item>
+            <b-list-group-item v-if="post.authorTelephone === userInfo.phone"
+              @click.stop="showDeleteModal = true">
+              <b-icon-trash class="mr-2" ></b-icon-trash>删除
+            </b-list-group-item>
+            <b-modal v-model="showDeleteModal" title="确认删除" ok-title="Confirm"
+              @ok="postdelete(post)">
+              <p>你确定要删除这个帖子吗？</p>
+            </b-modal>
+          </b-list-group>
+          <b-row class="mt-0">
+            <b-col md="4" class="mb-2">
+              <div class="author-box" @click.stop>
+                {{ post.author }}
+              </div>
+            </b-col>
+          </b-row>
+          <b-card-title>{{ post.title }}</b-card-title>
+          <b-card-text>{{ post.content }}</b-card-text>
+          <div class="d-flex justify-content-between">
+            <small class="text-muted">{{ formatDate(post.postTime) }}</small>
+          </div>
+          <div class="d-flex justify-content-between align-items-center mt-3">
+            <div class="text-muted">
+              <b-icon :icon="post.isLiked ? 'heart-fill' : 'heart'"
               @click.stop="like(post)" :class="{ 'text-danger': post.isLiked }"></b-icon>
               {{ post.like }}
+            </div>
+            <div class="text-muted">
+              <b-icon-eye-fill></b-icon-eye-fill> 100
+            </div>
+            <div class="text-muted"><b-icon icon="chat-dots-fill"></b-icon> {{ post.comment }}</div>
           </div>
-          <div class="text-muted"><b-icon icon="chat-dots-fill"></b-icon> {{ post.comment }}</div>
-        </div>
         </b-card>
       </b-col>
-      </b-row>
-    </div>
-  </template>
+    </b-row>
+  </div>
+</template>
 
 <script>
 
@@ -66,6 +71,7 @@ export default {
       postID: '',
       isLiked: '',
       isSaved: '',
+      showDeleteModal: false,
     };
   },
   created() {
@@ -90,6 +96,7 @@ export default {
     ...mapActions('postModule', { postBrowse: 'browse' }),
     ...mapActions('postModule', { postLike: 'like' }),
     ...mapActions('userModule', { postSave: 'save' }),
+    ...mapActions('postModule', { deletepost: 'deletepost' }),
     goback() {
       this.$router.replace({ name: 'partitions' });
     },
@@ -162,6 +169,16 @@ export default {
       this.postLike({
         userTelephone: this.userTelephone, postID: this.postID, isLiked: this.isLiked,
       }).then(() => {
+      }).catch((err) => {
+        console.error(err);
+      });
+    },
+    postdelete(post) {
+      this.postID = post.id;
+      this.deletepost({
+        postID: this.postID,
+      }).then(() => {
+        this.$router.go(0);
       }).catch((err) => {
         console.error(err);
       });

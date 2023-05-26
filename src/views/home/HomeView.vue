@@ -53,6 +53,9 @@
               @click.stop="like(post)" :class="{ 'text-danger': post.isLiked }"></b-icon>
               {{ post.like }}
             </div>
+            <div class="text-muted">
+              <b-icon-eye-fill></b-icon-eye-fill> 100
+            </div>
             <div class="text-muted"><b-icon icon="chat-dots-fill"></b-icon> {{ post.comment }}</div>
           </div>
         </b-card>
@@ -109,7 +112,7 @@ export default {
     ...mapActions('postModule', { deletepost: 'deletepost' }),
     ...mapActions('postModule', { submitreport: 'submitreport' }),
     goback() {
-      this.$router.replace({ name: 'partitions' });
+      this.$router.go(-1);
     },
     async browsePosts() {
       this.userTelephone = this.userInfo.phone;

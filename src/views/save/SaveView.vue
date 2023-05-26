@@ -5,24 +5,35 @@
       <b-icon-reply class="mr-2"></b-icon-reply>返回
     </b-button>
     <b-row>
-    <b-col v-for="post in posts" :key="post.id" cols="12" md="12" lg="12" class="mb-3">
-      <b-card class="px-3 py-2 card-shadow"
-          @click="$router.push({ name: 'postDetails',
-          params: { id: post.id, partition: partition }})">
+      <b-col v-for="post in posts" :key="post.id" cols="12" md="12" lg="12" class="mb-3">
+        <b-card class="px-3 py-2 card-shadow"
+        @click="$router.push({ name: 'postDetails',
+        params: { id: post.id, partition: partition }, query: { title: post.title }})">
           <div class="text-muted" style="margin-left:820px;" @click.stop>
-              <b-icon icon="three-dots-vertical" @click.stop="toggleMenu(post)"></b-icon></div>
-          <b-list-group v-if="post.showMenu" style="width:100px;height:1.25rem;margin-left: 850px;
+            <b-icon icon="three-dots-vertical" @click.stop="toggleMenu(post)"></b-icon></div>
+            <b-list-group v-if="post.showMenu" style="width:100px;height:1.25rem;margin-left: 850px;
             margin-top: -20px;font-size: 0.9rem;" @click.stop>
             <b-list-group-item>
               <b-icon class="mr-2" :icon="post.isSaved ? 'star-fill' : 'star'"
               @click.stop="save(post)" :class="{ 'text-warning': post.isSaved }"></b-icon>收藏
             </b-list-group-item>
-            <b-list-group-item v-if="post.authorTelephone !== userInfo.phone">
+            <b-list-group-item v-if="post.authorTelephone !== userInfo.phone"
+              @click.stop="showReportModal = true">
               <b-icon-exclamation-triangle class="mr-2"></b-icon-exclamation-triangle>举报
             </b-list-group-item>
-            <b-list-group-item v-if="post.authorTelephone === userInfo.phone">
-              <b-icon-trash class="mr-2"></b-icon-trash>删除
+            <b-modal v-model="showReportModal" title="举报" @hidden="clearReportReason"
+              @ok="submitReport(post)" ok-title="Submit">
+              <b-form-textarea v-model="reportReason" placeholder="请输入举报原因" rows="8">
+              </b-form-textarea>
+            </b-modal>
+            <b-list-group-item v-if="post.authorTelephone === userInfo.phone"
+              @click.stop="showDeleteModal = true">
+              <b-icon-trash class="mr-2" ></b-icon-trash>删除
             </b-list-group-item>
+            <b-modal v-model="showDeleteModal" title="确认删除" ok-title="Confirm"
+              @ok="postdelete(post)">
+              <p>你确定要删除这个帖子吗？</p>
+            </b-modal>
           </b-list-group>
           <b-row class="mt-0">
             <b-col md="4" class="mb-2">
@@ -39,13 +50,16 @@
           <div class="d-flex justify-content-between align-items-center mt-3">
             <div class="text-muted">
               <b-icon :icon="post.isLiked ? 'heart-fill' : 'heart'"
-                @click.stop="like(post)" :class="{ 'text-danger': post.isLiked }"></b-icon>
-                {{ post.like }}
+              @click.stop="like(post)" :class="{ 'text-danger': post.isLiked }"></b-icon>
+              {{ post.like }}
+            </div>
+            <div class="text-muted">
+              <b-icon-eye-fill></b-icon-eye-fill> 100
             </div>
             <div class="text-muted"><b-icon icon="chat-dots-fill"></b-icon> {{ post.comment }}</div>
           </div>
-      </b-card>
-    </b-col>
+        </b-card>
+      </b-col>
     </b-row>
   </div>
 </template>
@@ -66,18 +80,12 @@ export default {
       postID: '',
       isLiked: '',
       isSaved: '',
+      showDeleteModal: false,
+      showReportModal: false,
+      reportReason: '',
     };
   },
   created() {
-    if (localStorage.getItem('Partition')) {
-      this.partition = JSON.parse(localStorage.getItem('Partition'));
-    } else if (this.$route.params.partitions && this.$route.params.partitions !== '主页') {
-      this.partition = this.$route.params.partitions;
-      // 将partition保存在本地缓存中
-      localStorage.setItem('Partition', JSON.stringify(this.$route.params.partitions));
-    } else {
-      this.partition = '主页';
-    }
     // 在页面创建时默认加载主页帖子列表
     this.browsePosts();
   },
@@ -90,6 +98,8 @@ export default {
     ...mapActions('postModule', { postBrowse: 'browse' }),
     ...mapActions('postModule', { postLike: 'like' }),
     ...mapActions('userModule', { postSave: 'save' }),
+    ...mapActions('postModule', { deletepost: 'deletepost' }),
+    ...mapActions('postModule', { submitreport: 'submitreport' }),
     goback() {
       this.$router.replace({ name: 'partitions' });
     },
@@ -147,6 +157,7 @@ export default {
       }).catch((err) => {
         console.error(err);
       });
+      this.$router.go(0);
     },
     like(post) {
       // 切换点赞状态
@@ -165,6 +176,38 @@ export default {
       }).catch((err) => {
         console.error(err);
       });
+    },
+    postdelete(post) {
+      this.postID = post.id;
+      this.deletepost({
+        postID: this.postID,
+      }).then(() => {
+        this.$router.go(0);
+      }).catch((err) => {
+        console.error(err);
+      });
+    },
+    submitReport(post) {
+      this.postID = post.id;
+      this.userTelephone = this.userInfo.phone;
+      this.submitreport({
+        TargetID: this.postID, userTelephone: this.userTelephone, Reason: this.reportReason,
+      }).then(() => {
+        this.$bvToast.toast('举报发送成功', {
+          title: '系统提醒',
+          variant: 'primary',
+          solid: true,
+        });
+      }).catch((err) => {
+        this.$bvToast.toast(err.response.data.msg, {
+          title: '数据验证错误',
+          variant: 'danger',
+          solid: true,
+        });
+      });
+    },
+    clearReportReason() {
+      this.reportReason = '';
     },
   },
 };

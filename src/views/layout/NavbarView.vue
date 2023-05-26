@@ -63,7 +63,7 @@
             style="font-size: 18px;">
             <b-icon-envelope-fill class="mr-3"></b-icon-envelope-fill>反馈
           </b-list-group-item>
-          <b-list-group-item to="/myPage" :class="{ active: $route.path === '/myPage' }"
+          <b-list-group-item
             style="font-size: 18px; display: flex; align-items: center;" @click="toggleProfiles">
             <b-icon-person-circle class="mr-3"></b-icon-person-circle>我的
             <b-icon-caret-right-fill v-if="!showProfiles" style="margin-left: auto;">
@@ -83,7 +83,7 @@
           :class="{ active: $route.path === '/history' }" style="font-size: 18px;">
             <b-icon-clock-fill class="mr-3"></b-icon-clock-fill>历史记录
           </b-list-group-item>
-          <b-list-group-item to="/set" :class="{ active: $route.path === '/set' }"
+          <b-list-group-item
             style="font-size: 18px; display: flex; align-items: center;" @click="toggleSettings">
             <b-icon-gear-fill class="mr-3"></b-icon-gear-fill>设置
             <b-icon-caret-right-fill v-if="!showSettings" style="margin-left: auto;">

@@ -44,6 +44,9 @@
           @click.stop="like()" :class="{ 'text-danger': post.isLiked }"></b-icon>
           {{ post.like }}
         </div>
+        <div class="text-muted">
+              <b-icon-eye-fill></b-icon-eye-fill> 100
+        </div>
         <div class='text-muted'><b-icon icon='chat-dots-fill'></b-icon> {{ commentsNum }}</div>
       </div>
     </b-card>
@@ -318,7 +321,7 @@ export default {
       this.allComments = !this.allComments;// 将帖子所有评论都展示出来
     },
     goback() {
-      this.$router.replace({ name: 'home', params: { partition: this.partition } });
+      this.$router.go(-1);
     },
     toggleMenu() {
       this.post.showMenu = !this.post.showMenu;
