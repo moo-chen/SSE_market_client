@@ -30,12 +30,6 @@ const userModule = {
       return new Promise((resolve, reject) => {
         // userService.register()为发送网络请求的函数，用于向后端发送注册信息
         userService.register({ name, phone, password }).then((res) => {
-          // 保存token
-          context.commit('SET_TOKEN', res.data.data.token);
-          return userService.info();
-        }).then((res) => {
-          // 保存用户信息
-          context.commit('SET_USERINFO', res.data.data.user);
           resolve(res);
         }).catch((err) => {
           reject(err);

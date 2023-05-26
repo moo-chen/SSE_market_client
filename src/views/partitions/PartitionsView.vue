@@ -8,7 +8,7 @@
             <h5 class='card-title'>{{ card.title }}</h5>
             <p class='card-text'>{{ card.description }}</p>
             <a :href='card.linkUrl' class='btn btn-primary'
-            @click="$router.push({ name: 'home', params: { partitions: card.title } })">
+            @click="$router.push({ name: 'home', query: { partitions: card.title } })">
             {{ card.linkLabel }}</a>
           </div>
         </div>
