@@ -17,15 +17,6 @@
               <b-icon class="mr-2" :icon="post.isSaved ? 'star-fill' : 'star'"
               @click.stop="save(post)" :class="{ 'text-warning': post.isSaved }"></b-icon>收藏
             </b-list-group-item>
-            <b-list-group-item v-if="post.authorTelephone !== userInfo.phone"
-              @click.stop="showReportModal = true">
-              <b-icon-exclamation-triangle class="mr-2"></b-icon-exclamation-triangle>举报
-            </b-list-group-item>
-            <b-modal v-model="showReportModal" title="举报" @hidden="clearReportReason"
-              @ok="submitReport(post)" ok-title="Submit">
-              <b-form-textarea v-model="reportReason" placeholder="请输入举报原因" rows="8">
-              </b-form-textarea>
-            </b-modal>
             <b-list-group-item v-if="post.authorTelephone === userInfo.phone"
               @click.stop="showDeleteModal = true">
               <b-icon-trash class="mr-2" ></b-icon-trash>删除
@@ -78,25 +69,21 @@ export default {
       posts: [],
       userTelephone: '',
       postID: '',
-      isSaved: '',
       isLiked: '',
-      searchinfo: '',
+      isSaved: '',
       showDeleteModal: false,
-      showReportModal: false,
-      reportReason: '',
     };
   },
   created() {
     if (localStorage.getItem('Partition')) {
       this.partition = JSON.parse(localStorage.getItem('Partition'));
-    } else if (this.$route.query.partitions && this.$route.query.partitions !== '主页') {
-      this.partition = this.$route.query.partitions;
+    } else if (this.$route.params.partitions && this.$route.params.partitions !== '主页') {
+      this.partition = this.$route.params.partitions;
       // 将partition保存在本地缓存中
-      localStorage.setItem('Partition', JSON.stringify(this.$route.query.partitions));
+      localStorage.setItem('Partition', JSON.stringify(this.$route.params.partitions));
     } else {
       this.partition = '主页';
     }
-    this.searchinfo = this.$route.query.searchinfo;
     // 在页面创建时默认加载主页帖子列表
     this.browsePosts();
   },
@@ -110,9 +97,8 @@ export default {
     ...mapActions('postModule', { postLike: 'like' }),
     ...mapActions('userModule', { postSave: 'save' }),
     ...mapActions('postModule', { deletepost: 'deletepost' }),
-    ...mapActions('postModule', { submitreport: 'submitreport' }),
     goback() {
-      this.$router.go(-1);
+      this.$router.replace({ name: 'partitions' });
     },
     async browsePosts() {
       this.userTelephone = this.userInfo.phone;
@@ -120,10 +106,12 @@ export default {
       try {
         // 向后端发送请求并获取帖子列表
         const { data } = await this.postBrowse({
-          userTelephone: this.userTelephone, partition: this.partition, searchinfo: this.searchinfo,
+          userTelephone: this.userTelephone, partition: this.partition,
         });
+        // 根据用户电话号码过滤帖子列表
+        const filteredData = data.filter((post) => post.UserTelephone === this.userTelephone);
         // 将获取到的帖子列表数据赋值给 posts 变量
-        this.posts = data.map((post) => ({
+        this.posts = filteredData.map((post) => ({
           id: post.PostID,
           author: post.UserName,
           authorTelephone: post.UserTelephone,
@@ -194,28 +182,6 @@ export default {
       }).catch((err) => {
         console.error(err);
       });
-    },
-    submitReport(post) {
-      this.postID = post.id;
-      this.userTelephone = this.userInfo.phone;
-      this.submitreport({
-        TargetID: this.postID, userTelephone: this.userTelephone, Reason: this.reportReason,
-      }).then(() => {
-        this.$bvToast.toast('举报发送成功', {
-          title: '系统提醒',
-          variant: 'primary',
-          solid: true,
-        });
-      }).catch((err) => {
-        this.$bvToast.toast(err.response.data.msg, {
-          title: '数据验证错误',
-          variant: 'danger',
-          solid: true,
-        });
-      });
-    },
-    clearReportReason() {
-      this.reportReason = '';
     },
   },
 };

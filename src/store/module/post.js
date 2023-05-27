@@ -17,16 +17,16 @@ const postModule = {
       });
     },
 
-    browse(context, { userTelephone, partition }) {
+    browse(context, { userTelephone, partition, searchinfo }) {
       return new Promise((resolve, reject) => {
-        postService.browse({ userTelephone, partition }).then((res) => {
+        postService.browse({ userTelephone, partition, searchinfo }).then((res) => {
           resolve(res);
         }).catch((err) => {
           reject(err);
         });
       });
     },
-    // 帖子点赞
+
     like(context, { userTelephone, postID, isLiked }) {
       return new Promise((resolve, reject) => {
         postService.like({ userTelephone, postID, isLiked }).then((res) => {
@@ -37,7 +37,26 @@ const postModule = {
       });
     },
 
-    // 显示帖子详情
+    deletepost(context, { postID }) {
+      return new Promise((resolve, reject) => {
+        postService.deletepost({ postID }).then((res) => {
+          resolve(res);
+        }).catch((err) => {
+          reject(err);
+        });
+      });
+    },
+
+    submitreport(context, { TargetID, userTelephone, Reason }) {
+      return new Promise((resolve, reject) => {
+        postService.submitreport({ TargetID, userTelephone, Reason }).then((res) => {
+          resolve(res);
+        }).catch((err) => {
+          reject(err);
+        });
+      });
+    },
+
     showDetails(context, { userTelephone, postID }) {
       return new Promise((resolve, reject) => {
         postService.showDetails({ userTelephone, postID }).then((res) => {
@@ -47,6 +66,7 @@ const postModule = {
         });
       });
     },
+
   },
 };
 

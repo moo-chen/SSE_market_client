@@ -78,25 +78,14 @@ export default {
       posts: [],
       userTelephone: '',
       postID: '',
-      isSaved: '',
       isLiked: '',
-      searchinfo: '',
+      isSaved: '',
       showDeleteModal: false,
       showReportModal: false,
       reportReason: '',
     };
   },
   created() {
-    if (localStorage.getItem('Partition')) {
-      this.partition = JSON.parse(localStorage.getItem('Partition'));
-    } else if (this.$route.query.partitions && this.$route.query.partitions !== '主页') {
-      this.partition = this.$route.query.partitions;
-      // 将partition保存在本地缓存中
-      localStorage.setItem('Partition', JSON.stringify(this.$route.query.partitions));
-    } else {
-      this.partition = '主页';
-    }
-    this.searchinfo = this.$route.query.searchinfo;
     // 在页面创建时默认加载主页帖子列表
     this.browsePosts();
   },
@@ -112,7 +101,7 @@ export default {
     ...mapActions('postModule', { deletepost: 'deletepost' }),
     ...mapActions('postModule', { submitreport: 'submitreport' }),
     goback() {
-      this.$router.go(-1);
+      this.$router.replace({ name: 'partitions' });
     },
     async browsePosts() {
       this.userTelephone = this.userInfo.phone;
@@ -120,10 +109,12 @@ export default {
       try {
         // 向后端发送请求并获取帖子列表
         const { data } = await this.postBrowse({
-          userTelephone: this.userTelephone, partition: this.partition, searchinfo: this.searchinfo,
+          userTelephone: this.userTelephone, partition: this.partition,
         });
+        // 根据是否被收藏过滤帖子列表
+        const filteredData = data.filter((post) => post.IsSaved === true);
         // 将获取到的帖子列表数据赋值给 posts 变量
-        this.posts = data.map((post) => ({
+        this.posts = filteredData.map((post) => ({
           id: post.PostID,
           author: post.UserName,
           authorTelephone: post.UserTelephone,
@@ -166,6 +157,7 @@ export default {
       }).catch((err) => {
         console.error(err);
       });
+      this.$router.go(0);
     },
     like(post) {
       // 切换点赞状态

@@ -63,7 +63,7 @@ export default {
           });
           // 跳转主页
           setTimeout(() => {
-            this.$router.replace({ name: 'profile' });
+            this.$router.replace({ name: 'home' });
           }, 1000);
         })
         .catch((err) => {

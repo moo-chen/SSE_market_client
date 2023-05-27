@@ -8,12 +8,14 @@
       <b-collapse is-nav id="nav_collapse">
         <b-navbar-nav style="margin-left:100px;">
           <b-navbar-form>
-            <b-input-group v-if="this.$route.name === 'home'">
+            <b-input-group v-if="this.$route.name === 'home' &&
+            !this.$route.query.partitions">
               <b-form-input style="width: 600px; border-radius: 5px;"
-              placeholder="搜索"></b-form-input>
+              placeholder="搜索" v-model="searchinfo"></b-form-input>
               <b-input-group-append>
                 <b-button style="margin-left:20px; border-radius: 5px;"
-                variant="dark">
+                variant="dark"
+                @click="refreshPageAndNavigate">
                 <b-icon-search class="mr-2"></b-icon-search>搜索
               </b-button>
               </b-input-group-append>
@@ -62,28 +64,32 @@
             style="font-size: 18px;">
             <b-icon-envelope-fill class="mr-3"></b-icon-envelope-fill>反馈
           </b-list-group-item>
-          <b-list-group-item to="/myPage" :class="{ active: $route.path === '/myPage' }"
-            style="font-size: 18px; display: flex; align-items: center;" @click="toggleProfiles">
+          <b-list-group-item
+        :style="{ 'font-size': '18px', 'display': 'flex', 'align-items': 'center',
+        'background-color': showProfiles ? 'rgb(245, 245, 245)' : '' }"
+        @click="toggleProfiles">
             <b-icon-person-circle class="mr-3"></b-icon-person-circle>我的
             <b-icon-caret-right-fill v-if="!showProfiles" style="margin-left: auto;">
             </b-icon-caret-right-fill>
             <b-icon-caret-down-fill v-if="showProfiles" style="margin-left: auto;">
             </b-icon-caret-down-fill>
           </b-list-group-item>
-          <b-list-group-item v-if="showProfiles" to="/profile"
+          <b-list-group-item  class="childList" v-if="showProfiles" to="/profile"
           :class="{ active: $route.path === '/profile' }" style="font-size: 18px;">
             <b-icon-table class="mr-3"></b-icon-table>个人信息
           </b-list-group-item>
-          <b-list-group-item v-if="showProfiles" to="/collect"
-          :class="{ active: $route.path === '/collect' }" style="font-size: 18px;">
+          <b-list-group-item v-if="showProfiles" to="/save"
+          :class="{ active: $route.path === '/save' }" style="font-size: 18px;">
             <b-icon-star-fill class="mr-3"></b-icon-star-fill>我的收藏
           </b-list-group-item>
           <b-list-group-item v-if="showProfiles" to="/history"
           :class="{ active: $route.path === '/history' }" style="font-size: 18px;">
             <b-icon-clock-fill class="mr-3"></b-icon-clock-fill>历史记录
           </b-list-group-item>
-          <b-list-group-item to="/set" :class="{ active: $route.path === '/set' }"
-            style="font-size: 18px; display: flex; align-items: center;" @click="toggleSettings">
+          <b-list-group-item
+          :style="{ 'font-size': '18px', 'display': 'flex', 'align-items': 'center',
+          'background-color': showSettings ? 'rgb(245, 245, 245)' : '' }"
+            @click="toggleSettings">
             <b-icon-gear-fill class="mr-3"></b-icon-gear-fill>设置
             <b-icon-caret-right-fill v-if="!showSettings" style="margin-left: auto;">
             </b-icon-caret-right-fill>
@@ -121,6 +127,7 @@ export default {
       showPartitions: false,
       showSettings: false,
       showProfiles: false,
+      searchinfo: '',
     };
   },
   methods: {
@@ -134,6 +141,10 @@ export default {
     },
     togglePartitions() {
       this.showPartitions = !this.showPartitions;
+    },
+    refreshPageAndNavigate() {
+      this.$router.push({ name: 'home', query: { searchinfo: this.searchinfo } });
+      this.$router.go(0);
     },
   },
 };
