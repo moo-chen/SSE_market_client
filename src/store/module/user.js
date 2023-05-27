@@ -4,6 +4,7 @@ import userService from '@/service/userService';
 const userModule = {
   namespaced: true,
   state: {
+    // 从本地缓存中获取
     token: storageService.get(storageService.USER_TOKEN),
     userInfo: storageService.get(storageService.USER_INFO) ? JSON.parse(storageService.get(storageService.USER_INFO)) : null, //eslint-disable-line
   },
