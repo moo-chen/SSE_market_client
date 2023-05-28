@@ -4,11 +4,11 @@ const postModule = {
   namespaced: true,
   actions: {
     post(context, {
-      userTelephone, title, content, partition,
+      userTelephone, title, content, partition, photos,
     }) {
       return new Promise((resolve, reject) => {
         postService.post({
-          userTelephone, title, content, partition,
+          userTelephone, title, content, partition, photos,
         }).then((res) => {
           resolve(res);
         }).catch((err) => {
