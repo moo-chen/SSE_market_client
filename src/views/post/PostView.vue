@@ -9,6 +9,18 @@
           <b-form-group label='正文'>
             <b-form-textarea v-model='posts.content' :rows='20'></b-form-textarea>
           </b-form-group>
+          <el-upload
+              action="http://localhost:8080/api/auth/uploadphotos"
+              list-type="picture-card"
+              multiple
+              :on-preview="handlePictureCardPreview"
+              :on-remove="handleRemove"
+              :on-success="handleSuccess">
+            <i class="el-icon-plus"></i>
+          </el-upload>
+          <el-dialog :visible.sync="dialogVisible">
+            <img width="100%" :src="dialogImageUrl" alt="">
+          </el-dialog>
           <b-form-group label='选择分区'>
             <b-form-select v-model='posts.partition'>
               <b-form-select-option value='日常吐槽'>日常吐槽</b-form-select-option>
@@ -41,18 +53,35 @@ export default {
   }),
   data() {
     return {
+      fileList: [],
+      dialogImageUrl: '',
+      dialogVisible: false,
       posts: {
         userTelephone: '',
         title: '',
         content: '',
         partition: '',
+        photos: '',
       },
     };
   },
   methods: {
+    handleSuccess(response, file) {
+      this.fileList.push({ name: file.name, url: response.fileURL });
+    },
+    handleRemove(file, fileList) {
+      this.fileList = this.fileList.filter((item) => item.name !== file.name);
+      console.log(file, fileList);
+    },
+    handlePictureCardPreview(file) {
+      this.dialogImageUrl = file.url;
+      this.dialogVisible = true;
+    },
     ...mapActions('postModule', { Post: 'post' }),
     post() {
       this.posts.userTelephone = this.userInfo.phone;
+      // 提取 fileList 中的所有 url，并连接成一个字符串
+      this.posts.photos = this.fileList.map((file) => file.url).join('|');
       // 请求
       this.Post(this.posts)
         .then(() => {

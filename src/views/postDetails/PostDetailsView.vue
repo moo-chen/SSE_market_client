@@ -35,6 +35,21 @@
       <div class='author-box mb-2'>{{ post.author }}</div>
       <h2 class='title-font-size mb-3'>{{ post.title }}</h2>
       <p class='content-font-size mb-3'>{{ post.content }}</p>
+      <div class="photo-viewer">
+        <div class="thumbnail-container">
+          <div v-for="(file, index) in fileListGet" :key="index">
+            <img :src="file"
+                 width="270"
+                 height="270"
+                 @click="handlePictureCardPreview(file)"
+                 @keyup.enter="handlePictureCardPreview(file)"
+                 alt="Post Photo" />
+          </div>
+        </div>
+        <el-dialog :visible.sync="dialogVisible">
+          <img width="100%" :src="dialogImageUrl" alt="Preview" />
+        </el-dialog>
+      </div>
       <div class="d-flex justify-content-between">
         <small class="text-muted">{{ formatDate(post.postTime) }}</small>
       </div>
@@ -200,6 +215,9 @@ export default {
       }
       return this.comments.slice(0, 10);
     },
+    fileListGet() {
+      return this.post.photos.split('|');
+    },
     ...mapState({
       userInfo: (state) => state.userModule.userInfo,
     }),
@@ -221,6 +239,9 @@ export default {
       showDeleteModal: false,
       showReportModal: false,
       reportReason: '',
+      fileList: [],
+      dialogImageUrl: '',
+      dialogVisible: false,
       post: {
         postID: '',
         author: '',
@@ -234,6 +255,7 @@ export default {
         isLiked: '',
         showMenu: '',
         showCommentForm: '',
+        photos: '',
       },
       comments: [],
       pcomment: {
@@ -290,6 +312,7 @@ export default {
         this.post.isSaved = post.data.IsSaved;
         this.post.isLiked = post.data.IsLiked;
         this.post.showMenu = false;
+        this.post.photos = post.data.Photos;
       })
       .catch((err) => {
         console.error(err);
@@ -302,6 +325,10 @@ export default {
     next();
   },
   methods: {
+    handlePictureCardPreview(file) {
+      this.dialogImageUrl = file;
+      this.dialogVisible = true;
+    },
     len,
     ...mapActions('postModule', { postShowDetails: 'showDetails' }),
     ...mapActions('postModule', { postLike: 'like' }),
@@ -513,4 +540,13 @@ export default {
 
 <style>
 @import '../../style/css/PostDetailsView.css';
+.thumbnail-container {
+  display: flex;
+  flex-wrap: wrap;
+}
+.thumbnail-container div {
+  width: calc(100% / 3);
+  padding: 10px;
+  box-sizing: border-box;
+}
 </style>
