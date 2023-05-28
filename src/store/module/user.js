@@ -1,4 +1,5 @@
 import storageService from '@/service/storageService';
+// eslint-disable-next-line import/no-cycle
 import userService from '@/service/userService';
 
 const userModule = {
