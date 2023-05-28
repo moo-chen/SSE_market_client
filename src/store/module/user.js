@@ -73,6 +73,15 @@ const userModule = {
         });
       });
     },
+    getInfo(context, { phone }) {
+      return new Promise((resolve, reject) => {
+        userService.getInfo({ phone }).then((res) => {
+          resolve(res);
+        }).catch((err) => {
+          reject(err);
+        });
+      });
+    },
   },
 };
 
