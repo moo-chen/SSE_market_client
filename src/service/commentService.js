@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/no-cycle
 import request from '@/utils/request';
 
 // 获取帖子评论和帖子评论的评论

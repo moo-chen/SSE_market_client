@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/no-cycle
 import commentService from '@/service/commentService';
 
 const commentModule = {

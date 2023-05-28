@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/no-cycle
 import request from '@/utils/request';
 
 // 用户注册

@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/no-cycle
 import postService from '@/service/postService';
 
 const postModule = {

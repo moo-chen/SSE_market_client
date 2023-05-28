@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+// eslint-disable-next-line import/no-cycle
 import userModule from './module/user';
 import postModule from './module/post';
 import commentModule from './module/comment';
