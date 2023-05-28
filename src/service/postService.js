@@ -6,12 +6,14 @@ const post = ({
   title,
   content,
   partition,
+  photos,
 }) => {
   return request.post('auth/post', {
     userTelephone,
     title,
     content,
     partition,
+    photos,
   });
 };
 
