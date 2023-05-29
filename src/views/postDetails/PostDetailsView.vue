@@ -349,7 +349,7 @@ export default {
       this.allComments = !this.allComments;// 将帖子所有评论都展示出来
     },
     goback() {
-      this.$router.go(-1);
+      this.$router.replace({ name: 'home', query: { partitions: this.partition } });
     },
     toggleMenu() {
       this.post.showMenu = !this.post.showMenu;

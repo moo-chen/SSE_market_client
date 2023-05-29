@@ -112,7 +112,7 @@ export default {
     ...mapActions('postModule', { deletepost: 'deletepost' }),
     ...mapActions('postModule', { submitreport: 'submitreport' }),
     goback() {
-      this.$router.go(-1);
+      this.$router.replace({ name: 'partitions' });
     },
     async browsePosts() {
       this.userTelephone = this.userInfo.phone;
