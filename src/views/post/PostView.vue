@@ -32,7 +32,7 @@
             </b-form-select>
           </b-form-group>
           <div class='d-flex justify-content-center w-100'>
-            <b-button variant='primary' @click="$router.replace({ name: 'profile' })">
+            <b-button variant='primary' @click="$router.replace({ name: 'home' })">
               取消发帖
             </b-button>
             <div class='mx-3'></div>
