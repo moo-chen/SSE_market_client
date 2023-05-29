@@ -30,6 +30,14 @@ const postRoutes = [
     },
     component: () => import('../../views/partitions/PartitionsView.vue'),
   },
+  {
+    path: '/profile',
+    name: 'profile',
+    meta: {
+      auth: true,
+    },
+    component: () => import('../../views/profile/ProfileView.vue'),
+  },
 ];
 
 export default postRoutes;

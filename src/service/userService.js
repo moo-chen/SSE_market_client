@@ -49,11 +49,15 @@ const showDetails = ({ postId }) => {
   return request.post('auth/showDetails', { postId });
 };
 
-// 获取用户信息
+// 获取用户信息(检验token）
 const info = () => {
   return request.get('auth/info');
 };
 
+// 获取个人信息
+const getInfo = ({ phone }) => {
+  return request.post('auth/getInfo', { phone });
+};
 export default {
   register,
   login,
@@ -63,4 +67,5 @@ export default {
   showDetails,
   info,
   save,
+  getInfo,
 };

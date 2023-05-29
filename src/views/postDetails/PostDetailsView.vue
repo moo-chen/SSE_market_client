@@ -35,7 +35,7 @@
       <div class='author-box mb-2'>{{ post.author }}</div>
       <h2 class='title-font-size mb-3'>{{ post.title }}</h2>
       <p class='content-font-size mb-3'>{{ post.content }}</p>
-      <div class="photo-viewer">
+      <div v-if="fileListGet !== []" class="photo-viewer">
         <div class="thumbnail-container">
           <div v-for="(file, index) in fileListGet" :key="index">
             <img :src="file"
@@ -180,7 +180,7 @@
               </div>
             </div>
             </transition-group>
-              <b-button v-if="comment.subComments.length > 1 && len(comment.subComments) > 5"
+              <b-button v-if="comment.subComments.length > 0 && len(comment.subComments) > 5"
                         @click="showAllReplies(index)" variant="outline-primary"
                         style="font-size: 12px;">
                 <div v-if="comment.showAllReplies">折叠评论</div>
@@ -216,6 +216,7 @@ export default {
       return this.comments.slice(0, 10);
     },
     fileListGet() {
+      if (this.post.photos === '') return [];
       return this.post.photos.split('|');
     },
     ...mapState({
