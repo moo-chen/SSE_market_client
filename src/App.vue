@@ -2,7 +2,8 @@
   <div id='app'>
     <navbar />
     <b-container>
-      <router-view style="margin-top:60px;"></router-view>
+      <router-view :style="{ marginTop: $route.name == 'home' ? '20px' : '120px'}">>
+        </router-view>
     </b-container>
   </div>
 </template>

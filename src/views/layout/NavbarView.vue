@@ -1,6 +1,7 @@
 <template>
   <div>
-    <b-navbar fixed="top">
+    <div class="image-container" v-if="$route.name == 'home'"></div>
+    <b-navbar fixed="top" v-if="$route.name != 'home' || scrollPosition > 400">
       <b-navbar-brand>
         <b-icon-shop class="mr-3"></b-icon-shop>SSE_market
       </b-navbar-brand>
@@ -35,9 +36,11 @@
         </b-navbar-nav>
       </b-collapse>
     </b-navbar>
-    <b-row no-gutters style="margin-top: 60px;" v-if="userInfo.name">
-      <b-col sm="2" class="nav-col" style="position: fixed;height: 100vh;">
-        <b-list-group flush style="margin-top: 60px;">
+    <b-row no-gutters v-if="userInfo.name">
+      <b-col sm="2" class="nav-col" style="position: fixed;height: 100%;">
+        <b-list-group flush
+        :style="{ marginTop: $route.name == 'home' ? (scrollPosition < 400 ?
+        `${60-scrollPosition}px` : '-300px') : '120px'}">
           <b-list-group-item to="/" :class="{ active: $route.path === '/' }"
           style="font-size: 18px; display: flex; align-items: center;"
           @click="togglePartitions()">
@@ -128,11 +131,21 @@ export default {
       showSettings: false,
       showProfiles: false,
       searchinfo: '',
+      scrollPosition: 0,
     };
+  },
+  mounted() {
+    window.addEventListener('scroll', this.handleScroll);
+  },
+  destroyed() {
+    window.removeEventListener('scroll', this.handleScroll);
   },
   methods: {
     // 使用map将映射'store/module'里的logout函数
     ...mapActions('userModule', ['logout']),
+    handleScroll() {
+      this.scrollPosition = window.scrollY;
+    },
     toggleSettings() {
       this.showSettings = !this.showSettings;
     },
