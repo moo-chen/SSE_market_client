@@ -41,7 +41,7 @@
 </template>
 <script>
 import { mapActions, mapState } from 'vuex';
-import axios from 'axios';
+import request from '@/utils/request';
 
 export default {
   computed: mapState({
@@ -118,12 +118,10 @@ export default {
         name: this.userInfo.name,
         num: this.userInfo.num,
         intro: this.userInfo.intro,
-        ban: this.userInfo.ban,
-        punishnum: this.userInfo.punishnum,
         avatarURL: this.userInfo.avatarURL,
       };
 
-      axios.post('http://localhost:8080/api/auth/updateUserInfo', updatedUserInfo)
+      request.post('http://localhost:8080/api/auth/updateUserInfo', updatedUserInfo)
         .then((response) => {
           // 处理更新成功的逻辑
           console.log(response);
