@@ -32,6 +32,7 @@
     background-color: rgb(17, 167, 226) !important;
 }
 
-.nav-col {
+.list-group {
+    height: 800px;
     border-right: 1px solid rgb(237, 235, 235);
 }

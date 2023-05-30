@@ -6,9 +6,7 @@
     </b-button>
     <b-row>
       <b-col v-for="post in posts" :key="post.id" cols="12" md="12" lg="12" class="mb-3">
-        <b-card class="px-3 py-2 card-shadow"
-        @click="$router.push({ name: 'postDetails',
-        params: { id: post.id, partition: partition }, query: { title: post.title }})">
+        <b-card class="px-3 py-2 card-shadow" @click="showDetails(post)">
           <div class="text-muted" style="margin-left:820px;" @click.stop>
             <b-icon icon="three-dots-vertical" @click.stop="toggleMenu(post)"></b-icon></div>
             <b-list-group v-if="post.showMenu" style="width:100px;height:1.25rem;margin-left: 850px;
@@ -102,6 +100,13 @@ export default {
     ...mapActions('postModule', { submitreport: 'submitreport' }),
     goback() {
       this.$router.replace({ name: 'partitions' });
+    },
+    showDetails(post) {
+      this.$router.push({
+        name: 'postDetails',
+        params: { id: post.id, partition: this.partition, before: 'save' },
+        query: { title: post.title },
+      });
     },
     async browsePosts() {
       this.userTelephone = this.userInfo.phone;

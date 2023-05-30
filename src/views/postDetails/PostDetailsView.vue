@@ -233,6 +233,7 @@ export default {
   },
   data() {
     return {
+      before: '',
       sortkind: 'Date',
       allComments: false,
       userTelephone: '',
@@ -282,6 +283,14 @@ export default {
     };
   },
   created() {
+    if (this.$route.params.before) {
+      this.before = this.$route.params.before;
+      // 将postID保存在本地缓存中
+      localStorage.setItem('Before', JSON.stringify(this.$route.params.before));
+    } else {
+      // 在本地缓存在直接读取postID
+      this.before = JSON.parse(localStorage.getItem('Before'));
+    }
     if (this.$route.params.id) {
       this.post.postID = this.$route.params.id;
       // 将postID保存在本地缓存中
@@ -323,6 +332,7 @@ export default {
   beforeRouteLeave(to, from, next) {
     // 返回上一页面时清空本地缓存
     localStorage.removeItem('PostID');
+    localStorage.removeItem('Before');
     next();
   },
   methods: {
@@ -349,7 +359,13 @@ export default {
       this.allComments = !this.allComments;// 将帖子所有评论都展示出来
     },
     goback() {
-      this.$router.replace({ name: 'home', query: { partitions: this.partition } });
+      if (this.before === 'home') {
+        this.$router.replace({ name: 'home', query: { partitions: this.partition } });
+      } else if (this.before === 'save') {
+        this.$router.replace({ name: 'save' });
+      } else if (this.before === 'history') {
+        this.$router.replace({ name: 'history' });
+      }
     },
     toggleMenu() {
       this.post.showMenu = !this.post.showMenu;

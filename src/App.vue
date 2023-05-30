@@ -2,7 +2,9 @@
   <div id='app'>
     <navbar />
     <b-container>
-      <router-view :style="{ marginTop: $route.name == 'home' ? '20px' : '120px'}">>
+      <router-view :style="{ marginTop: $route.name == 'home' &&
+      (!this.$route.query.partitions || this.$route.query.partitions == '主页')
+          ? '20px' : '120px'}">>
         </router-view>
     </b-container>
   </div>

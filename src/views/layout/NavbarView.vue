@@ -1,7 +1,9 @@
 <template>
   <div>
-    <div class="image-container" v-if="$route.name == 'home'"></div>
-    <b-navbar fixed="top" v-if="$route.name != 'home' || scrollPosition > 400">
+    <div class="image-container" v-if="$route.name == 'home' &&
+      (!this.$route.query.partitions || this.$route.query.partitions == '主页')"></div>
+    <b-navbar fixed="top" v-if="$route.name != 'home' || scrollPosition > 400 ||
+      (this.$route.query.partitions && this.$route.query.partitions != '主页')">
       <b-navbar-brand>
         <b-icon-shop class="mr-3"></b-icon-shop>SSE_market
       </b-navbar-brand>
@@ -9,8 +11,8 @@
       <b-collapse is-nav id="nav_collapse">
         <b-navbar-nav style="margin-left:100px;">
           <b-navbar-form>
-            <b-input-group v-if="this.$route.name === 'home' &&
-            !this.$route.query.partitions">
+            <b-input-group v-if="this.$route.name == 'home' &&
+            (this.$route.query.partitions == '主页' || !this.$route.query.partitions)">
               <b-form-input style="width: 600px; border-radius: 5px;"
               placeholder="搜索" v-model="searchinfo"></b-form-input>
               <b-input-group-append>
@@ -38,9 +40,10 @@
     </b-navbar>
     <b-row no-gutters v-if="userInfo.name">
       <b-col sm="2" class="nav-col" style="position: fixed;height: 100%;">
-        <b-list-group flush
-        :style="{ marginTop: $route.name == 'home' ? (scrollPosition < 400 ?
-        `${60-scrollPosition}px` : '-300px') : '120px'}">
+        <b-list-group flush class="list-group"
+        :style="{ marginTop: $route.name == 'home' &&
+      (!this.$route.query.partitions || this.$route.query.partitions == '主页') ?
+        (scrollPosition < 400 ? `${60-scrollPosition}px` : '-300px') : '120px'}">
           <b-list-group-item to="/" :class="{ active: $route.path === '/' }"
           style="font-size: 18px; display: flex; align-items: center;"
           @click="togglePartitions()">
