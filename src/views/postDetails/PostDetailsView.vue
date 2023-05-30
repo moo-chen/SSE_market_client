@@ -33,8 +33,8 @@
           </b-modal>
       </b-list-group>
       <div class='author-box mb-2'>{{ post.author }}</div>
-      <h2 class='title-font-size mb-3'>{{ post.title }}</h2>
-      <p class='content-font-size mb-3'>{{ post.content }}</p>
+      <b-card-title>{{ post.title }}</b-card-title>
+      <b-card-text>{{ post.content }}</b-card-text>
       <div v-if="fileListGet !== []" class="photo-viewer">
         <div class="thumbnail-container">
           <div v-for="(file, index) in fileListGet" :key="index">
