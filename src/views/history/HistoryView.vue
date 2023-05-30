@@ -78,7 +78,6 @@ export default {
   },
   beforeRouteLeave(to, from, next) {
     // 返回上一页面时清空本地缓存
-    localStorage.removeItem('Partition');
     next();
   },
   methods: {
@@ -86,9 +85,6 @@ export default {
     ...mapActions('postModule', { postLike: 'like' }),
     ...mapActions('userModule', { postSave: 'save' }),
     ...mapActions('postModule', { deletepost: 'deletepost' }),
-    goback() {
-      this.$router.replace({ name: 'partitions' });
-    },
     showDetails(post) {
       this.$router.push({
         name: 'postDetails',
