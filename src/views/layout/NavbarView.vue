@@ -57,10 +57,14 @@
             :class="{ active: $route.path === '/partitions' }" style="font-size: 18px;">
             <b-icon-grid1x2-fill class="mr-3"></b-icon-grid1x2-fill>分区选择
           </b-list-group-item>
-          <b-list-group-item to="/post" :class="{ active: $route.name === 'post' }"
+          <b-list-group-item @click="showPostForm()"
             style="font-size: 18px;">
             <b-icon-pencil-fill class="mr-3"></b-icon-pencil-fill>发帖
           </b-list-group-item>
+          <b-modal v-model='PostFormVisible' title='发帖' ok-only ok-title="取消发帖"
+          modal-class="custom-modal">
+            <PostForm />
+          </b-modal>
           <b-list-group-item to="/notifications"
             :class="{ active: $route.path === '/notifications' }"
             style="font-size: 18px;">
@@ -121,15 +125,20 @@
 <script>
 
 import { mapState, mapActions } from 'vuex';
+import PostForm from '@/components/PostForm.vue';
 
 export default {
   // 获取在浏览器缓存中的包含用户信息的token，userInfo中包含用户的name和telephone
   // 所以要从前端返回用户信息时，一般采用telephone(因为name不唯一，id又无法从前端直接获取)
+  components: {
+    PostForm,
+  },
   computed: mapState({
     userInfo: (state) => state.userModule.userInfo,
   }),
   data() {
     return {
+      PostFormVisible: false,
       showPartitions: false,
       showSettings: false,
       showProfiles: false,
@@ -146,6 +155,9 @@ export default {
   methods: {
     // 使用map将映射'store/module'里的logout函数
     ...mapActions('userModule', ['logout']),
+    showPostForm() {
+      this.PostFormVisible = true;
+    },
     handleScroll() {
       this.scrollPosition = window.scrollY;
     },

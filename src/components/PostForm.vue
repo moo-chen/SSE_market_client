@@ -1,8 +1,8 @@
 <template>
   <div class='post'>
-    <b-row class='mt-4' style="margin-left:200px;">
+    <b-row class='mt-4'>
       <b-col md='8' offset-md='2' lg='10' offset-lg='1'>
-        <b-card style="max-width: 1200px;max-height: 2000px;">
+        <b-card style='max-width: 1200px; max-height: 2000px'>
           <b-form-group label='标题'>
             <b-form-input v-model='posts.title' type='text'></b-form-input>
           </b-form-group>
@@ -10,16 +10,17 @@
             <b-form-textarea v-model='posts.content' :rows='20'></b-form-textarea>
           </b-form-group>
           <el-upload
-              action="http://localhost:8080/api/auth/uploadphotos"
-              list-type="picture-card"
-              multiple
-              :on-preview="handlePictureCardPreview"
-              :on-remove="handleRemove"
-              :on-success="handleSuccess">
-            <i class="el-icon-plus"></i>
+            action='http://localhost:8080/api/auth/uploadphotos'
+            list-type='picture-card'
+            multiple
+            :on-preview='handlePictureCardPreview'
+            :on-remove='handleRemove'
+            :on-success='handleSuccess'
+          >
+            <i class='el-icon-plus'></i>
           </el-upload>
-          <el-dialog :visible.sync="dialogVisible">
-            <img width="100%" :src="dialogImageUrl" alt="">
+          <el-dialog :visible.sync='dialogVisible'>
+            <img width='100%' :src='dialogImageUrl' alt='' />
           </el-dialog>
           <b-form-group label='选择分区'>
             <b-form-select v-model='posts.partition'>
@@ -32,9 +33,6 @@
             </b-form-select>
           </b-form-group>
           <div class='d-flex justify-content-center w-100'>
-            <b-button variant='primary' @click="$router.replace({ name: 'home' })">
-              取消发帖
-            </b-button>
             <div class='mx-3'></div>
             <b-button variant='primary' @click='post'> 确认发帖 </b-button>
           </div>
@@ -92,8 +90,8 @@ export default {
           });
           // 跳转主页
           setTimeout(() => {
-            this.$router.replace({ name: 'home' });
-          }, 1000);
+            this.$router.go(0);
+          }, 500);
         })
         .catch((err) => {
           this.$bvToast.toast(err.response.data.msg, {

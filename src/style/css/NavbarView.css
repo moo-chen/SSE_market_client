@@ -36,3 +36,7 @@
     height: 800px;
     border-right: 1px solid rgb(237, 235, 235);
 }
+
+.custom-modal .modal-dialog {
+    max-width: 800px;
+  }
