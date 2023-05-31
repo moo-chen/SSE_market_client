@@ -39,3 +39,29 @@
 .text-color {
   color: #6c757d;
 }
+
+.custom-modal .modal-dialog {
+  max-width: 800px;
+  max-height: 200px;
+}
+
+.login-section {
+  position: absolute;
+  margin-left: 1150px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 200px; /* 设置高度以便撑开容器 */
+  width: 300px;
+  background: url('@/assets/image/background3.jpg'); /* 设置背景图片 */
+  background-size: cover; /* 背景图片铺满整个div */
+}
+
+.register-button {
+  background: none;
+  border: none;
+  color: blue;
+  text-decoration: underline;
+  cursor: pointer;
+  z-index: 100;
+}

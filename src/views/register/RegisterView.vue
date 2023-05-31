@@ -44,8 +44,6 @@
             <b-form-group>
               <!-- 使用click添加事件，这里是定向到下面的register函数。click的另一个用户参见'views/layout/NavbarView.vue'文件 -->
               <b-button @click="register" variant="outline-primary" block>注册</b-button>
-              <b-button @click="$router.replace({ name : 'login' })"
-              variant="outline-primary" block>返回登录</b-button>
             </b-form-group>
           </b-form>
         </b-card>
@@ -115,10 +113,6 @@ export default {
           variant: 'primary',
           solid: true,
         });
-        // 延迟跳转主页
-        setTimeout(() => {
-          this.$router.replace({ name: 'login' });
-        }, 1000);
       }).catch((err) => {
         // 这里写从后端返回数据失败后的操作
         this.$bvToast.toast(err.response.data.msg, {

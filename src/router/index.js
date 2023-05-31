@@ -10,9 +10,6 @@ const routes = [
   {
     path: '/',
     name: 'home',
-    meta: {
-      auth: true,
-    },
     component: () => import('../views/home/HomeView.vue'),
   },
   ...userRoutes, // 引入userRoutes中的路由

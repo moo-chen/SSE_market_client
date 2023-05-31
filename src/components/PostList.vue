@@ -1,12 +1,27 @@
 <template>
   <div class='home-view'>
+    <b-modal v-model='toLogin' title='登录' ok-only ok-title="取消登录"
+      modal-class="custom-modal">
+      <LoginForm />
+    </b-modal>
+    <div class="login-section" v-if="this.$route.name == 'home' && partition == '主页'
+        && !userInfo">
+      <b-button variant="primary" @click="toLogin = true"
+      style="margin-top:100px;width: 150px;border-radius: 20px;">
+        立即登录</b-button>
+      <div class="register-section" style="margin-top:40px">
+        <span>还没有账号？</span>
+        <a href="http://localhost:8081/register" target="_blank">立即注册！</a>
+      </div>
+    </div>
     <b-button variant="primary" v-if="this.partition != '主页'" class="back_button"
       @click="goback" style="margin-left: 60px;">
       <b-icon-reply class="mr-2"></b-icon-reply>返回
     </b-button>
     <b-row>
       <b-col v-for='post in posts' :key='post.id' cols='12' md='12' lg='12' class='mb-3'>
-        <b-card class='px-3 py-2 card-shadow' @click='showDetails(post)'>
+        <b-card class='px-3 py-2 card-shadow' @click='showDetails(post)'
+        style="width:900px">
           <div class='text-muted' style='margin-left: 820px' @click.stop>
             <b-icon icon='three-dots-vertical' @click.stop='toggleMenu(post)'></b-icon>
           </div>
@@ -84,9 +99,14 @@
 </template>
 
 <script>
+
 import { mapState, mapActions } from 'vuex';
+import LoginForm from '@/components/LoginForm.vue';
 
 export default {
+  components: {
+    LoginForm,
+  },
   computed: mapState({
     userInfo: (state) => state.userModule.userInfo,
   }),
@@ -101,6 +121,7 @@ export default {
       showDeleteModal: false,
       showReportModal: false,
       reportReason: '',
+      toLogin: false,
     };
   },
   created() {
@@ -131,7 +152,14 @@ export default {
     goback() {
       this.$router.replace({ name: 'partitions' });
     },
+    toRegister() {
+      window.open('/register', '_blank');
+    },
     showDetails(post) {
+      if (!this.userInfo) {
+        this.toLogin = true;
+        return;
+      }
       if (this.$route.name === 'home') {
         this.$router.push({
           name: 'postDetails',
@@ -153,7 +181,12 @@ export default {
       }
     },
     async browsePosts() {
-      this.userTelephone = this.userInfo.phone;
+      if (this.userInfo) {
+        this.userTelephone = this.userInfo.phone;
+      } else {
+        // 游客访问
+        this.userTelephone = '00000000000';
+      }
       // 从后端返回一个结构体变量的方法
       try {
         // 向后端发送请求并获取帖子列表
@@ -227,6 +260,10 @@ export default {
       ).padStart(2, '0')}`;
     },
     toggleMenu(post) {
+      if (!this.userInfo) {
+        this.toLogin = true;
+        return;
+      }
       const updatedShowMenu = { ...post, showMenu: !post.showMenu };
       this.posts.splice(this.posts.indexOf(post), 1, updatedShowMenu);
     },
@@ -250,6 +287,10 @@ export default {
         });
     },
     like(post) {
+      if (!this.userInfo) {
+        this.toLogin = true;
+        return;
+      }
       // 切换点赞状态
       const updatedPost = { ...post, isLiked: !post.isLiked };
       // 更新点赞数

@@ -34,7 +34,7 @@
           </b-form-group>
           <div class='d-flex justify-content-center w-100'>
             <div class='mx-3'></div>
-            <b-button variant='primary' @click='post'> 确认发帖 </b-button>
+            <b-button variant='primary' @click='send()'> 确认发帖 </b-button>
           </div>
         </b-card>
       </b-col>
@@ -49,6 +49,9 @@ export default {
   computed: mapState({
     userInfo: (state) => state.userModule.userInfo,
   }),
+  props: {
+    mode: String,
+  },
   data() {
     return {
       fileList: [],
@@ -64,6 +67,7 @@ export default {
     };
   },
   methods: {
+    ...mapActions('postModule', { Post: 'post' }),
     handleSuccess(response, file) {
       this.fileList.push({ name: file.name, url: response.fileURL });
     },
@@ -75,7 +79,13 @@ export default {
       this.dialogImageUrl = file.url;
       this.dialogVisible = true;
     },
-    ...mapActions('postModule', { Post: 'post' }),
+    send() {
+      if (this.mode === 'post') {
+        this.post();
+      } else if (this.mode === 'feedback') {
+        this.feedback();
+      }
+    },
     post() {
       this.posts.userTelephone = this.userInfo.phone;
       // 提取 fileList 中的所有 url，并连接成一个字符串
@@ -100,6 +110,9 @@ export default {
             solid: true,
           });
         });
+    },
+    feedback() {
+
     },
   },
 };

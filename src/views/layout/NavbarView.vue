@@ -1,9 +1,32 @@
 <template>
   <div>
+    <b-modal v-model='toLogin' title='登录' ok-only ok-title="取消登录"
+      modal-class="custom-modal">
+      <LoginForm />
+    </b-modal>
     <div class="image-container" v-if="$route.name == 'home' &&
-      (!this.$route.query.partitions || this.$route.query.partitions == '主页')"></div>
-    <b-navbar fixed="top" v-if="$route.name != 'home' || scrollPosition > 400 ||
-      (this.$route.query.partitions && this.$route.query.partitions != '主页')">
+      (!this.$route.query.partitions || this.$route.query.partitions == '主页')">
+      <div style="display:flex;">
+        <p style="margin-left:40%;margin-top: 100px;font-size:50px;
+        font-family:Arial, sans-serif; font-weight:bold;">
+          SSE_market</p>
+      </div>
+      <b-input-group v-if="$route.name == 'home' &&
+      (!this.$route.query.partitions || this.$route.query.partitions == '主页')">
+        <div style="display: flex;margin-left:30%;margin-top: 10px;">
+          <b-form-input style="width: 600px;height: 50px ;border-radius: 20px;"
+          placeholder="搜索" v-model="searchinfo"></b-form-input>
+        <b-input-group-append>
+        <b-button style="margin-left:20px; border-radius: 20px;" variant="dark"
+          @click="refreshPageAndNavigate">
+          <b-icon-search class="mr-2"></b-icon-search>搜索
+        </b-button>
+        </b-input-group-append>
+        </div>
+      </b-input-group>
+      </div>
+    <b-navbar fixed="top" v-if="($route.name !== 'home'&&$route.name !== 'register') ||
+    scrollPosition > 400 || (this.$route.query.partitions && this.$route.query.partitions != '主页')">
       <b-navbar-brand>
         <b-icon-shop class="mr-3"></b-icon-shop>SSE_market
       </b-navbar-brand>
@@ -26,7 +49,7 @@
           </b-navbar-form>
         </b-navbar-nav>
         <b-navbar-nav class="ml-auto">
-          <b-nav-item-dropdown right>
+          <b-nav-item-dropdown right v-if="userInfo">
             <template #button-content>
               <b-icon-person-fill></b-icon-person-fill>
               {{ userInfo.name }}
@@ -38,7 +61,7 @@
         </b-navbar-nav>
       </b-collapse>
     </b-navbar>
-    <b-row no-gutters v-if="userInfo.name">
+    <b-row no-gutters>
       <b-col sm="2" class="nav-col" style="position: fixed;height: 100%;">
         <b-list-group flush class="list-group"
         :style="{ marginTop: $route.name == 'home' &&
@@ -63,17 +86,22 @@
           </b-list-group-item>
           <b-modal v-model='PostFormVisible' title='发帖' ok-only ok-title="取消发帖"
           modal-class="custom-modal">
-            <PostForm />
+            <PostForm :mode="'post'"/>
           </b-modal>
           <b-list-group-item to="/notifications"
             :class="{ active: $route.path === '/notifications' }"
             style="font-size: 18px;">
             <b-icon-bell-fill class="mr-3"></b-icon-bell-fill>通知
           </b-list-group-item>
-            <b-list-group-item to="/feedback" :class="{ active: $route.path === '/feedback' }"
+            <b-list-group-item @click="toFeedback()"
+            :class="{ active: $route.path === '/feedback' }"
             style="font-size: 18px;">
             <b-icon-envelope-fill class="mr-3"></b-icon-envelope-fill>反馈
           </b-list-group-item>
+          <b-modal v-model='FeedbackVisible' title='反馈' ok-only ok-title="取消反馈"
+          modal-class="custom-modal">
+            <PostForm :mode="'feedback'"/>
+          </b-modal>
           <b-list-group-item
         :style="{ 'font-size': '18px', 'display': 'flex', 'align-items': 'center',
         'background-color': showProfiles ? 'rgb(245, 245, 245)' : '' }"
@@ -126,12 +154,14 @@
 
 import { mapState, mapActions } from 'vuex';
 import PostForm from '@/components/PostForm.vue';
+import LoginForm from '@/components/LoginForm.vue';
 
 export default {
   // 获取在浏览器缓存中的包含用户信息的token，userInfo中包含用户的name和telephone
   // 所以要从前端返回用户信息时，一般采用telephone(因为name不唯一，id又无法从前端直接获取)
   components: {
     PostForm,
+    LoginForm,
   },
   computed: mapState({
     userInfo: (state) => state.userModule.userInfo,
@@ -139,11 +169,13 @@ export default {
   data() {
     return {
       PostFormVisible: false,
+      FeedbackVisible: false,
       showPartitions: false,
       showSettings: false,
       showProfiles: false,
       searchinfo: '',
       scrollPosition: 0,
+      toLogin: false,
     };
   },
   mounted() {
@@ -156,15 +188,34 @@ export default {
     // 使用map将映射'store/module'里的logout函数
     ...mapActions('userModule', ['logout']),
     showPostForm() {
+      if (!this.userInfo) {
+        this.toLogin = true;
+        return;
+      }
       this.PostFormVisible = true;
+    },
+    toFeedback() {
+      if (!this.userInfo) {
+        this.toLogin = true;
+        return;
+      }
+      this.FeedbackVisible = true;
     },
     handleScroll() {
       this.scrollPosition = window.scrollY;
     },
     toggleSettings() {
+      if (!this.userInfo) {
+        this.toLogin = true;
+        return;
+      }
       this.showSettings = !this.showSettings;
     },
     toggleProfiles() {
+      if (!this.userInfo) {
+        this.toLogin = true;
+        return;
+      }
       this.showProfiles = !this.showProfiles;
     },
     togglePartitions() {
