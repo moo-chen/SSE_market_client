@@ -61,7 +61,7 @@
         </b-navbar-nav>
       </b-collapse>
     </b-navbar>
-    <b-row no-gutters>
+    <b-row no-gutters v-if="this.$route.name != 'register'">
       <b-col sm="2" class="nav-col" style="position:fixed;z-index: 100;">
         <b-list-group flush class="list-group"
         :style="{ marginTop: $route.name == 'home' &&
