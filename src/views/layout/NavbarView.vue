@@ -62,7 +62,7 @@
       </b-collapse>
     </b-navbar>
     <b-row no-gutters>
-      <b-col sm="2" class="nav-col" style="position: fixed;height: 100%;">
+      <b-col sm="2" class="nav-col" style="position:fixed;z-index: 100;">
         <b-list-group flush class="list-group"
         :style="{ marginTop: $route.name == 'home' &&
       (!this.$route.query.partitions || this.$route.query.partitions == '主页') ?
@@ -88,7 +88,7 @@
           modal-class="custom-modal">
             <PostForm :mode="'post'"/>
           </b-modal>
-          <b-list-group-item to="/notifications"
+          <b-list-group-item @click="toNotifications()"
             :class="{ active: $route.path === '/notifications' }"
             style="font-size: 18px;">
             <b-icon-bell-fill class="mr-3"></b-icon-bell-fill>通知
@@ -144,8 +144,6 @@
           </b-list-group-item>
         </b-list-group>
       </b-col>
-      <b-col style="margin-left: 160px;">
-      </b-col>
     </b-row>
   </div>
 </template>
@@ -193,6 +191,13 @@ export default {
         return;
       }
       this.PostFormVisible = true;
+    },
+    toNotifications() {
+      if (!this.userInfo) {
+        this.toLogin = true;
+        return;
+      }
+      this.$router.replace({ name: 'notifications' });
     },
     toFeedback() {
       if (!this.userInfo) {

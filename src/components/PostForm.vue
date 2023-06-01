@@ -22,7 +22,7 @@
           <el-dialog :visible.sync='dialogVisible'>
             <img width='100%' :src='dialogImageUrl' alt='' />
           </el-dialog>
-          <b-form-group label='选择分区'>
+          <b-form-group label='选择分区' v-if="this.mode === 'post'">
             <b-form-select v-model='posts.partition'>
               <b-form-select-option value='日常吐槽'>日常吐槽</b-form-select-option>
               <b-form-select-option value='学习交流'>学习交流</b-form-select-option>
@@ -34,7 +34,7 @@
           </b-form-group>
           <div class='d-flex justify-content-center w-100'>
             <div class='mx-3'></div>
-            <b-button variant='primary' @click='send()'> 确认发帖 </b-button>
+            <b-button variant='primary' @click='send()'> 确认发布 </b-button>
           </div>
         </b-card>
       </b-col>
