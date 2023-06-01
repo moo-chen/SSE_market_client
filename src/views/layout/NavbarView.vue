@@ -69,19 +69,19 @@
         (scrollPosition < 400 ? `${60-scrollPosition}px` : '-300px') : '120px'}">
           <b-list-group-item to="/" :class="{ active: $route.path === '/' }"
           style="font-size: 18px; display: flex; align-items: center;"
-          @click="togglePartitions()">
+          @click="togglePartitions()" class="click">
             <b-icon-house-fill class="mr-3"></b-icon-house-fill>主页
             <b-icon-caret-right-fill v-if="!showPartitions" style="margin-left: auto;">
             </b-icon-caret-right-fill>
             <b-icon-caret-down-fill v-if="showPartitions" style="margin-left: auto;">
             </b-icon-caret-down-fill>
           </b-list-group-item>
-          <b-list-group-item v-if="showPartitions" to="/partitions"
+          <b-list-group-item v-if="showPartitions" to="/partitions" class="click"
             :class="{ active: $route.path === '/partitions' }" style="font-size: 18px;">
             <b-icon-grid1x2-fill class="mr-3"></b-icon-grid1x2-fill>分区选择
           </b-list-group-item>
           <b-list-group-item @click="showPostForm()"
-            style="font-size: 18px;">
+            style="font-size: 18px;"  class="click">
             <b-icon-pencil-fill class="mr-3"></b-icon-pencil-fill>发帖
           </b-list-group-item>
           <b-modal v-model='PostFormVisible' title='发帖' ok-only ok-title="取消发帖"
@@ -90,12 +90,12 @@
           </b-modal>
           <b-list-group-item @click="toNotifications()"
             :class="{ active: $route.path === '/notifications' }"
-            style="font-size: 18px;">
+            style="font-size: 18px;" class="click">
             <b-icon-bell-fill class="mr-3"></b-icon-bell-fill>通知
           </b-list-group-item>
             <b-list-group-item @click="toFeedback()"
             :class="{ active: $route.path === '/feedback' }"
-            style="font-size: 18px;">
+            style="font-size: 18px;" class="click">
             <b-icon-envelope-fill class="mr-3"></b-icon-envelope-fill>反馈
           </b-list-group-item>
           <b-modal v-model='FeedbackVisible' title='反馈' ok-only ok-title="取消反馈"
@@ -105,40 +105,40 @@
           <b-list-group-item
         :style="{ 'font-size': '18px', 'display': 'flex', 'align-items': 'center',
         'background-color': showProfiles ? 'rgb(245, 245, 245)' : '' }"
-        @click="toggleProfiles">
+        @click="toggleProfiles" class="click">
             <b-icon-person-circle class="mr-3"></b-icon-person-circle>我的
             <b-icon-caret-right-fill v-if="!showProfiles" style="margin-left: auto;">
             </b-icon-caret-right-fill>
             <b-icon-caret-down-fill v-if="showProfiles" style="margin-left: auto;">
             </b-icon-caret-down-fill>
           </b-list-group-item>
-          <b-list-group-item  class="childList" v-if="showProfiles" to="/profile"
+          <b-list-group-item  class="click" v-if="showProfiles" to="/profile"
           :class="{ active: $route.path === '/profile' }" style="font-size: 18px;">
             <b-icon-table class="mr-3"></b-icon-table>个人信息
           </b-list-group-item>
-          <b-list-group-item v-if="showProfiles" to="/save"
+          <b-list-group-item v-if="showProfiles" to="/save" class="click"
           :class="{ active: $route.path === '/save' }" style="font-size: 18px;">
             <b-icon-star-fill class="mr-3"></b-icon-star-fill>我的收藏
           </b-list-group-item>
-          <b-list-group-item v-if="showProfiles" to="/history"
+          <b-list-group-item v-if="showProfiles" to="/history" class="click"
           :class="{ active: $route.path === '/history' }" style="font-size: 18px;">
             <b-icon-clock-fill class="mr-3"></b-icon-clock-fill>历史记录
           </b-list-group-item>
           <b-list-group-item
           :style="{ 'font-size': '18px', 'display': 'flex', 'align-items': 'center',
           'background-color': showSettings ? 'rgb(245, 245, 245)' : '' }"
-            @click="toggleSettings">
+            @click="toggleSettings" class="click">
             <b-icon-gear-fill class="mr-3"></b-icon-gear-fill>设置
             <b-icon-caret-right-fill v-if="!showSettings" style="margin-left: auto;">
             </b-icon-caret-right-fill>
             <b-icon-caret-down-fill v-if="showSettings" style="margin-left: auto;">
             </b-icon-caret-down-fill>
           </b-list-group-item>
-          <b-list-group-item v-if="showSettings" to="/changePassword"
+          <b-list-group-item v-if="showSettings" to="/changePassword" class="click"
           :class="{ active: $route.path === '/changePassword' }" style="font-size: 18px;">
             <b-icon-lock-fill class="mr-3"></b-icon-lock-fill>修改密码
           </b-list-group-item>
-          <b-list-group-item v-if="showSettings" to="/delete"
+          <b-list-group-item v-if="showSettings" to="/delete" class="click"
           :class="{ active: $route.path === '/delete' }" style="font-size: 18px;">
             <b-icon-x-circle-fill class="mr-3"></b-icon-x-circle-fill>注销账号
           </b-list-group-item>
