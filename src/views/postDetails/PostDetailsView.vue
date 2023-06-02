@@ -32,6 +32,7 @@
             <p>你确定要删除这个帖子吗？</p>
           </b-modal>
       </b-list-group>
+      <b-avatar :src="post.authorAvatar" size="5rem" class="mr-3"></b-avatar>
       <div class='author-box mb-2'>{{ post.author }}</div>
       <b-card-title>{{ post.title }}</b-card-title>
       <b-card-text>{{ post.content }}</b-card-text>
@@ -90,7 +91,8 @@
                 variant="primary" class="btn-sm">按热度排序</b-button>
     </div>
     <transition-group name="comment-list" tag="div">
-    <div v-for="(comment, index) in visibleComments" :key="index">
+    <div v-for="(comment, index) in visibleComments"
+         :key="index" ref="commentRef" :id="`comment-${comment.pcommentID}`">
       <b-card class="my-1">
         <div class="d-flex mb-2">
           <div class="flex-shrink-0 mr-3">
@@ -133,9 +135,10 @@
                       style="font-size: 12px;margin-top:10px">
               查看评论共{{len(comment.subComments)}}条
             </b-button>
-            <b-modal hide-footer v-model="showRepliesModal" v-if="index===showcommentsindex">
+            <b-modal hide-footer v-model="showRepliesModal"  v-if="index===showcommentsindex">
             <transition-group name="comment-list" tag="div">
-            <div v-for="(subComment, subIndex) in visibleSubComments(index)" :key="subIndex">
+            <div v-for="(subComment, subIndex) in visibleSubComments(index)"
+                 :key="subIndex" :id="`ccomment-${subComment.ccommentID}`" tabindex="0">
               <hr>
               <div class="d-lg-flex mb-2" @mouseover="isHovered = true;
                 nowSubIndex = subIndex;nowIndex = index"
@@ -231,8 +234,15 @@ export default {
       return num;
     },
   },
+  mounted() {
+    // 获取当前评论ID
+    this.currentPcommentID = this.$route.params.pcommentID;
+    this.currentCcommentID = this.$route.params.ccommentID;
+  },
   data() {
     return {
+      currentPcommentID: 0,
+      currentCcommentID: 0,
       before: '',
       sortkind: 'Date',
       allComments: false,
@@ -314,6 +324,7 @@ export default {
         this.post.postID = post.data.PostID;
         this.post.author = post.data.UserName;
         this.post.authorTelephone = post.data.UserTelephone;
+        this.post.authorAvatar = post.data.UserAvatar;
         this.post.title = post.data.Title;
         this.post.content = post.data.Content;
         this.post.like = post.data.Like;
@@ -327,7 +338,11 @@ export default {
       .catch((err) => {
         console.error(err);
       });
-    this.pcommentsShow();
+    this.pcommentsShow().then(() => {
+      setTimeout(() => {
+        this.scrollToComment();
+      }, 1000);
+    });
   },
   beforeRouteLeave(to, from, next) {
     // 返回上一页面时清空本地缓存
@@ -336,6 +351,45 @@ export default {
     next();
   },
   methods: {
+    scrollToComment() {
+      // 获取当前评论所在的元素
+      const commentEl = document.getElementById(`comment-${this.currentPcommentID}`);
+      console.log(commentEl);
+      // const commentRef = this.$refs.commentRef[3];
+      // if (commentRef) {
+      //   commentRef.setAttribute('tabindex', '-1');
+      //   commentRef.scrollIntoView({ behavior: 'smooth', duration: 500 });
+      // }
+      if (commentEl) {
+        // 使用vue-scrollto插件平滑滚动到元素所在位置
+        this.$scrollTo(commentEl, {
+          duration: 750, // 滚动动画持续时间，单位为毫秒
+          offset: -150, // 滚动偏移量，用于调整滚动位置
+        });
+        commentEl.classList.add('blink');
+        setTimeout(() => {
+          commentEl.classList.remove('blink');
+        }, 10000);
+      }
+      if (this.currentCcommentID) {
+        const parentEl = commentEl.parentNode;
+        this.showcommentsindex = Array.prototype.indexOf.call(parentEl.children, commentEl);
+        this.showRepliesModal = true;
+        this.showAllReplies(this.showcommentsindex);
+        setTimeout(() => {
+          const childEl = document.getElementById(`ccomment-${this.currentCcommentID}`);
+          console.log(childEl, this.currentCcommentID);
+          if (childEl) {
+            // 使用vue-scrollto插件平滑滚动到元素所在位置
+            childEl.focus();
+            childEl.classList.add('blink');
+            setTimeout(() => {
+              childEl.classList.remove('blink');
+            }, 10000);
+          }
+        }, 500);
+      }
+    },
     handlePictureCardPreview(file) {
       this.dialogImageUrl = file;
       this.dialogVisible = true;
@@ -565,5 +619,26 @@ export default {
   width: calc(100% / 3);
   padding: 10px;
   box-sizing: border-box;
+}
+@keyframes blink {
+  0% {
+    opacity: 1;
+    background-color: transparent;
+  }
+  50% {
+    opacity: 0.5;
+    background-color: gray;
+  }
+  100% {
+    opacity: 1;
+    background-color: transparent;
+  }
+}
+/* 使用更具体的选择器 */
+.blink {
+  animation-name: blink;
+  animation-duration: 1.0s;
+  animation-iteration-count: 3;
+  background-color: transparent !important; /* 覆盖框架中的样式 */
 }
 </style>

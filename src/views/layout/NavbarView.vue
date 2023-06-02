@@ -89,7 +89,7 @@
             <PostForm :mode="'post'"/>
           </b-modal>
           <b-list-group-item @click="toNotifications()"
-            :class="{ active: $route.path === '/notifications' }"
+            :class="{ active: $route.path === '/notice' }"
             style="font-size: 18px;" class="click">
             <b-icon-bell-fill class="mr-3"></b-icon-bell-fill>通知
           </b-list-group-item>
@@ -197,7 +197,7 @@ export default {
         this.toLogin = true;
         return;
       }
-      this.$router.replace({ name: 'notifications' });
+      this.$router.replace({ name: 'notice' });
     },
     toFeedback() {
       if (!this.userInfo) {

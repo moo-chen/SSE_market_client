@@ -73,13 +73,30 @@
           </b-list-group>
           <b-row class='mt-0'>
             <b-col md='4' class='mb-2'>
+              <b-avatar :src="post.authorAvatar" size="4rem" class="mr-2"></b-avatar>
               <div class='author-box' @click.stop>
                 {{ post.author }}
               </div>
             </b-col>
           </b-row>
-          <b-card-title>{{ post.title }}</b-card-title>
-          <b-card-text>{{ post.content }}</b-card-text>
+              <b-card-title>{{ post.title }}</b-card-title>
+              <b-card-text>{{ post.content }}</b-card-text>
+              <div v-if="fileListGet(post) !== []" class="photo-viewer">
+                <div class="thumbnail-container">
+                  <div v-for="(file, index) in fileListGet(post)" :key="index">
+                    <img :src="file"
+                         width="270"
+                         height="270"
+                         @click="handlePictureCardPreview(file)"
+                         @keyup.enter="handlePictureCardPreview(file)"
+                         alt="Post Photo" />
+                  </div>
+                </div>
+                <el-dialog :visible.sync="dialogVisible">
+                  <img width="100%" :src="dialogImageUrl" alt="Preview" />
+                </el-dialog>
+              </div>
+
           <div class='d-flex justify-content-between'>
             <small class='text-muted'>{{ formatDate(post.postTime) }}</small>
           </div>
@@ -202,6 +219,7 @@ export default {
               id: post.PostID,
               author: post.UserName,
               authorTelephone: post.UserTelephone,
+              authorAvatar: post.UserAvatar,
               title: post.Title,
               content: post.Content,
               like: post.Like,
@@ -209,6 +227,7 @@ export default {
               postTime: post.PostTime,
               isSaved: post.IsSaved,
               isLiked: post.IsLiked,
+              photos: post.Photos,
               showMenu: false,
             })).sort((a, b) => new Date(b.postTime) - new Date(a.postTime)); // 按时间倒序排序展示
         } else if (this.$route.name === 'save') {
@@ -349,10 +368,27 @@ export default {
     clearReportReason() {
       this.reportReason = '';
     },
+    fileListGet(post) {
+      if (post.photos === '') return [];
+      return post.photos.split('|');
+    },
+    handlePictureCardPreview(file) {
+      this.dialogImageUrl = file;
+      this.dialogVisible = true;
+    },
   },
 };
 </script>
 
 <style lang='scss' scoped>
 @import '@/style/css/HomeView.css';
+.thumbnail-container {
+  display: flex;
+  flex-wrap: wrap;
+}
+.thumbnail-container div {
+  width: calc(100% / 3);
+  padding: 10px;
+  box-sizing: border-box;
+}
 </style>

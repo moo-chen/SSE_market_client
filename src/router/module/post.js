@@ -27,6 +27,14 @@ const postRoutes = [
     },
     component: () => import('../../views/profile/ProfileView.vue'),
   },
+  {
+    path: '/notice',
+    name: 'notice',
+    meta: {
+      auth: true,
+    },
+    component: () => import('../../views/notice/NoticeView.vue'),
+  },
 ];
 
 export default postRoutes;
