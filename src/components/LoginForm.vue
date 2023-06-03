@@ -33,10 +33,10 @@
           </b-form>
             <b-row>
             <b-col>
-              <a href="http://localhost:8081/register" target="_blank">立即注册！</a>
+              <a href="#" onclick="window.open('/register', '_blank');">立即注册！</a>
             </b-col>
             <b-col class="text-right">
-              <a href="http://localhost:8081/changePassword" target="_blank">忘记密码?</a>
+              <a href="#" onclick="window.open('/changePassword', '_blank');">忘记密码？</a>
             </b-col>
           </b-row>
           </b-card>

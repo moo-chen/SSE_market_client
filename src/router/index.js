@@ -33,7 +33,7 @@ router.beforeEach((to, from, next) => {
       next();
     } else {
       // 跳转登录
-      router.push({ name: 'login' });
+      router.push({ name: 'home' });
     }
   } else {
     next();
