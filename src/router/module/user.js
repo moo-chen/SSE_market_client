@@ -14,11 +14,17 @@ const userRoutes = [
   {
     path: '/save',
     name: 'save',
+    meta: {
+      auth: true,
+    },
     component: () => import('@/views/save/SaveView.vue'),
   },
   {
     path: '/history',
     name: 'history',
+    meta: {
+      auth: true,
+    },
     component: () => import('@/views/history/HistoryView.vue'),
   },
 ];
