@@ -5,6 +5,7 @@ import axios from 'axios';
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 import VueAxios from 'vue-axios';
+import VueScrollTo from 'vue-scrollto';
 import App from './App.vue';
 import router from './router';
 import store from './store';
@@ -19,6 +20,7 @@ Vue.use(IconsPlugin);
 Vue.use(Vuelidate);
 Vue.use(ElementUI);
 Vue.use(VueAxios, axios);
+Vue.use(VueScrollTo);
 Vue.prototype.$axios = axios;
 new Vue({
   router,
