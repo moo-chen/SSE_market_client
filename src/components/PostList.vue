@@ -11,7 +11,7 @@
         立即登录</b-button>
       <div class="register-section" style="margin-top:40px">
         <span>还没有账号？</span>
-        <a href="http://localhost:8081/register" target="_blank">立即注册！</a>
+        <a href="#" onclick="window.open('/register', '_blank');">立即注册！</a>
       </div>
     </div>
     <b-button variant="primary" v-if="this.partition != '主页'" class="back_button"
