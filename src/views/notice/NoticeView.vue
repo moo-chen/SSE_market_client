@@ -18,7 +18,8 @@
             <small class="text-muted">{{ formatDate(notice.time) }}</small>
             <div class="d-flex align-items-center justify-content-between">
               <span v-if="notice.type==='pcomment'|| notice.type==='ccomment'"
-                    class="sender mr-2">{{ notice.senderName }}</span>
+                    STYLE="color: #409EFF" class="mr-2">{{ notice.senderName }}</span>
+              <span v-else STYLE="color:saddlebrown" class="mr-2">系统通知：</span>
               <!-- 内容和类型 -->
               <span v-if="notice.type === 'pcomment'">评论了你的帖子:</span>
               <span v-if="notice.type === 'ccomment'">回复了你的评论:</span>
@@ -44,23 +45,26 @@
     <b-modal v-if="currentNotice" v-model="modalVisible" hide-footer @hide="markAsRead">
       <div class="d-flex align-items-center">
         <!-- 头像 -->
-        <b-avatar v-if="notice.type==='pcomment'|| notice.type==='ccomment'"
+        <b-avatar v-if="currentNotice.type==='pcomment'|| currentNotice.type==='ccomment'"
                   :src="currentNotice.senderAvatar" size="2rem" class="mr-2"></b-avatar>
         <div class="flex-grow-1">
           <!-- 标题 -->
           <div class="d-flex justify-content-between align-items-center">
-            <span class="sender" v-if="notice.type==='pcomment'|| notice.type==='ccomment'"
+            <span v-if="currentNotice.type==='pcomment'
+            || currentNotice.type==='ccomment'"
                   STYLE="color: #409EFF">{{ currentNotice.senderName }}</span>
             <span v-else STYLE="color:saddlebrown">系统通知：</span>
+            <small class="text-muted">{{ formatDate(currentNotice.time) }}</small>
           </div>
           <!-- 内容和类型 -->
           <div>
-            <small class="text-muted">{{ formatDate(notice.time) }}</small>
-            <span v-if="currentNotice.type === 'pcomment'">评论了你的帖子:</span>
-            <span v-if="currentNotice.type === 'ccomment'">回复了你的评论:</span>
-            <span v-if="currentNotice.type === 'punishment'" style="color: red">警告，你的账号出现违规：</span>
-            <span v-if="currentNotice.type === 'sue'">你的举报已得到处理：</span>
-            <span v-if="currentNotice.type === 'feedback'">你的反馈已得到处理回复：</span>
+            <span v-if="currentNotice.type === 'pcomment'" @keydown.enter="showDetails"
+                  class="postjump" @click="showDetails">评论了你的帖子: </span>
+            <span v-if="currentNotice.type === 'ccomment'" @keydown.enter="showDetails"
+                  class="postjump" @click="showDetails">回复了你的评论: </span>
+            <span v-if="currentNotice.type === 'punishment'" style="color: red">警告，你的账号出现违规： </span>
+            <span v-if="currentNotice.type === 'sue'">你的举报已得到处理： </span>
+            <span v-if="currentNotice.type === 'feedback'">你的反馈已得到处理回复： </span>
             <span class="preview mb-1" style="color:gray">{{ currentNotice.content }}</span>
           </div>
         </div>
