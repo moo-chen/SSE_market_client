@@ -13,10 +13,10 @@ const postPcomment = ({ userTelephone, postID, content }) => {
 
 // 对评论进行评论或回复评论的评论
 const postCcomment = ({
-  userTelephone, postID, pcommentID, content, userTargetName,
+  userTelephone, postID, pcommentID, content, userTargetName, ccommentID,
 }) => {
   return request.post('auth/postCcomment', {
-    userTelephone, postID, pcommentID, content, userTargetName,
+    userTelephone, postID, pcommentID, content, userTargetName, ccommentID,
   });
 };
 

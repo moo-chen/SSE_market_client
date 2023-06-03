@@ -5,6 +5,7 @@
 <script>
 
 import PostList from '@/components/PostList.vue';
+import store from '@/store';
 
 export default {
   components: {
@@ -35,6 +36,7 @@ export default {
       this.partition = '主页';
     }
     this.searchinfo = this.$route.query.searchinfo;
+    store.commit('getNotices');
   },
   beforeRouteLeave(to, from, next) {
     // 返回上一页面时清空本地缓存
