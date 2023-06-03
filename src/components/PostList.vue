@@ -81,40 +81,42 @@
           </b-row>
               <b-card-title>{{ post.title }}</b-card-title>
               <b-card-text>{{ post.content }}</b-card-text>
-              <template v-if="fileListGet.length === 4">
+          <div v-if="fileListGet.length > 0" class="photo-viewer">
+            <div class="thumbnail-container">
+              <template v-if="fileListGet(post).length === 4">
           <div>
-            <img :src="fileListGet[0]"
+            <img :src="fileListGet(post)[0]"
                  width="270"
                  height="270"
-                 @click="handlePictureCardPreview(fileListGet[0])"
-                 @keyup.enter="handlePictureCardPreview(fileListGet[0])"
+                 @click="handlePictureCardPreview(fileListGet(post)[0])"
+                 @keyup.enter="handlePictureCardPreview(fileListGet(post)[0])"
                  alt="Post Photo" />
-            <img :src="fileListGet[1]"
+            <img :src="fileListGet(post)[1]"
                  width="270"
                  height="270"
                  style="margin-top:20px"
-                 @click="handlePictureCardPreview(fileListGet[1])"
-                 @keyup.enter="handlePictureCardPreview(fileListGet[1])"
+                 @click="handlePictureCardPreview(fileListGet(post)[1])"
+                 @keyup.enter="handlePictureCardPreview(fileListGet(post)[1])"
                  alt="Post Photo" />
           </div>
           <div>
-            <img :src="fileListGet[2]"
+            <img :src="fileListGet(post)[2]"
                  width="270"
                  height="270"
-                 @click="handlePictureCardPreview(fileListGet[2])"
-                 @keyup.enter="handlePictureCardPreview(fileListGet[2])"
+                 @click="handlePictureCardPreview(fileListGet(post)[2])"
+                 @keyup.enter="handlePictureCardPreview(fileListGet(post)[2])"
                  alt="Post Photo" />
-            <img :src="fileListGet[3]"
+            <img :src="fileListGet(post)[3]"
                  width="270"
                  height="270"
                  style="margin-top:20px"
-                 @click="handlePictureCardPreview(fileListGet[3])"
-                 @keyup.enter="handlePictureCardPreview(fileListGet[3])"
+                 @click="handlePictureCardPreview(fileListGet(post)[3])"
+                 @keyup.enter="handlePictureCardPreview(fileListGet(post)[3])"
                  alt="Post Photo" />
           </div>
         </template>
           <template v-else>
-            <div v-for="(file, index) in fileListGet" :key="index">
+            <div v-for="(file, index) in fileListGet(post)" :key="index">
               <img :src="file"
                    width="270"
                    height="270"
@@ -123,7 +125,8 @@
                    alt="Post Photo" />
             </div>
           </template>
-
+            </div>
+          </div>
           <div class='d-flex justify-content-between'>
             <small class='text-muted'>{{ formatDate(post.postTime) }}</small>
           </div>
@@ -151,12 +154,23 @@ export default {
   components: {
     LoginForm,
   },
-  computed: mapState({
-    userInfo: (state) => state.userModule.userInfo,
-  }),
+  computed: {
+    ...mapState({
+      userInfo: (state) => state.userModule.userInfo,
+    }),
+    fileListGet() {
+      return (post) => {
+        if (!post.photos || post.photos === '') return [];
+        return post.photos.split('|');
+      };
+    },
+  },
   data() {
     return {
       posts: [],
+      fileList: [],
+      dialogImageUrl: '',
+      dialogVisible: false,
       userTelephone: '',
       postID: '',
       isSaved: '',
@@ -265,6 +279,7 @@ export default {
             id: post.PostID,
             author: post.UserName,
             authorTelephone: post.UserTelephone,
+            authorAvatar: post.UserAvatar,
             title: post.Title,
             content: post.Content,
             like: post.Like,
@@ -272,6 +287,7 @@ export default {
             postTime: post.PostTime,
             isSaved: post.IsSaved,
             isLiked: post.IsLiked,
+            photos: post.Photos,
             showMenu: false,
           })).sort((a, b) => new Date(b.postTime) - new Date(a.postTime)); // 按时间倒序排序展示
         } else if (this.$route.name === 'history') {
@@ -282,6 +298,7 @@ export default {
             id: post.PostID,
             author: post.UserName,
             authorTelephone: post.UserTelephone,
+            authorAvatar: post.UserAvatar,
             title: post.Title,
             content: post.Content,
             like: post.Like,
@@ -289,6 +306,7 @@ export default {
             postTime: post.PostTime,
             isSaved: post.IsSaved,
             isLiked: post.IsLiked,
+            photos: post.Photos,
             showMenu: false,
           })).sort((a, b) => new Date(b.postTime) - new Date(a.postTime)); // 按时间倒序排序展示
         }
@@ -394,10 +412,6 @@ export default {
     },
     clearReportReason() {
       this.reportReason = '';
-    },
-    fileListGet(post) {
-      if (post.photos === '') return [];
-      return post.photos.split('|');
     },
     handlePictureCardPreview(file) {
       this.dialogImageUrl = file;

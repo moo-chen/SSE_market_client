@@ -14,6 +14,9 @@ export default {
     return {
       partition: '主页',
       posts: [],
+      fileList: [],
+      dialogImageUrl: '',
+      dialogVisible: false,
       userTelephone: '',
       postID: '',
       isSaved: '',

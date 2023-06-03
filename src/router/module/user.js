@@ -7,11 +7,6 @@ const userRoutes = [
     component: () => import('@/views/register/RegisterView.vue'),
   },
   {
-    path: '/login',
-    name: 'login',
-    component: () => import('@/views/login/LoginView.vue'),
-  },
-  {
     path: '/save',
     name: 'save',
     meta: {
