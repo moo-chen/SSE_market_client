@@ -81,21 +81,48 @@
           </b-row>
               <b-card-title>{{ post.title }}</b-card-title>
               <b-card-text>{{ post.content }}</b-card-text>
-              <div v-if="fileListGet(post) !== []" class="photo-viewer">
-                <div class="thumbnail-container">
-                  <div v-for="(file, index) in fileListGet(post)" :key="index">
-                    <img :src="file"
-                         width="270"
-                         height="270"
-                         @click="handlePictureCardPreview(file)"
-                         @keyup.enter="handlePictureCardPreview(file)"
-                         alt="Post Photo" />
-                  </div>
-                </div>
-                <el-dialog :visible.sync="dialogVisible">
-                  <img width="100%" :src="dialogImageUrl" alt="Preview" />
-                </el-dialog>
-              </div>
+              <template v-if="fileListGet.length === 4">
+          <div>
+            <img :src="fileListGet[0]"
+                 width="270"
+                 height="270"
+                 @click="handlePictureCardPreview(fileListGet[0])"
+                 @keyup.enter="handlePictureCardPreview(fileListGet[0])"
+                 alt="Post Photo" />
+            <img :src="fileListGet[1]"
+                 width="270"
+                 height="270"
+                 style="margin-top:20px"
+                 @click="handlePictureCardPreview(fileListGet[1])"
+                 @keyup.enter="handlePictureCardPreview(fileListGet[1])"
+                 alt="Post Photo" />
+          </div>
+          <div>
+            <img :src="fileListGet[2]"
+                 width="270"
+                 height="270"
+                 @click="handlePictureCardPreview(fileListGet[2])"
+                 @keyup.enter="handlePictureCardPreview(fileListGet[2])"
+                 alt="Post Photo" />
+            <img :src="fileListGet[3]"
+                 width="270"
+                 height="270"
+                 style="margin-top:20px"
+                 @click="handlePictureCardPreview(fileListGet[3])"
+                 @keyup.enter="handlePictureCardPreview(fileListGet[3])"
+                 alt="Post Photo" />
+          </div>
+        </template>
+          <template v-else>
+            <div v-for="(file, index) in fileListGet" :key="index">
+              <img :src="file"
+                   width="270"
+                   height="270"
+                   @click="handlePictureCardPreview(file)"
+                   @keyup.enter="handlePictureCardPreview(file)"
+                   alt="Post Photo" />
+            </div>
+          </template>
 
           <div class='d-flex justify-content-between'>
             <small class='text-muted'>{{ formatDate(post.postTime) }}</small>
