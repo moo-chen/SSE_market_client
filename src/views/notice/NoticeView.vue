@@ -167,21 +167,23 @@ export default {
         return;
       }
       // 跳转到对应的帖子
-      if (nowNotice.type === 'pcomment') {
-        this.$router.push({
-          name: 'postDetails',
-          params: {
-            id: nowNotice.postID, partition: this.partition, before: 'notice', pcommentID: nowNotice.target,
-          },
-        });
-      } else if (nowNotice.type === 'ccomment') {
-        this.$router.push({
-          name: 'postDetails',
-          params: {
-            id: nowNotice.postID, partition: this.partition, before: 'notice', pcommentID: nowNotice.pcommentID, ccommentID: nowNotice.target,
-          },
-        });
-      }
+      setTimeout(() => {
+        if (nowNotice.type === 'pcomment') {
+          this.$router.push({
+            name: 'postDetails',
+            params: {
+              id: nowNotice.postID, partition: this.partition, before: 'notice', pcommentID: nowNotice.target,
+            },
+          });
+        } else if (nowNotice.type === 'ccomment') {
+          this.$router.push({
+            name: 'postDetails',
+            params: {
+              id: nowNotice.postID, partition: this.partition, before: 'notice', pcommentID: nowNotice.pcommentID, ccommentID: nowNotice.target,
+            },
+          });
+        }
+      }, 100);
     },
     formatDate(date) {
       // 格式化日期时间

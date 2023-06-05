@@ -29,6 +29,7 @@ router.beforeEach((to, from, next) => {
     if (store.state.userModule.token) {
       // 这里还要判断token 的有效性 比如有没有过期 需要后台发放token 的时候 带上token 的有效期，
       // 如果 token 无效 需要 请求token
+      store.commit('getNotices');
       next();
     } else {
       // 跳转登录

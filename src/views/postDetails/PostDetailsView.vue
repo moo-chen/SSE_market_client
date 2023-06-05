@@ -203,7 +203,8 @@
                     回复
                   </b-button>
                   <div v-if="replyshow && subIndex===nowSubIndex" style="margin-top:10px">
-                    <form @submit.prevent="ccommentPost(index,subComment.author)">
+                    <form @submit.prevent=
+                              "ccommentPost(index,subComment.author,subComment.ccommentID)">
                       <b-form-group>
                         <b-form-textarea v-model="ccomment.content"
                                          :placeholder="'回复@'+subComment.author" rows="3">
@@ -289,7 +290,7 @@ export default {
       dialogImageUrl: '',
       dialogVisible: false,
       post: {
-        postID: '',
+        postID: 0,
         author: '',
         authorTelephone: '',
         title: '',
@@ -311,10 +312,11 @@ export default {
       },
       ccomment: {
         userTelephone: '',
-        postID: '',
-        pcommentID: '',
+        postID: 0,
+        pcommentID: 0,
         content: '',
         userTargetName: '',
+        ccommentID: 0,
       },
       // 用来记录是否悬停在子评论上
       isHovered: false,
@@ -447,12 +449,15 @@ export default {
       this.allComments = !this.allComments;// 将帖子所有评论都展示出来
     },
     goback() {
+      console.log(this.before);
       if (this.before === 'home') {
         this.$router.replace({ name: 'home', query: { partitions: this.partition } });
       } else if (this.before === 'save') {
         this.$router.replace({ name: 'save' });
       } else if (this.before === 'history') {
         this.$router.replace({ name: 'history' });
+      } else if (this.before === 'notice') {
+        this.$router.replace({ name: 'notice' });
       }
     },
     toggleMenu() {
@@ -607,12 +612,13 @@ export default {
         });
     },
     // 发表评论的评论或者回复评论的评论
-    ccommentPost(index, author) {
+    ccommentPost(index, author, ccommentID) {
       const comment = this.comments[index];
       this.ccomment.postID = this.post.postID;
       this.ccomment.pcommentID = comment.pcommentID;
       this.ccomment.userTelephone = this.userTelephone;
       this.ccomment.userTargetName = author;
+      this.ccomment.ccommentID = ccommentID;
       this.postCcomment(this.ccomment).then(() => {
         this.$bvToast.toast('回复成功', {
           title: '系统提醒',
@@ -623,6 +629,7 @@ export default {
           this.pcommentsShow();
           // 清空输入的内容
           this.ccomment.content = '';
+          this.ccomment.ccommentID = 0;
         }, 1000);
       })
         .catch((err) => {

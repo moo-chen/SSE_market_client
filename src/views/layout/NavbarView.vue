@@ -92,6 +92,8 @@
             :class="{ active: $route.path === '/notice' }"
             style="font-size: 18px;" class="click">
             <b-icon-bell-fill class="mr-3"></b-icon-bell-fill>通知
+            <span v-if="noticesNum!=0"
+                  class="badge badge-danger ml-2 pop">{{noticesNum}}</span>
           </b-list-group-item>
             <b-list-group-item @click="toFeedback()"
             :class="{ active: $route.path === '/feedback' }"
@@ -153,6 +155,7 @@
 import { mapState, mapActions } from 'vuex';
 import PostForm from '@/components/PostForm.vue';
 import LoginForm from '@/components/LoginForm.vue';
+import store from '@/store';
 
 export default {
   // 获取在浏览器缓存中的包含用户信息的token，userInfo中包含用户的name和telephone
@@ -161,9 +164,14 @@ export default {
     PostForm,
     LoginForm,
   },
-  computed: mapState({
-    userInfo: (state) => state.userModule.userInfo,
-  }),
+  computed: {
+    ...mapState({
+      userInfo: (state) => state.userModule.userInfo,
+    }),
+    noticesNum() {
+      return store.state.noticesNum;
+    },
+  },
   data() {
     return {
       PostFormVisible: false,
@@ -230,10 +238,14 @@ export default {
       this.$router.push({ name: 'home', query: { searchinfo: this.searchinfo } });
       this.$router.go(0);
     },
+
   },
 };
 </script>
 
 <style>
 @import '../../style/css/NavbarView.css';
+.pop {
+  animation: pop 0.5s ease-in-out;
+}
 </style>
