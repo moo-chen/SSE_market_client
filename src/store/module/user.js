@@ -28,10 +28,62 @@ const userModule = {
   actions: {
     // context是浏览器store上下文对象，用于保存token
     // { name, telephone, password }为传送给后端的数据的结构体变量
-    register(context, { name, phone, password }) {
+    register(context, {
+      name,
+      phone,
+      password,
+      password2,
+      email,
+      num,
+      valiCode,
+    }) {
       return new Promise((resolve, reject) => {
         // userService.register()为发送网络请求的函数，用于向后端发送注册信息
-        userService.register({ name, phone, password }).then((res) => {
+        userService.register({
+          name,
+          phone,
+          password,
+          password2,
+          email,
+          num,
+          valiCode,
+        }).then((res) => {
+          resolve(res);
+        }).catch((err) => {
+          reject(err);
+        });
+      });
+    },
+
+    modifyPassword(context, { phone, password, password2 }) {
+      return new Promise((resolve, reject) => {
+        userService.modifyPassword({ phone, password, password2 }).then((res) => {
+          resolve(res);
+        }).catch((err) => {
+          reject(err);
+        });
+      });
+    },
+
+    identityValidate(context, { email, valiCode }) {
+      // console.error('hello');
+      return new Promise((resolve, reject) => {
+        userService.identityValidate({ email, valiCode }).then((res) => {
+          context.commit('SET_TOKEN', res.data.data.token);
+          return userService.info();
+        }).then((res) => {
+          // 保存用户信息
+          context.commit('SET_USERINFO', res.data.data.user);
+          resolve(res);
+        }).catch((err) => {
+          reject(err);
+        });
+      });
+    },
+
+    validateEmail(context, { email, mode }) {
+      return new Promise((resolve, reject) => {
+        userService.validateEmail({ email, mode }).then((res) => {
           resolve(res);
         }).catch((err) => {
           reject(err);

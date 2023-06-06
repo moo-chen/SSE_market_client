@@ -133,8 +133,8 @@
             <b-icon-caret-down-fill v-if="showSettings" style="margin-left: auto;">
             </b-icon-caret-down-fill>
           </b-list-group-item>
-          <b-list-group-item v-if="showSettings" to="/changePassword" class="click"
-          :class="{ active: $route.path === '/changePassword' }" style="font-size: 18px;">
+          <b-list-group-item v-if="showSettings" to="/modifyPassword" class="click"
+          :class="{ active: $route.path === '/modifyPassword' }" style="font-size: 18px;">
             <b-icon-lock-fill class="mr-3"></b-icon-lock-fill>修改密码
           </b-list-group-item>
           <b-list-group-item v-if="showSettings" to="/delete" class="click"

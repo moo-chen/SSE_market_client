@@ -22,6 +22,16 @@ const userRoutes = [
     },
     component: () => import('@/views/history/HistoryView.vue'),
   },
+  {
+    path: '/modifyPassword',
+    name: 'modifyPassword',
+    component: () => import('@/views/modifyPassword/ModifyPassword.vue'),
+  },
+  {
+    path: '/identityValidate',
+    name: 'identityValidate',
+    component: () => import('@/views/identityValidate/IdentityValidateView.vue'),
+  },
 ];
 
 export default userRoutes;

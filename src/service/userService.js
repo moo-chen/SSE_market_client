@@ -5,8 +5,12 @@ import request from '@/utils/request';
 // { name, telephone, password }为要传给后端的数据的结构体变量
 // post中的路径与后端对于功能处理函数的路由后缀保持一致，前缀已在环境变量中定义
 // 添加新的函数记得在下方export default中添加导出
-const register = ({ name, phone, password }) => {
-  return request.post('auth/register', { name, phone, password });
+const register = ({
+  name, phone, password, password2, email, num, valiCode,
+}) => {
+  return request.post('auth/register', {
+    name, phone, password, password2, email, num, valiCode,
+  });
 };
 
 // 用户登录
@@ -58,6 +62,16 @@ const info = () => {
 const getInfo = ({ phone }) => {
   return request.post('auth/getInfo', { phone });
 };
+
+// 获取密码
+const modifyPassword = ({ phone, password, password2 }) => {
+  return request.post('auth/modifyPassword', { phone, password, password2 });
+};
+
+// 注册验证邮箱
+const validateEmail = ({ email, mode }) => {
+  return request.post('auth/validateEmail', { email, mode });
+};
 export default {
   register,
   login,
@@ -68,4 +82,6 @@ export default {
   info,
   save,
   getInfo,
+  modifyPassword,
+  validateEmail,
 };
