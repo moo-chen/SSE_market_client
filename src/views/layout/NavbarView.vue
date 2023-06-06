@@ -4,26 +4,23 @@
       modal-class="custom-modal">
       <LoginForm />
     </b-modal>
-    <div class="image-container" v-if="$route.name == 'home' &&
-      (!this.$route.query.partitions || this.$route.query.partitions == '主页')">
-      <div style="display:flex;">
-        <p style="margin-left:40%;margin-top: 100px;font-size:50px;
-        font-family:Arial, sans-serif; font-weight:bold;">
-          SSE_market</p>
-      </div>
-      <b-input-group v-if="$route.name == 'home' &&
-      (!this.$route.query.partitions || this.$route.query.partitions == '主页')">
-        <div style="display: flex;margin-left:30%;margin-top: 10px;">
-          <b-form-input style="width: 600px;height: 50px ;border-radius: 20px;"
-          placeholder="搜索" v-model="searchinfo"></b-form-input>
-        <b-input-group-append>
-        <b-button style="margin-left:20px; border-radius: 20px;" variant="dark"
-          @click="refreshPageAndNavigate">
+    <div class="video-container" v-if="$route.name == 'home' && (!this.$route.query.partitions ||
+      this.$route.query.partitions == '主页')">
+    <video autoplay loop muted playsinline>
+      <source src="../../assets/vedio/Background.mp4" type="video/mp4">
+    </video>
+    <div class="overlay">
+      <p class="title">SSE_market</p>
+      <div class="search-box">
+        <b-form-input placeholder="搜索" v-model="searchinfo"
+        style="height: 50px;border-radius: 20px;">
+        </b-form-input>
+        <b-button variant="dark" @click="refreshPageAndNavigate"
+          style="margin-left:10px;width: 100px;height: 50px;border-radius: 20px;">
           <b-icon-search class="mr-2"></b-icon-search>搜索
         </b-button>
-        </b-input-group-append>
-        </div>
-      </b-input-group>
+      </div>
+    </div>
       </div>
     <b-navbar fixed="top" v-if="($route.name !== 'home'&&$route.name !== 'register') ||
     scrollPosition > 400 || (this.$route.query.partitions && this.$route.query.partitions != '主页')">
