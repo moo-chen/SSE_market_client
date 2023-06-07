@@ -32,8 +32,12 @@ const deletepost = ({ postID }) => {
   return request.post('auth/deletePost', { postID });
 };
 
-const submitreport = ({ TargetID, userTelephone, Reason }) => {
-  return request.post('auth/submitReport', { TargetID, userTelephone, Reason });
+const submitreport = ({
+  TargetID, Targettype, userTelephone, Reason,
+}) => {
+  return request.post('auth/submitReport', {
+    TargetID, Targettype, userTelephone, Reason,
+  });
 };
 
 // 获取帖子详情

@@ -48,9 +48,13 @@ const postModule = {
       });
     },
 
-    submitreport(context, { TargetID, userTelephone, Reason }) {
+    submitreport(context, {
+      TargetID, Targettype, userTelephone, Reason,
+    }) {
       return new Promise((resolve, reject) => {
-        postService.submitreport({ TargetID, userTelephone, Reason }).then((res) => {
+        postService.submitreport({
+          TargetID, Targettype, userTelephone, Reason,
+        }).then((res) => {
           resolve(res);
         }).catch((err) => {
           reject(err);
