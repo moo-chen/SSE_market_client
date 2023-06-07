@@ -68,6 +68,15 @@ const postModule = {
       });
     },
 
+    submitFeedback(context, { ftext, attachment }) {
+      return new Promise((resolve, reject) => {
+        postService.submitFeedback({ ftext, attachment }).then((res) => {
+          resolve(res);
+        }).catch((err) => {
+          reject(err);
+        });
+      });
+    },
   },
 };
 

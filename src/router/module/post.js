@@ -35,6 +35,14 @@ const postRoutes = [
     },
     component: () => import('../../views/notice/NoticeView.vue'),
   },
+  {
+    path: '/feedback',
+    name: 'feedback',
+    meta: {
+      auth: true,
+    },
+    component: () => import('../../views/feedback/FeedbackView.vue'),
+  },
 ];
 
 export default postRoutes;

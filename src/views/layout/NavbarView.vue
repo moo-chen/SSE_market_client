@@ -92,7 +92,7 @@
             <span v-if="noticesNum!=0"
                   class="badge badge-danger ml-2 pop">{{noticesNum}}</span>
           </b-list-group-item>
-            <b-list-group-item @click="toFeedback()"
+            <b-list-group-item to="/feedback"
             :class="{ active: $route.path === '/feedback' }"
             style="font-size: 18px;" class="click">
             <b-icon-envelope-fill class="mr-3"></b-icon-envelope-fill>反馈
