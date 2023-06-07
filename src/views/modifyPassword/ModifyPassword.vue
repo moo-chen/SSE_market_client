@@ -89,14 +89,11 @@ export default {
       this.user.phone = this.userInfo.phone;
       console.error(this.user.phone);
       this.userModify(this.user).then(() => {
-        this.$bvToast.toast('修改密码成功,请登录', {
+        this.$bvToast.toast('修改密码成功', {
           title: '系统提醒',
           variant: 'primary',
           solid: true,
         });
-        setTimeout(() => {
-          this.$router.replace({ name: 'login' });
-        }, 1000);
       }).catch((err) => {
         this.$bvToast.toast(err.response.data.msg, {
           title: '数据验证错误',

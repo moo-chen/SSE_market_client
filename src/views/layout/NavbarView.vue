@@ -22,7 +22,8 @@
       </div>
     </div>
       </div>
-    <b-navbar fixed="top" v-if="($route.name !== 'home'&&$route.name !== 'register') ||
+    <b-navbar fixed="top" v-if="($route.name !== 'home'&&$route.name !== 'register'
+    && this.$route.name != 'modifyPassword' && this.$route.name != 'identityValidate') ||
     scrollPosition > 400 || (this.$route.query.partitions && this.$route.query.partitions != '主页')">
       <b-navbar-brand>
         <b-icon-shop class="mr-3"></b-icon-shop>SSE_market
@@ -58,7 +59,8 @@
         </b-navbar-nav>
       </b-collapse>
     </b-navbar>
-    <b-row no-gutters v-if="this.$route.name != 'register'">
+    <b-row no-gutters v-if="this.$route.name != 'register' && this.$route.name != 'modifyPassword'
+      && this.$route.name != 'identityValidate'">
       <b-col sm="2" class="nav-col" style="position:fixed;z-index: 100;">
         <b-list-group flush class="list-group"
         :style="{ marginTop: $route.name == 'home' &&
@@ -133,8 +135,8 @@
             <b-icon-caret-down-fill v-if="showSettings" style="margin-left: auto;">
             </b-icon-caret-down-fill>
           </b-list-group-item>
-          <b-list-group-item v-if="showSettings" to="/modifyPassword" class="click"
-          :class="{ active: $route.path === '/modifyPassword' }" style="font-size: 18px;">
+          <b-list-group-item v-if="showSettings" class="click"
+           @click="toModifyPassword()" style="font-size: 18px;">
             <b-icon-lock-fill class="mr-3"></b-icon-lock-fill>修改密码
           </b-list-group-item>
           <b-list-group-item v-if="showSettings" to="/delete" class="click"
@@ -210,6 +212,9 @@ export default {
         return;
       }
       this.FeedbackVisible = true;
+    },
+    toModifyPassword() {
+      window.open('/identityValidate', '_blank');
     },
     handleScroll() {
       this.scrollPosition = window.scrollY;

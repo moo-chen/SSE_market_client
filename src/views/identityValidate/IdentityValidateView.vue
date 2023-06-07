@@ -27,8 +27,6 @@
             <b-form-group>
               <b-button @click='validateEmail' variant='outline-primary' block>获取验证码</b-button>
               <b-button @click='identityValidate' variant='outline-primary' block>修改密码</b-button>
-              <b-button @click="$router.replace({ name : 'login' })"
-              variant="outline-primary" block>返回登录</b-button>
             </b-form-group>
           </b-form>
         </b-card>
@@ -72,9 +70,14 @@ export default {
       const { $dirty, $error } = this.$v.user[name];
       return $dirty ? !$error : null;
     },
+    validateEmailState(name) {
+      // 这里是es6 解构赋值
+      const { $dirty, $error } = this.$v.onlyEmail[name];
+      return $dirty ? !$error : null;
+    },
     validateEmail() {
-      this.$v.user.$touch();
       this.user.mode = 1;
+      this.$v.user.$touch();
       if (this.$v.user.$anyError) {
         return;
       }
@@ -94,13 +97,12 @@ export default {
     },
 
     identityValidate() {
-      console.error('start');
+      this.user.mode = 1;
       this.$v.user.$touch();
       if (this.$v.user.$anyError) {
-        console.error('error!');
         return;
       }
-      this.idValidate(this.user).then(() => {
+      this.userValidate(this.user).then(() => {
         this.$bvToast.toast('身份验证成功,可以更改密码', {
           title: '系统提醒',
           variant: 'primary',
@@ -110,11 +112,15 @@ export default {
           this.$router.replace({ name: 'modifyPassword' });
         }, 1000);
       }).catch((err) => {
-        this.$bvToast.toast(err.response.data.msg, {
-          title: '数据验证错误',
-          variant: 'danger',
-          solid: true,
-        });
+        if (err.response && err.response.data && err.response.data.msg) { // 新增判断
+          this.$bvToast.toast(err.response.data.msg, {
+            title: '数据验证错误',
+            variant: 'danger',
+            solid: true,
+          });
+        } else {
+          console.error(err); // 输出错误
+        }
       });
     },
   },

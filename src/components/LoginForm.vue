@@ -36,7 +36,7 @@
               <a href="#" onclick="window.open('/register', '_blank');">立即注册！</a>
             </b-col>
             <b-col class="text-right">
-              <a href="#" onclick="window.open('/modifyPassword', '_blank');">忘记密码？</a>
+              <a href="#" onclick="window.open('/identityValidate', '_blank');">忘记密码？</a>
             </b-col>
           </b-row>
           </b-card>
