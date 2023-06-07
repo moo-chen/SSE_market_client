@@ -1,5 +1,11 @@
 <template>
   <div class='post'>
+    <el-steps :active="3" simple>
+      <el-step title="编辑题目与正文" icon="el-icon-edit"></el-step>
+      <el-step title="上传图片（可选）" icon="el-icon-upload"></el-step>
+      <el-step title="选择分区" icon="el-icon-s-unfold"></el-step>
+      <el-step title="确认发帖" icon="el-icon-check"></el-step>
+    </el-steps>
     <b-row class='mt-4'>
       <b-col md='8' offset-md='2' lg='10' offset-lg='1'>
         <b-card style='max-width: 1200px; max-height: 2000px'>
@@ -111,9 +117,9 @@ export default {
           });
         });
     },
-    feedback() {
-
-    },
+    // feedback() {
+    //
+    // },
   },
 };
 </script>
