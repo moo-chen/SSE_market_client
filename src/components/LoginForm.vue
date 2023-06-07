@@ -1,23 +1,4 @@
 <template>
-  <div class="full-screen-container">
-    <vue-particles
-        class="particles-bg"
-        color="#39AFFD"
-        :particle-opacity="0.7"
-        :particles-number="100"
-        shape-type="circle"
-        :particle-size="4"
-        lines-color="#8DD1FE"
-        :lines-width="1"
-        :line-linked="true"
-        :line-opacity="0.4"
-        :lines-distance="150"
-        :move-speed="3"
-        :hover-effect="true"
-        hover-mode="grab"
-        :click-effect="true"
-        click-mode="push"
-    />
   <div class='login-view'>
     <div class='login' @keydown.enter='login'>
       <b-row class='mt-5'>
@@ -62,7 +43,6 @@
         </b-col>
       </b-row>
     </div>
-  </div>
   </div>
 </template>
 <script>
@@ -126,19 +106,4 @@ export default {
 };
 </script>
 <style lang='scss' scoped>
-.full-screen-container {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-}
-
-.particles-bg {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-}
 </style>
