@@ -41,6 +41,10 @@ const showDetails = ({ userTelephone, postID }) => {
   return request.post('auth/showDetails', { userTelephone, postID });
 };
 
+const submitFeedback = ({ ftext, attachment }) => {
+  return request.post('auth/submitFeedback', { ftext, attachment });
+};
+
 export default {
   post,
   browse,
@@ -48,5 +52,5 @@ export default {
   deletepost,
   submitreport,
   showDetails,
-
+  submitFeedback,
 };
