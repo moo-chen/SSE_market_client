@@ -24,6 +24,26 @@ const commentModule = {
         });
       });
     },
+    // 对评论删除
+    deletePcomment(context, { pcommentID }) {
+      return new Promise((resolve, reject) => {
+        commentService.deletePcomment({ pcommentID }).then((res) => {
+          resolve(res);
+        }).catch((err) => {
+          reject(err);
+        });
+      });
+    },
+    // 对评论的评论删除
+    deleteCcomment(context, { ccommentID }) {
+      return new Promise((resolve, reject) => {
+        commentService.deleteCcomment({ ccommentID }).then((res) => {
+          resolve(res);
+        }).catch((err) => {
+          reject(err);
+        });
+      });
+    },
     // 对评论的评论或对评论的评论回复
     postCcomment(context, {
       userTelephone, postID, pcommentID, content, userTargetName, ccommentID,

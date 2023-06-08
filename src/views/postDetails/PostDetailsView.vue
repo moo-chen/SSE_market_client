@@ -19,7 +19,7 @@
             <b-icon-exclamation-triangle class="mr-2"></b-icon-exclamation-triangle>举报
           </b-list-group-item>
           <b-modal v-model="showReportModal" title="举报" @hidden="clearReportReason"
-            @ok="submitReport" ok-title="Submit">
+            @ok="submitReport('post',post.postID)" ok-title="Submit">
             <b-form-textarea v-model="reportReason" placeholder="请输入举报原因" rows="8">
             </b-form-textarea>
           </b-modal>
@@ -83,7 +83,7 @@
         </div>
         <el-dialog :visible.sync="dialogVisible">
           <img width="100%" :src="dialogImageUrl" alt="Preview" />
-        </el-dialog>
+        </el-dialog>Comment
       </div>
       <div class="d-flex justify-content-between">
         <small class="text-muted">{{ formatDate(post.postTime) }}</small>
@@ -150,6 +150,52 @@
             variant="primary" style="margin-top:10px">
               {{ comment.showReplyForm ? '隐藏评论' : '评论' }}
             </b-button>
+            <div class='text-muted' style='margin-left: 820px' @click.stop>
+              <b-icon icon='three-dots-vertical' @click.stop="comment.showMenu =
+              !comment.showMenu"></b-icon>
+            </div>
+            <b-list-group
+            v-if='comment.showMenu'
+            style='
+              width: 100px;
+              height: 1.25rem;
+              margin-left: 850px;
+              margin-top: -20px;
+              font-size: 0.9rem;
+            '
+            @click.stop
+          >
+            <b-list-group-item
+              v-if='comment.authorTelephone !== userInfo.phone'
+              @click.stop='showReportModal = true'
+            >
+              <b-icon-exclamation-triangle class='mr-2'></b-icon-exclamation-triangle>举报
+            </b-list-group-item>
+            <b-modal
+              v-model='showReportModal'
+              title='举报'
+              @hidden='clearReportReason'
+              @ok='submitReport("pcomment",comment.pcommentID)'
+              ok-title='Submit'
+            >
+              <b-form-textarea v-model='reportReason' placeholder='请输入举报原因' rows='8'>
+              </b-form-textarea>
+            </b-modal>
+            <b-list-group-item
+              v-if='comment.authorTelephone === userInfo.phone'
+              @click.stop='showDeleteModal = true'
+            >
+              <b-icon-trash class='mr-2'></b-icon-trash>删除
+            </b-list-group-item>
+            <b-modal
+              v-model='showDeleteModal'
+              title='确认删除'
+              ok-title='Confirm'
+              @ok='pcommentdelete(comment)'
+            >
+              <p>你确定要删除这条评论吗？</p>
+            </b-modal>
+          </b-list-group>
             <!--如果点击了评论，将显示评论窗口-->
             <div v-if="comment.showReplyForm" style="margin-top:10px">
               <form @submit.prevent="ccommentPost(index)">
@@ -196,6 +242,84 @@
                   </b-icon>
                   {{ subComment.likeNum }}
                 </div>
+                <!-- <div class="d-flex justify-content-end">
+                  <div class='text-muted' style='margin-top: -19px;
+                  margin-right: -250px' @click.stop>
+                    <b-icon icon='three-dots-vertical'
+                    @click.stop="subComment.showMenu =!subComment.showMenu"></b-icon>
+                  </div>
+                </div>
+                <b-list-group
+            v-if='subComment.showMenu'
+            style='
+              width: 10px;
+              height: 0.75rem;
+              margin-left: 200px;
+              margin-top: -20px;
+              font-size: 1.0rem;
+            '
+            @click.stop
+          >
+            <b-list-group-item
+              v-if='subComment.authorTelephone !== userInfo.phone'
+              @click.stop='showReportModal = true'
+            >
+              <b-icon-exclamation-triangle class='mr-2'></b-icon-exclamation-triangle>举报
+            </b-list-group-item>
+            <b-modal
+              v-model='showReportModal'
+              title='举报'
+              @hidden='clearReportReason'
+              @ok='submitReport("pcomment",comment.pcommentID)'
+              ok-title='Submit'
+            >
+              <b-form-textarea v-model='reportReason' placeholder='请输入举报原因' rows='8'>
+              </b-form-textarea>
+            </b-modal>
+            <b-list-group-item
+              v-if='subComment.authorTelephone === userInfo.phone'
+              @click.stop='showDeleteModal = true'
+            >
+              <b-icon-trash class='mr-2'></b-icon-trash>删除
+            </b-list-group-item>
+            <b-modal
+              v-model='showDeleteModal'
+              title='确认删除'
+              ok-title='Confirm'
+              @ok='pcommentdelete(comment)'
+            >
+              <p>你确定要删除这条评论吗？</p>
+            </b-modal>
+          </b-list-group> -->
+          <div class="d-flex justify-content-end">
+            <div class='text-muted' style='margin-top: -19px; position: relative;'>
+              <div v-if="subComment.authorTelephone !== userInfo.phone"
+              style="position: absolute; top: 0; right: 0;">
+                <b-icon icon='exclamation-triangle' @click.stop='showReportModal = true'></b-icon>
+                <b-modal
+                  v-model='showReportModal'
+                  title='举报'
+                  @hidden='clearReportReason'
+                  @ok='submitReport("ccomment",subComment.ccommentID)'
+                  ok-title='Submit'
+                >
+                  <b-form-textarea v-model='reportReason'
+                  placeholder='请输入举报原因' rows='8'></b-form-textarea>
+                </b-modal>
+              </div>
+              <div v-else style="position: absolute; top: 0; right: 0;">
+                <b-icon icon='trash' @click.stop='showDeleteModal = true'></b-icon>
+                <b-modal
+                  v-model='showDeleteModal'
+                  title='确认删除'
+                  ok-title='Confirm'
+                  @ok='ccommentdelete(subComment)'
+                >
+                  <p>你确定要删除这条评论吗？</p>
+                </b-modal>
+              </div>
+              </div>
+            </div>
                 <div v-if="isHovered && subIndex===nowSubIndex && index===nowIndex"
                 style="margin-left:10px">
                   <b-button @click="replyshow = !replyshow"
@@ -285,6 +409,7 @@ export default {
       partition: '',
       showDeleteModal: false,
       showReportModal: false,
+      showccmenu: false,
       reportReason: '',
       fileList: [],
       dialogImageUrl: '',
@@ -437,6 +562,8 @@ export default {
     ...mapActions('postModule', { deletepost: 'deletepost' }),
     ...mapActions('postModule', { submitreport: 'submitreport' }),
     ...mapActions('commentModule', { showPcomments: 'showPcomments' }),
+    ...mapActions('commentModule', { deletePcomment: 'deletePcomment' }),
+    ...mapActions('commentModule', { deleteCcomment: 'deleteCcomment' }),
     ...mapActions('commentModule', { postPcomment: 'postPcomment' }),
     ...mapActions('commentModule', { postCcomment: 'postCcomment' }),
     ...mapActions('commentModule', { pcommentlike: 'pcommentLike' }),
@@ -535,9 +662,30 @@ export default {
         console.error(err);
       });
     },
-    submitReport() {
+    pcommentdelete(comment) {
+      this.deletePcomment({
+        pcommentID: comment.pcommentID,
+      }).then(() => {
+        this.$router.go(0);
+      }).catch((err) => {
+        console.error(err);
+      });
+    },
+    ccommentdelete(SubComment) {
+      this.deleteCcomment({
+        ccommentID: SubComment.ccommentID,
+      }).then(() => {
+        this.$router.go(0);
+      }).catch((err) => {
+        console.error(err);
+      });
+    },
+    submitReport(type, idnum) {
       this.submitreport({
-        TargetID: this.post.postID, userTelephone: this.userInfo.phone, Reason: this.reportReason,
+        TargetID: idnum,
+        Targettype: type,
+        userTelephone: this.userInfo.phone,
+        Reason: this.reportReason,
       }).then(() => {
         this.$bvToast.toast('举报发送成功', {
           title: '系统提醒',
@@ -566,11 +714,13 @@ export default {
           pcommentID: pcomment.PcommentID,
           author: pcomment.Author,
           authorAvatar: pcomment.AuthorAvatar,
+          authorTelephone: pcomment.AuthorTelephone,
           commentTime: pcomment.CommentTime,
           content: pcomment.Content,
           likeNum: pcomment.LikeNum,
           subComments: pcomment.SubComments,
           isLiked: pcomment.IsLiked,
+          showMenu: false,
           showReplyForm: false,
           showAllReplies: false,
           heat: pcomment.LikeNum + len(pcomment.SubComments),

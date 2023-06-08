@@ -11,6 +11,16 @@ const postPcomment = ({ userTelephone, postID, content }) => {
   return request.post('auth/postPcomment', { userTelephone, postID, content });
 };
 
+// 对评论删除
+const deletePcomment = ({ pcommentID }) => {
+  return request.post('auth/deletePcomment', { pcommentID });
+};
+
+// 对评论删除
+const deleteCcomment = ({ ccommentID }) => {
+  return request.post('auth/deleteCcomment', { ccommentID });
+};
+
 // 对评论进行评论或回复评论的评论
 const postCcomment = ({
   userTelephone, postID, pcommentID, content, userTargetName, ccommentID,
@@ -31,6 +41,8 @@ const ccommentLike = ({ userTelephone, ccommentID, isLiked }) => {
 export default {
   showPcomments,
   postPcomment,
+  deletePcomment,
+  deleteCcomment,
   postCcomment,
   pcommentLike,
   ccommentLike,
