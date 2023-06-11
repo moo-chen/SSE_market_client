@@ -22,6 +22,7 @@
             :on-preview='handlePictureCardPreview'
             :on-remove='handleRemove'
             :on-success='handleSuccess'
+            accept=".jpg,.png"
           >
             <i class='el-icon-plus'></i>
           </el-upload>
