@@ -1,10 +1,11 @@
 <template>
   <div>
+    {{page}}
     <!-- 通知列表 -->
-    <b-list-group v-if="notices.length > 0" class="notification-list">
-      <transition-group name="list" tag="div">
+    <b-list-group v-if="notices.length > 0" class="notification-list" >
+      <transition-group name="list" tag="div" ref="listGroup">
       <b-list-group-item
-          v-for="(notice, index) in notices"
+          v-for="(notice, index) in nownotices"
           :key="index"
           @click="viewNotice(notice,index)"
           class="notification-item"
@@ -37,6 +38,7 @@
         </div>
         </div>
       </b-list-group-item>
+        <b-card class="loading" v-if="loading">正在加载...</b-card>
       </transition-group>
     </b-list-group>
     <p v-else>没有通知</p>
@@ -80,6 +82,9 @@ import { mapState } from 'vuex';
 export default {
   data() {
     return {
+      loading: true,
+      page: 1,
+      pagesize: 10,
       notices: [],
       currentNotice: null,
       currentIndex: 0,
@@ -88,12 +93,15 @@ export default {
   },
   mounted() {
     this.getNotices();
+    window.addEventListener('scroll', this.handleScroll);
   },
   computed: {
     ...mapState({
       userInfo: (state) => state.userModule.userInfo,
     }),
-
+    nownotices() {
+      return this.notices.slice(0, this.page * this.pagesize);
+    },
   },
   created() {
     if (this.$route.params.before) {
@@ -101,6 +109,23 @@ export default {
     }
   },
   methods: {
+    handleScroll() {
+      this.$nextTick(() => {
+        const listGroup = this.$refs.listGroup.$el;
+        if (listGroup.getBoundingClientRect().bottom <= window.innerHeight) {
+          this.loadMoreNotices();
+        }
+      });
+    },
+    async loadMoreNotices() {
+      window.removeEventListener('scroll', this.handleScroll);
+      this.loading = true;
+      setTimeout(() => {
+        this.page += 1;
+      }, 500);
+      this.loading = false;
+      window.addEventListener('scroll', this.handleScroll);
+    },
     // 获取通知列表
     getNotices() {
       request.get('/auth/getNotice').then((response) => {
@@ -134,6 +159,8 @@ export default {
           }
           return 0;
         });
+      }).then(() => {
+        this.loadMoreNotices();
       }).catch((error) => {
         console.error(error);
       });
@@ -169,19 +196,21 @@ export default {
       // 跳转到对应的帖子
       setTimeout(() => {
         if (nowNotice.type === 'pcomment') {
-          this.$router.push({
+          const link = this.$router.resolve({
             name: 'postDetails',
-            params: {
+            query: {
               id: nowNotice.postID, partition: this.partition, before: 'notice', pcommentID: nowNotice.target,
             },
           });
+          window.open(link.href, '_blank');
         } else if (nowNotice.type === 'ccomment') {
-          this.$router.push({
+          const link = this.$router.resolve({
             name: 'postDetails',
-            params: {
+            query: {
               id: nowNotice.postID, partition: this.partition, before: 'notice', pcommentID: nowNotice.pcommentID, ccommentID: nowNotice.target,
             },
           });
+          window.open(link.href, '_blank');
         }
       }, 100);
     },
@@ -225,10 +254,15 @@ export default {
 .pop {
   animation: pop 0.5s ease-in-out;
 }
-.list-enter-active, .list-leave-active {
-  transition: opacity 0.5s;
+
+.list-enter-active,
+.list-leave-active {
+  transition: all 0.7s cubic-bezier(0.5, 0, 0.5, 1);
 }
-.list-enter, .list-leave-to {
+
+.list-enter,
+.list-leave-to {
   opacity: 0;
+  transform: rotate(180deg);
 }
 </style>

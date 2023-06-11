@@ -20,7 +20,7 @@
     </b-button>
     <b-row>
       <b-col v-for='post in posts' :key='post.id' cols='12' md='12' lg='12' class='mb-3'>
-        <b-card class='px-3 py-2 card-shadow' @click='showDetails(post)'
+        <b-card class='px-3 py-2 card-shadow'
         style="width:900px">
           <div class='text-muted' style='margin-left: 820px' @click.stop>
             <b-icon icon='three-dots-vertical' @click.stop='toggleMenu(post)'></b-icon>
@@ -79,7 +79,8 @@
               </div>
             </b-col>
           </b-row>
-              <b-card-title>{{ post.title }}</b-card-title>
+              <b-card-title @click='showDetails(post)'
+                            class="b-card-title">{{ post.title }}</b-card-title>
               <b-card-text>{{ post.content }}</b-card-text>
           <div v-if="fileListGet.length > 0" class="photo-viewer">
             <div class="thumbnail-container">
@@ -213,25 +214,14 @@ export default {
         this.toLogin = true;
         return;
       }
-      if (this.$route.name === 'home') {
-        this.$router.push({
-          name: 'postDetails',
-          params: { id: post.id, partition: this.partition, before: 'home' },
-          query: { title: post.title },
-        });
-      } else if (this.$route.name === 'save') {
-        this.$router.push({
-          name: 'postDetails',
-          params: { id: post.id, partition: this.partition, before: 'save' },
-          query: { title: post.title },
-        });
-      } else if (this.$route.name === 'history') {
-        this.$router.push({
-          name: 'postDetails',
-          params: { id: post.id, partition: this.partition, before: 'history' },
-          query: { title: post.title },
-        });
-      }
+      const routeLink = this.$router.resolve({
+        name: 'postDetails',
+        params: { partition: this.partition },
+        query: {
+          id: post.id, title: post.title, before: this.$route.name, partition: this.partition,
+        },
+      });
+      window.open(routeLink.href, '_blank');
     },
     async browsePosts() {
       if (this.userInfo) {
@@ -427,5 +417,8 @@ export default {
   width: calc(100% / 3);
   padding: 10px;
   box-sizing: border-box;
+}
+.b-card-title:hover {
+  color: rgba(56, 104, 225, 0.9);
 }
 </style>

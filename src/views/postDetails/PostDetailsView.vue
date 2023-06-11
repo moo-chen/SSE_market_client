@@ -83,7 +83,7 @@
         </div>
         <el-dialog :visible.sync="dialogVisible">
           <img width="100%" :src="dialogImageUrl" alt="Preview" />
-        </el-dialog>Comment
+        </el-dialog>
       </div>
       <div class="d-flex justify-content-between">
         <small class="text-muted">{{ formatDate(post.postTime) }}</small>
@@ -395,8 +395,8 @@ export default {
   },
   mounted() {
     // 获取当前评论ID
-    this.currentPcommentID = this.$route.params.pcommentID;
-    this.currentCcommentID = this.$route.params.ccommentID;
+    this.currentPcommentID = this.$route.query.pcommentID;
+    this.currentCcommentID = this.$route.query.ccommentID;
   },
   data() {
     return {
@@ -454,26 +454,26 @@ export default {
     };
   },
   created() {
-    if (this.$route.params.before) {
-      this.before = this.$route.params.before;
+    if (this.$route.query.before) {
+      this.before = this.$route.query.before;
       // 将postID保存在本地缓存中
-      localStorage.setItem('Before', JSON.stringify(this.$route.params.before));
+      localStorage.setItem('Before', JSON.stringify(this.$route.query.before));
     } else {
       // 在本地缓存在直接读取postID
       this.before = JSON.parse(localStorage.getItem('Before'));
     }
-    if (this.$route.params.id) {
-      this.post.postID = this.$route.params.id;
+    if (this.$route.query.id) {
+      this.post.postID = parseInt(this.$route.query.id, 10);
       // 将postID保存在本地缓存中
-      localStorage.setItem('PostID', JSON.stringify(this.$route.params.id));
+      localStorage.setItem('PostID', JSON.stringify(this.$route.query.id));
     } else {
       // 在本地缓存在直接读取postID
       this.post.postID = JSON.parse(localStorage.getItem('PostID'));
     }
-    if (this.$route.params.partition) {
-      this.partition = this.$route.params.partition;
+    if (this.$route.query.partition) {
+      this.partition = this.$route.query.partition;
       // 将partition保存在本地缓存中
-      localStorage.setItem('Partition', JSON.stringify(this.$route.params.partition));
+      localStorage.setItem('Partition', JSON.stringify(this.$route.query.partition));
     } else {
       // 在本地缓存在直接读取postID
       this.partition = JSON.parse(localStorage.getItem('Partition'));
