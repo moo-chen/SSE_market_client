@@ -278,8 +278,7 @@ export default {
         if (this.$route.name === 'home') {
           // 将获取到的帖子列表数据赋值给 posts 变量
           this.totalItems = data.length;
-          this.posts = data.slice((this.currentPage - 1)
-              * this.pageSize, this.currentPage * this.pageSize)
+          this.posts = data
             .map((post) => ({
               id: post.PostID,
               author: post.UserName,
@@ -295,6 +294,8 @@ export default {
               photos: post.Photos,
               showMenu: false,
             })).sort((a, b) => new Date(b.postTime) - new Date(a.postTime)); // 按时间倒序排序展示
+          this.posts = this.posts.slice((this.currentPage - 1)
+              * this.pageSize, this.currentPage * this.pageSize);
         } else if (this.$route.name === 'save') {
           // 根据是否被收藏过滤帖子列表
           const filteredData = data.filter((post) => post.IsSaved === true);
