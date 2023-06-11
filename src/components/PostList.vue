@@ -145,6 +145,17 @@
         </b-card>
       </b-col>
     </b-row>
+    <el-pagination
+        class="is-background"
+        style="margin-left: 300px"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="currentPage"
+        :page-sizes="[5, 10, 25, 50]"
+        :page-size="pageSize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="totalItems">
+    </el-pagination>
   </div>
 </template>
 
@@ -170,6 +181,9 @@ export default {
   },
   data() {
     return {
+      totalItems: 0,
+      pageSize: 5,
+      currentPage: 1,
       music_path: '/山高水长.mp3',
       posts: [],
       fileList: [],
@@ -206,18 +220,17 @@ export default {
     ...mapActions('userModule', { postSave: 'save' }),
     ...mapActions('postModule', { deletepost: 'deletepost' }),
     ...mapActions('postModule', { submitreport: 'submitreport' }),
+    handleSizeChange(val) {
+      this.pageSize = val;
+      this.currentPage = 1; // 如果改变每页显示的数量，回到第一页
+      this.browsePosts();
+    },
+    handleCurrentChange(val) {
+      this.currentPage = val;
+      this.browsePosts();
+    },
     goback() {
       this.$router.replace({ name: 'partitions' });
-    },
-    aclick(src) {
-      this.$refs.audio.src = src;
-      if (this.is_play) {
-        this.$refs.audio.pause();
-        this.is_play = false;
-      } else {
-        this.$refs.audio.play();
-        this.is_play = true;
-      }
     },
     toRegister() {
       window.open('/register', '_blank');
@@ -264,7 +277,9 @@ export default {
         });
         if (this.$route.name === 'home') {
           // 将获取到的帖子列表数据赋值给 posts 变量
-          this.posts = data
+          this.totalItems = data.length;
+          this.posts = data.slice((this.currentPage - 1)
+              * this.pageSize, this.currentPage * this.pageSize)
             .map((post) => ({
               id: post.PostID,
               author: post.UserName,
@@ -441,5 +456,12 @@ export default {
   width: calc(100% / 3);
   padding: 10px;
   box-sizing: border-box;
+}
+.el-pagination.is-background .el-pager li.active{
+  background-color: #409EFF;
+  color: #fff;
+}
+.el-pagination.is-background .el-pager li:not(.active) {
+  background-color: #e4e7ed;
 }
 </style>
