@@ -2,6 +2,25 @@
 <!-- <template>中放的是页面的html框架，可用html语言编写，也可调用bootstrap-vue等第三方提供的组件，但需要在main.js中引入  -->
 <template>
   <div class='register-view'>
+    <div class="full-screen-container">
+      <vue-particles
+          class="particles-bg"
+          color="#FFC0CB"
+          :particle-opacity="0.7"
+          :particles-number="100"
+          shape-type="star"
+          :particle-size="4"
+          lines-color="#8DD1FE"
+          :lines-width="1"
+          :line-linked="true"
+          :line-opacity="0.4"
+          :lines-distance="150"
+          :move-speed="3"
+          :hover-effect="true"
+          hover-mode="grab"
+          :click-effect="true"
+          click-mode="push"
+      />
     <div class='register'>
       <b-row class='mt-5'>
         <b-col md='8' offset-md='2' lg='6' offset-lg='3'>
@@ -94,6 +113,7 @@
         </b-col>
       </b-row>
     </div>
+  </div>
   </div>
 </template>
 
@@ -240,6 +260,21 @@ export default {
   width: 1200px;
   margin: auto;
   margin-top: 50px !important;
-  margin-left: 150px !important;
+  margin-left: 350px !important;
+}
+.full-screen-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.particles-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
 }
 </style>
