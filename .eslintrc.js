@@ -8,6 +8,7 @@ module.exports = {
     parser: '@babel/eslint-parser',
   },
   rules: {
+    'vuejs-accessibility/media-has-caption': 'off',
     'linebreak-style': ["error", "windows"],
     'global-require': 'off',
     'arrow-body-style': ['off'],
