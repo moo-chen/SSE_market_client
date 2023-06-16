@@ -9,10 +9,13 @@
       <b-button variant="primary" @click="toLogin = true"
       style="margin-top:100px;width: 150px;border-radius: 20px;">
         立即登录</b-button>
-      <div class="register-section" style="margin-top:40px">
+      <div class="register-section" style="margin-top:40px;z-index: 9999;">
         <span>还没有账号？</span>
         <a href="#" onclick="window.open('/register', '_blank');">立即注册！</a>
       </div>
+    </div>
+    <div class="audio-section">
+      <audio ref="audio" :src="music_path" style="margin-top: 140px; z-index: 9999;" controls />
     </div>
     <b-button variant="primary" v-if="this.partition != '主页'" class="back_button"
       @click="goback" style="margin-left: 60px;">
@@ -167,6 +170,7 @@ export default {
   },
   data() {
     return {
+      music_path: '/山高水长.mp3',
       posts: [],
       fileList: [],
       dialogImageUrl: '',
@@ -204,6 +208,16 @@ export default {
     ...mapActions('postModule', { submitreport: 'submitreport' }),
     goback() {
       this.$router.replace({ name: 'partitions' });
+    },
+    aclick(src) {
+      this.$refs.audio.src = src;
+      if (this.is_play) {
+        this.$refs.audio.pause();
+        this.is_play = false;
+      } else {
+        this.$refs.audio.play();
+        this.is_play = true;
+      }
     },
     toRegister() {
       window.open('/register', '_blank');
