@@ -49,6 +49,24 @@ const submitFeedback = ({ ftext, attachment }) => {
   return request.post('auth/submitFeedback', { ftext, attachment });
 };
 
+// 更新浏览次数
+const updatebrowse = ({ userTelephone, postID }) => {
+  return request.post('auth/updateBrowseNum', { userTelephone, postID });
+};
+
+// 热火榜
+const calculateheat = ({
+  postID,
+  title,
+  heat,
+}) => {
+  return request.get('auth/calculateHeat', {
+    postID,
+    title,
+    heat,
+  });
+};
+
 export default {
   post,
   browse,
@@ -57,4 +75,6 @@ export default {
   submitreport,
   showDetails,
   submitFeedback,
+  updatebrowse,
+  calculateheat,
 };

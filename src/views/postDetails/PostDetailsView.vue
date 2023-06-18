@@ -95,7 +95,7 @@
           {{ post.like }}
         </div>
         <div class="text-muted">
-              <b-icon-eye-fill></b-icon-eye-fill> 100
+              <b-icon-eye-fill></b-icon-eye-fill> {{ post.browse }}
         </div>
         <div class='text-muted'><b-icon icon='chat-dots-fill'></b-icon> {{ commentsNum }}</div>
       </div>
@@ -428,6 +428,7 @@ export default {
         showMenu: '',
         showCommentForm: '',
         photos: '',
+        browse: '',
       },
       comments: [],
       pcomment: {
@@ -495,6 +496,7 @@ export default {
         this.post.isLiked = post.data.IsLiked;
         this.post.showMenu = false;
         this.post.photos = post.data.Photos;
+        this.post.browse = post.data.Browse;
       })
       .catch((err) => {
         console.error(err);
