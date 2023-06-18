@@ -291,31 +291,14 @@ export default {
         this.toLogin = true;
         return;
       }
-      if (this.$route.name === 'home') {
-        setTimeout(() => {
-          this.$router.push({
-            name: 'postDetails',
-            params: { id: post.id, partition: this.partition, before: 'home' },
-            query: { title: post.title },
-          });
-        }, 0.0001); // 先让浏览次数更新
-      } else if (this.$route.name === 'save') {
-        setTimeout(() => {
-          this.$router.push({
-            name: 'postDetails',
-            params: { id: post.id, partition: this.partition, before: 'save' },
-            query: { title: post.title },
-          });
-        }, 0.0001); // 先让浏览次数更新
-      } else if (this.$route.name === 'history') {
-        setTimeout(() => {
-          this.$router.push({
-            name: 'postDetails',
-            params: { id: post.id, partition: this.partition, before: 'history' },
-            query: { title: post.title },
-          });
-        }, 0.0001); // 先让浏览次数更新
-      }
+      const routeLink = this.$router.resolve({
+        name: 'postDetails',
+        params: { partition: this.partition },
+        query: {
+          id: post.id, title: post.title, before: this.$route.name, partition: this.partition,
+        },
+      });
+      window.open(routeLink.href, '_blank');
     },
     async browsePosts() {
       if (this.userInfo) {
@@ -557,6 +540,8 @@ export default {
   padding: 10px;
   box-sizing: border-box;
 }
+.b-card-title:hover {
+  color: rgba(56, 104, 225, 0.9);
 .page-container {
   display: flex;
 }

@@ -3,7 +3,7 @@
     <h4>个人信息</h4>
     <el-upload
         class="avatar-uploader"
-        action="http://localhost:8080/api/auth/uploadavatar"
+        action="https://localhost:8080/api/auth/uploadavatar"
         :show-file-list="false"
         :on-success="handleAvatarSuccess"
         :before-upload="beforeAvatarUpload"
@@ -121,7 +121,7 @@ export default {
         avatarURL: this.userInfo.avatarURL,
       };
 
-      request.post('http://localhost:8080/api/auth/updateUserInfo', updatedUserInfo)
+      request.post('https://localhost:8080/api/auth/updateUserInfo', updatedUserInfo)
         .then((response) => {
           // 处理更新成功的逻辑
           console.log(response);

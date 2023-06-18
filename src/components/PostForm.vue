@@ -16,7 +16,7 @@
             <b-form-textarea v-model='posts.content' :rows='20'></b-form-textarea>
           </b-form-group>
           <el-upload
-            action='http://localhost:8080/api/auth/uploadphotos'
+            action='https://localhost:8080/api/auth/uploadphotos'
             list-type='picture-card'
             multiple
             :on-preview='handlePictureCardPreview'
