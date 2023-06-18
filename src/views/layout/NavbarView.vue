@@ -10,7 +10,9 @@
       <source src="../../assets/vedio/Background.mp4" type="video/mp4">
     </video>
     <div class="overlay">
-      <p class="title">SSE_market</p>
+      <vue-typed-js :showCursor="false" :strings="['这是中山大学', '欢迎来到软工集市','今日火文等你看','SSE_market']">
+        <h1 class="typing">SSE_market</h1>
+      </vue-typed-js>
       <div class="search-box">
         <b-form-input placeholder="搜索" v-model="searchinfo"
         style="height: 50px;border-radius: 20px;">

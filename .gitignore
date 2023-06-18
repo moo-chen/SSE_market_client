@@ -23,3 +23,5 @@ pnpm-debug.log*
 *.sw?
 
 .yarn/
+.eslintrc.js
+yarn.lock
