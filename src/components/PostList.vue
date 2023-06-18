@@ -19,6 +19,11 @@
         v-if="this.$route.name == 'home' && partition == '主页'">
         <audio ref="audio" :src="music_path" style="margin-top: 140px;" controls />
       </div>
+      <div class="video-section" v-if="this.$route.name == 'home' && partition == '主页'"
+      :style="{ marginTop: userInfo ? '250px' : '500px' }">
+        <video ref="videoPlayer" :src="video_path" style="margin-top: 10px;
+        z-index: 9999;" controls></video>
+      </div>
       <b-button variant="primary" v-if="this.partition != '主页'" class="back_button"
         @click="goback" style="margin-left: 60px;">
         <b-icon-reply class="mr-2"></b-icon-reply>返回
@@ -164,7 +169,7 @@
         :total="totalItems">
     </el-pagination>
     </div>
-    <div class='hots-bar' :style="{ marginTop: userInfo ? '250px' : '500px' }"
+    <div class='hots-bar' :style="{ marginTop: userInfo ? '500px' : '750px' }"
       v-if="this.$route.name == 'home' && partition == '主页'">
       <b-card class="px-3 py-2 card-shadow" style="width: 310px; height: 100%;">
         <div>
@@ -224,6 +229,7 @@ export default {
       pageSize: 5,
       currentPage: 1,
       music_path: '/山高水长.mp3',
+      video_path: '/宣传片.mp4',
       posts: [],
       fileList: [],
       hotposts: [],
