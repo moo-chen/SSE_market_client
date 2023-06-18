@@ -7,6 +7,7 @@ import VueParticles from 'vue-particles';
 import 'element-ui/lib/theme-chalk/index.css';
 import VueAxios from 'vue-axios';
 import VueScrollTo from 'vue-scrollto';
+import VueTypedJs from 'vue-typed-js';
 import App from './App.vue';
 import router from './router';
 import store from './store';
@@ -23,6 +24,7 @@ Vue.use(ElementUI);
 Vue.use(VueParticles);
 Vue.use(VueAxios, axios);
 Vue.use(VueScrollTo);
+Vue.use(VueTypedJs);
 Vue.prototype.$axios = axios;
 new Vue({
   router,

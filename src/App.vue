@@ -6,7 +6,7 @@
       (!this.$route.query.partitions || this.$route.query.partitions == '主页')
           ? '20px' : '120px', marginLeft: $route.name == 'home' &&
       (!this.$route.query.partitions || this.$route.query.partitions == '主页')
-          ? '-150px' : '0px'}">>
+          ? '-120px' : '0px'}">>
         </router-view>
     </b-container>
   </div>

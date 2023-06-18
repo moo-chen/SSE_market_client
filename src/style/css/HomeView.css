@@ -95,3 +95,21 @@
   padding: 10px;
   box-sizing: border-box;
 }
+
+.video-section {
+  position: absolute;
+  margin-top:300px;
+  margin-left: 1150px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 200px; /* 设置高度以便撑开容器 */
+  width: 300px;
+  /* background: url('@/assets/image/珠海校区背景.png'); 
+  background-size: cover;  */
+}
+
+.video-section video {
+  max-width: 100%; /* 设置最大宽度为容器宽度 */
+  max-height: 100%; /* 设置最大高度为容器高度 */
+}

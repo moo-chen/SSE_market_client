@@ -81,6 +81,33 @@ const postModule = {
         });
       });
     },
+    updatebrowse(context, { userTelephone, postID }) {
+      return new Promise((resolve, reject) => {
+        postService.updatebrowse({ userTelephone, postID }).then((res) => {
+          resolve(res);
+        }).catch((err) => {
+          reject(err);
+        });
+      });
+    },
+
+    calculateheat(context, {
+      postID,
+      title,
+      heat,
+    }) {
+      return new Promise((resolve, reject) => {
+        postService.calculateheat({
+          postID,
+          title,
+          heat,
+        }).then((res) => {
+          resolve(res);
+        }).catch((err) => {
+          reject(err);
+        });
+      });
+    },
   },
 };
 
