@@ -2,6 +2,7 @@ import Vue from 'vue';
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue';
 import Vuelidate from 'vuelidate';
 import axios from 'axios';
+import mouse from '@/utils/mouseClick';
 import ElementUI from 'element-ui';
 import VueParticles from 'vue-particles';
 import 'element-ui/lib/theme-chalk/index.css';
@@ -21,6 +22,7 @@ Vue.use(BootstrapVue);
 Vue.use(IconsPlugin);
 Vue.use(Vuelidate);
 Vue.use(ElementUI);
+Vue.use(mouse);
 Vue.use(VueParticles);
 Vue.use(VueAxios, axios);
 Vue.use(VueScrollTo);
@@ -30,4 +32,7 @@ new Vue({
   router,
   store,
   render: (h) => h(App),
+  mounted() {
+    this.$mouseClick();
+  },
 }).$mount('#app');
