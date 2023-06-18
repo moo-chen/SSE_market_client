@@ -21,8 +21,7 @@
       </div>
       <div class="video-section" v-if="this.$route.name == 'home' && partition == '主页'"
       :style="{ marginTop: userInfo ? '250px' : '500px' }">
-        <video ref="videoPlayer" :src="video_path" style="margin-top: 10px;
-        z-index: 9999;" controls></video>
+        <video ref="videoPlayer" :src="video_path" style="margin-top: 10px;" controls></video>
       </div>
       <b-button variant="primary" v-if="this.partition != '主页'" class="back_button"
         @click="goback" style="margin-left: 60px;">
