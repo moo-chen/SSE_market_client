@@ -152,6 +152,17 @@
           </b-card>
         </b-col>
       </b-row>
+      <el-pagination
+        class="is-background"
+        style="margin-left: 300px"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="currentPage"
+        :page-sizes="[5, 10, 25, 50]"
+        :page-size="pageSize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="totalItems">
+    </el-pagination>
     </div>
     <div class='hots-bar' :style="{ marginTop: userInfo ? '250px' : '500px' }"
       v-if="this.$route.name == 'home' && partition == '主页'">
@@ -209,6 +220,9 @@ export default {
   },
   data() {
     return {
+      totalItems: 0,
+      pageSize: 5,
+      currentPage: 1,
       music_path: '/山高水长.mp3',
       posts: [],
       fileList: [],
@@ -252,6 +266,15 @@ export default {
     ...mapActions('postModule', { postHots: 'calculateheat' }),
     ...mapActions('postModule', { deletepost: 'deletepost' }),
     ...mapActions('postModule', { submitreport: 'submitreport' }),
+    handleSizeChange(val) {
+      this.pageSize = val;
+      this.currentPage = 1; // 如果改变每页显示的数量，回到第一页
+      this.browsePosts();
+    },
+    handleCurrentChange(val) {
+      this.currentPage = val;
+      this.browsePosts();
+    },
     goback() {
       this.$router.replace({ name: 'partitions' });
     },
@@ -306,6 +329,7 @@ export default {
         });
         if (this.$route.name === 'home') {
           // 将获取到的帖子列表数据赋值给 posts 变量
+          this.totalItems = data.length;
           this.posts = data
             .map((post) => ({
               id: post.PostID,
@@ -324,6 +348,8 @@ export default {
               photos: post.Photos,
               showMenu: false,
             })).sort((a, b) => new Date(b.postTime) - new Date(a.postTime)); // 按时间倒序排序展示
+          this.posts = this.posts.slice((this.currentPage - 1)
+            * this.pageSize, this.currentPage * this.pageSize);
         } else if (this.$route.name === 'save') {
           // 根据是否被收藏过滤帖子列表
           const filteredData = data.filter((post) => post.IsSaved === true);
@@ -537,5 +563,13 @@ export default {
   flex: 0;
   position: absolute;
   margin-left: 950px;
+}
+
+.el-pagination.is-background .el-pager li.active{
+  background-color: #409EFF;
+  color: #fff;
+}
+.el-pagination.is-background .el-pager li:not(.active) {
+  background-color: #e4e7ed;
 }
 </style>
