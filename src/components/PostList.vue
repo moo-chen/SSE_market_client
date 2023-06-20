@@ -198,6 +198,16 @@
           </div>
         </b-list-group-item>
       </b-card>
+      <b-card class="px-3 py-2 card-shadow block" style="width: 310px; height: 100%;">
+          <el-carousel height="100px">
+            <el-carousel-item v-for="item in imagebox" :key="item.id">
+              <a :href="getWebsiteURL(item.id)">
+                <span>Some text</span>
+                <img :src="item.idView" class="image" alt="">
+              </a>
+            </el-carousel-item>
+          </el-carousel>
+      </b-card>
     </div>
   </div>
 </template>
@@ -232,6 +242,12 @@ export default {
       posts: [],
       fileList: [],
       hotposts: [],
+      imagebox: [
+        { id: 0, idView: require('../assets/image/caraousel1.png') },
+        { id: 1, idView: require('../assets/image/caraousel2.png') },
+        { id: 2, idView: require('../assets/image/caraousel3.png') },
+        { id: 3, idView: require('../assets/image/caraousel4.png') },
+      ],
       dialogImageUrl: '',
       dialogVisible: false,
       userTelephone: '',
@@ -525,6 +541,21 @@ export default {
       this.dialogImageUrl = file;
       this.dialogVisible = true;
     },
+    getWebsiteURL(id) {
+      if (id === 0) {
+        return 'https://ztjy.sysu.edu.cn/';
+      }
+      if (id === 1) {
+        return 'https://www.sysu.edu.cn/news/ztjj2/gdzt/zt2023ncjgzhy.htm';
+      }
+      if (id === 2) {
+        return 'https://www.sysu.edu.cn/xxg/zdjj1.htm';
+      }
+      if (id === 3) {
+        return 'https://ddhzt.sysu.edu.cn/';
+      }
+      return ''; // 添加默认的返回值
+    },
   },
 };
 </script>
@@ -562,5 +593,16 @@ export default {
 }
 .el-pagination.is-background .el-pager li:not(.active) {
   background-color: #e4e7ed;
+}
+.block {
+  position: relative; /* 设置父容器为相对定位，为绝对定位的图片提供参考 */
+}
+.block .image {
+  position: absolute; /* 将图片设置为绝对定位 */
+  top: 0;
+  left: 0;
+  width: 100%; /* 图片宽度占满父容器 */
+  height: 100%; /* 图片高度占满父容器 */
+  object-fit: cover; /* 按比例缩放图片，以覆盖整个容器 */
 }
 </style>
