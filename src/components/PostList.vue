@@ -542,6 +542,7 @@ export default {
 }
 .b-card-title:hover {
   color: rgba(56, 104, 225, 0.9);
+}
 .page-container {
   display: flex;
 }
@@ -555,7 +556,7 @@ export default {
   margin-left: 950px;
 }
 
-.el-pagination.is-background .el-pager li.active{
+.el-pagination.is-background .el-pager li.active {
   background-color: #409EFF;
   color: #fff;
 }
