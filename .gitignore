@@ -25,3 +25,4 @@ pnpm-debug.log*
 .yarn/
 .eslintrc.js
 yarn.lock
+yarn.lock
