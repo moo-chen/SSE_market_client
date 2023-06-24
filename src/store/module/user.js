@@ -65,6 +65,17 @@ const userModule = {
       });
     },
 
+    deleteMe(context, name) {
+      console.error(name);
+      return new Promise((resolve, reject) => {
+        userService.deleteUser({ name }).then((res) => {
+          resolve(res);
+        }).catch((err) => {
+          reject(err);
+        });
+      });
+    },
+
     identityValidate(context, { email, valiCode }) {
       // console.error('hello');
       return new Promise((resolve, reject) => {
