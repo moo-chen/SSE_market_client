@@ -17,11 +17,12 @@
       </div>
       <div class="audio-section" :style="{ marginTop: userInfo ? '0px' : '250px' }"
         v-if="this.$route.name == 'home' && partition == '主页'">
-        <audio ref="audio" :src="music_path" style="margin-top: 140px;" controls />
+        <audio ref="audio" :src="music_path" style="margin-top: 140px; z-index: 1000;" controls />
       </div>
       <div class="video-section" v-if="this.$route.name == 'home' && partition == '主页'"
       :style="{ marginTop: userInfo ? '250px' : '500px' }">
-        <video ref="videoPlayer" :src="video_path" style="margin-top: 10px;" controls></video>
+        <video ref="videoPlayer" :src="video_path" style="margin-top: 10px; z-index: 1000;"
+               controls></video>
       </div>
       <b-button variant="primary" v-if="this.partition != '主页'" class="back_button"
         @click="goback" style="margin-left: 60px;">
@@ -408,6 +409,7 @@ export default {
             photos: post.Photos,
             showMenu: false,
           })).sort((a, b) => new Date(b.postTime) - new Date(a.postTime));
+          this.totalItems = this.posts.length;
           this.posts = this.posts.slice((this.currentPage - 1)
             * this.pageSize, this.currentPage * this.pageSize); // 按时间倒序排序展示
         } else if (this.$route.name === 'history') {
@@ -431,6 +433,7 @@ export default {
             photos: post.Photos,
             showMenu: false,
           })).sort((a, b) => new Date(b.postTime) - new Date(a.postTime));
+          this.totalItems = this.posts.length;
           this.posts = this.posts.slice((this.currentPage - 1)
             * this.pageSize, this.currentPage * this.pageSize);// 按时间倒序排序展示
         }
