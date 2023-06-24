@@ -43,7 +43,6 @@
 </template>
 
 <script>
-import store from '@/store';
 
 export default {
   data() {
@@ -74,7 +73,6 @@ export default {
         this.starsActie = 'stars-daytime';
         this.backTime = 'back-cloud-daytime';
         this.whiteTime = 'white-background-daytime';
-        store.commit('toggleStyle');
         localStorage.setItem('Style', JSON.stringify('day'));
         setTimeout(() => {
           this.$router.go(0);
@@ -106,6 +104,13 @@ export default {
       this.backTime = position.backTime;
       this.whiteTime = position.whiteTime;
       this.style = position.style;
+    } else {
+      this.active = 'sun';
+      this.daytime = 'day-background-daytime';
+      this.starsActie = 'stars-daytime';
+      this.backTime = 'back-cloud-daytime';
+      this.whiteTime = 'white-background-daytime';
+      localStorage.setItem('Style', JSON.stringify('day'));
     }
   },
 };
