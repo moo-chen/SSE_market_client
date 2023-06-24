@@ -27,7 +27,8 @@
     <b-navbar fixed="top" v-if="($route.name !== 'home'&&$route.name !== 'register'
     && this.$route.name != 'modifyPassword' && this.$route.name != 'identityValidate') ||
     scrollPosition > 400 || (this.$route.query.partitions && this.$route.query.partitions != '主页')"
-    :style="{ 'background-color': isNightStyle ? 'rgb(246, 155, 10)' : 'rgb(17, 167, 226)' }">
+    :style="{ 'background-color': isNightStyle ? 'rgb(246, 155, 10)' : 'rgb(17, 167, 226)' ,
+    'z-index': '9999' }">
       <b-navbar-brand>
         <b-icon-shop class="mr-3"></b-icon-shop>SSE_market
       </b-navbar-brand>
