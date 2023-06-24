@@ -1,15 +1,16 @@
 <template>
   <div>
-    {{page}}
     <!-- 通知列表 -->
-    <b-list-group v-if="notices.length > 0" class="notification-list" >
+    <b-list-group v-if="notices.length > 0" class="notification-list">
       <transition-group name="list" tag="div" ref="listGroup">
       <b-list-group-item
           v-for="(notice, index) in nownotices"
           :key="index"
           @click="viewNotice(notice,index)"
           class="notification-item"
-          :class="{ 'notification-unread': !notice.read }">
+          :class="{ 'notification-unread': !notice.read }"
+          :style="{ 'background-color': isNightStyle ? 'rgb(50,50,50)' : 'white',
+                    'color': isNightStyle ? 'gray' : null}">
         <div class="d-flex align-items-center">
           <!-- 头像 -->
           <b-avatar  v-if="notice.type==='pcomment'|| notice.type==='ccomment'"
@@ -102,8 +103,19 @@ export default {
     nownotices() {
       return this.notices.slice(0, this.page * this.pagesize);
     },
+    isNightStyle() {
+      if (JSON.parse(localStorage.getItem('Style')) === 'night') {
+        return true;
+      }
+      return false;
+    },
   },
   created() {
+    if (typeof localStorage !== 'undefined') {
+      if (!localStorage.getItem('Style')) {
+        localStorage.setItem('Style', JSON.stringify('day'));
+      }
+    }
     if (this.$route.params.before) {
       this.before = this.$route.params.before;
     }
@@ -228,9 +240,6 @@ export default {
 .notification-item {
   cursor: pointer;
 }
-
-.notification-item:hover {
-  background-color: #f5f5f5;}
 
 .postjump:hover {
   color: cornflowerblue;

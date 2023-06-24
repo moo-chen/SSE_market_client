@@ -10,7 +10,7 @@
         <b-button variant="primary" @click="toLogin = true"
         style="margin-top:100px;width: 150px;border-radius: 20px;">
           立即登录</b-button>
-        <div class="register-section" style="margin-top:40px">
+        <div class="register-section" style="margin-top:40px;color: white;">
           <span>还没有账号？</span>
           <a href="#" onclick="window.open('/register', '_blank');">立即注册！</a>
         </div>
@@ -31,6 +31,8 @@
         <b-col v-for='post in posts' :key='post.id' cols='12' md='12' lg='12' class='mb-3'>
           <b-card class='px-3 py-2 card-shadow'
           @click="() => { showDetails(post); updatebrowse(post) }"
+          :style="{ 'background-color': isNightStyle ? 'rgb(50,50,50)' : 'white',
+              'color': isNightStyle ? 'gray' : null }"
           style="width:900px">
             <div class='text-muted' style='margin-left: 820px' @click.stop>
               <b-icon icon='three-dots-vertical' @click.stop='toggleMenu(post)'></b-icon>
@@ -46,11 +48,15 @@
               '
               @click.stop
             >
-              <b-list-group-item>
+              <b-list-group-item
+                :style="{ 'background-color': isNightStyle ? 'rgb(50,50,50)' : 'white',
+                    'color': isNightStyle ? 'gray' : null}">
                   <b-icon class="mr-2" :icon="post.isSaved ? 'star-fill' : 'star'"
                 @click.stop="save(post)" :class="{ 'text-warning': post.isSaved }"></b-icon>收藏
               </b-list-group-item>
               <b-list-group-item
+              :style="{ 'background-color': isNightStyle ? 'rgb(50,50,50)' : 'white',
+                    'color': isNightStyle ? 'gray' : null}"
                 v-if='post.authorTelephone !== userInfo.phone'
                 @click.stop='showReportModal = true'
               >
@@ -68,6 +74,8 @@
               </b-modal>
               <b-list-group-item
                 v-if='post.authorTelephone === userInfo.phone'
+                :style="{ 'background-color': isNightStyle ? 'rgb(50,50,50)' : 'white',
+                    'color': isNightStyle ? 'gray' : null}"
                 @click.stop='showDeleteModal = true'
               >
                 <b-icon-trash class='mr-2'></b-icon-trash>删除
@@ -84,7 +92,9 @@
             <b-row class='mt-0'>
               <b-col md='4' class='mb-2'>
                 <b-avatar :src="post.authorAvatar" size="4rem" class="mr-2"></b-avatar>
-                <div class='author-box' @click.stop>
+                <div class='author-box' @click.stop
+                :style="{ 'background-color': isNightStyle ?
+                  'rgb(246, 155, 10)' : 'rgb(17, 167, 226)' }">
                   {{ post.author }}
                 </div>
               </b-col>
@@ -168,23 +178,34 @@
         :total="totalItems">
     </el-pagination>
     </div>
-    <div class='hots-bar' :style="{ marginTop: userInfo ? '500px' : '750px' }"
+    <div class='hots-bar' :style="{ marginTop: userInfo ? '500px' : '750px'}"
       v-if="this.$route.name == 'home' && partition == '主页'">
-      <b-card class="px-3 py-2 card-shadow" style="width: 310px; height: 100%;">
+      <b-card class="px-3 py-2 card-shadow" style="width: 310px; height: 100%;"
+      :style="{ 'background-color': isNightStyle ? 'rgb(70, 70, 70)' : null }">
         <div>
-          <b-card-header style="font-weight: bold;">
+          <b-card-header style="font-weight: bold;"
+          :style="{ 'color': isNightStyle ? 'gray' : null }">
             24小时火文
-            <button class="bi bi-arrow-clockwise" @click="calculateheat()">刷新</button>
+            <b-button class="bi bi-arrow-clockwise"
+            :style="{ 'background-color': isNightStyle ? 'rgb(70, 70, 70)' : 'white',
+            'color': isNightStyle ? 'gray' : 'black' }"
+            @click="calculateheat()">
+            <b-icon-arrow-clockwise></b-icon-arrow-clockwise>刷新
+          </b-button>
           </b-card-header>
         </div>
         <b-list-group-item v-for="(hotpost, index) in hotposts" :key="index"
+        :style="{ 'background-color': isNightStyle ? 'rgb(70, 70, 70)' : null,
+            'color': isNightStyle ? 'gray' : null }"
         @click="() => { showDetails(hotpost); updatebrowse(hotpost) }">
           <div>
             <template v-if="index<3">
               <span style="color: red; font-weight: bold;">{{ index + 1 }}</span>
             </template>
             <template v-else>
-              <span style="color:black; font-weight: bold;">{{ index + 1 }}</span>
+              <span style="font-weight: bold;"
+                :style="{ 'color': isNightStyle ? 'gray' : 'black'}">
+                {{ index + 1 }}</span>
             </template>
             <template v-if="hotpost.title.length > 8">
               {{ hotpost.title.substring(0, 8) }}...
@@ -198,7 +219,8 @@
           </div>
         </b-list-group-item>
       </b-card>
-      <b-card class="px-3 py-2 card-shadow block" style="width: 310px; height: 100%;">
+      <b-card class="px-3 py-2 card-shadow block" style="width: 310px; height: 100%;"
+      :style="{ 'background-color': isNightStyle ? 'rgb(70, 70, 70)' : null }">
           <el-carousel height="100px">
             <el-carousel-item v-for="item in imagebox" :key="item.id">
               <a :href="getWebsiteURL(item.id)">
@@ -230,6 +252,12 @@ export default {
         if (!post.photos || post.photos === '') return [];
         return post.photos.split('|');
       };
+    },
+    isNightStyle() {
+      if (JSON.parse(localStorage.getItem('Style')) === 'night') {
+        return true;
+      }
+      return false;
     },
   },
   data() {
@@ -265,6 +293,11 @@ export default {
     };
   },
   created() {
+    if (typeof localStorage !== 'undefined') {
+      if (!localStorage.getItem('Style')) {
+        localStorage.setItem('Style', JSON.stringify('day'));
+      }
+    }
     if (localStorage.getItem('Partition')) {
       this.partition = JSON.parse(localStorage.getItem('Partition'));
     } else if (this.$route.query.partitions && this.$route.query.partitions !== '主页') {
@@ -374,7 +407,9 @@ export default {
             heat: post.Heat,
             photos: post.Photos,
             showMenu: false,
-          })).sort((a, b) => new Date(b.postTime) - new Date(a.postTime)); // 按时间倒序排序展示
+          })).sort((a, b) => new Date(b.postTime) - new Date(a.postTime));
+          this.posts = this.posts.slice((this.currentPage - 1)
+            * this.pageSize, this.currentPage * this.pageSize); // 按时间倒序排序展示
         } else if (this.$route.name === 'history') {
           // 根据用户电话号码过滤帖子列表
           const filteredData = data.filter((post) => post.UserTelephone === this.userTelephone);
@@ -395,7 +430,9 @@ export default {
             heat: post.Heat,
             photos: post.Photos,
             showMenu: false,
-          })).sort((a, b) => new Date(b.postTime) - new Date(a.postTime)); // 按时间倒序排序展示
+          })).sort((a, b) => new Date(b.postTime) - new Date(a.postTime));
+          this.posts = this.posts.slice((this.currentPage - 1)
+            * this.pageSize, this.currentPage * this.pageSize);// 按时间倒序排序展示
         }
       } catch (error) {
         console.error(error);

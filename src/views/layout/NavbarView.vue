@@ -26,7 +26,8 @@
       </div>
     <b-navbar fixed="top" v-if="($route.name !== 'home'&&$route.name !== 'register'
     && this.$route.name != 'modifyPassword' && this.$route.name != 'identityValidate') ||
-    scrollPosition > 400 || (this.$route.query.partitions && this.$route.query.partitions != '主页')">
+    scrollPosition > 400 || (this.$route.query.partitions && this.$route.query.partitions != '主页')"
+    :style="{ 'background-color': isNightStyle ? 'rgb(246, 155, 10)' : 'rgb(17, 167, 226)' }">
       <b-navbar-brand>
         <b-icon-shop class="mr-3"></b-icon-shop>SSE_market
       </b-navbar-brand>
@@ -48,6 +49,7 @@
             </b-input-group>
           </b-navbar-form>
         </b-navbar-nav>
+        <div style="position:fixed"><StyleButton /></div>
         <b-navbar-nav class="ml-auto">
           <b-nav-item-dropdown right v-if="userInfo">
             <template #button-content>
@@ -67,8 +69,14 @@
         <b-list-group flush class="list-group"
         :style="{ marginTop: $route.name == 'home' &&
       (!this.$route.query.partitions || this.$route.query.partitions == '主页') ?
-        (scrollPosition < 400 ? `${60-scrollPosition}px` : '-300px') : '120px'}">
-          <b-list-group-item to="/" :class="{ active: $route.path === '/' }"
+        (scrollPosition < 400 ? `${60-scrollPosition}px` : '-300px') : '120px',
+        'background-color': isNightStyle ? 'rgb(50, 50, 50)' : null,
+        'border-right': isNightStyle ? '1px solid rgb(50, 50, 50)' :
+          '1px solid rgb(237, 235, 235)' }">
+          <b-list-group-item to="/" :style="{ 'background-color': $route.path !== '/' ?
+            isNightStyle ? 'rgb(70, 70, 70)' : null :
+            isNightStyle ? 'rgb(246, 155, 10)' : 'rgb(17, 167, 226)',
+            'color': isNightStyle ? 'gray' : null}"
           style="font-size: 18px; display: flex; align-items: center;"
           @click="togglePartitions()" class="click">
             <b-icon-house-fill class="mr-3"></b-icon-house-fill>主页
@@ -78,10 +86,16 @@
             </b-icon-caret-down-fill>
           </b-list-group-item>
           <b-list-group-item v-if="showPartitions" to="/partitions" class="click"
-            :class="{ active: $route.path === '/partitions' }" style="font-size: 18px;">
+          :style="{ 'background-color': $route.path !== '/partitions' ?
+            isNightStyle ? 'rgb(50, 50, 50)' : null :
+            isNightStyle ? 'rgb(246, 155, 10)' : 'rgb(17, 167, 226)',
+            'color': isNightStyle ? 'gray' : null}"
+            style="font-size: 18px;">
             <b-icon-grid1x2-fill class="mr-3"></b-icon-grid1x2-fill>分区选择
           </b-list-group-item>
           <b-list-group-item @click="showPostForm()"
+          :style="{ 'background-color': isNightStyle ? 'rgb(50, 50, 50)' : null,
+              'color': isNightStyle ? 'gray' : null}"
             style="font-size: 18px;"  class="click">
             <b-icon-pencil-fill class="mr-3"></b-icon-pencil-fill>发帖
           </b-list-group-item>
@@ -90,14 +104,20 @@
             <PostForm :mode="'post'"/>
           </b-modal>
           <b-list-group-item @click="toNotifications()"
-            :class="{ active: $route.path === '/notice' }"
+          :style="{ 'background-color': $route.path !== '/notice' ?
+            isNightStyle ? 'rgb(50, 50, 50)' : null :
+            isNightStyle ? 'rgb(246, 155, 10)' : 'rgb(17, 167, 226)',
+            'color': isNightStyle ? 'gray' : null }"
             style="font-size: 18px;" class="click">
             <b-icon-bell-fill class="mr-3"></b-icon-bell-fill>通知
             <span v-if="noticesNum!=0"
                   class="badge badge-danger ml-2 pop">{{noticesNum}}</span>
           </b-list-group-item>
             <b-list-group-item to="/feedback"
-            :class="{ active: $route.path === '/feedback' }"
+            :style="{ 'background-color': $route.path !== '/feedback' ?
+            isNightStyle ? 'rgb(50, 50, 50)' : null
+            : isNightStyle ? 'rgb(246, 155, 10)' : 'rgb(17, 167, 226)',
+            'color': isNightStyle ? 'gray' : null}"
             style="font-size: 18px;" class="click">
             <b-icon-envelope-fill class="mr-3"></b-icon-envelope-fill>反馈
           </b-list-group-item>
@@ -107,7 +127,9 @@
           </b-modal>
           <b-list-group-item
         :style="{ 'font-size': '18px', 'display': 'flex', 'align-items': 'center',
-        'background-color': showProfiles ? 'rgb(245, 245, 245)' : '' }"
+        'background-color': showProfiles ? 'rgb(245, 245, 245)' : '' ,
+        'background-color': isNightStyle ? 'rgb(50, 50, 50)' : null,
+        'color': isNightStyle ? 'gray' : null}"
         @click="toggleProfiles" class="click">
             <b-icon-person-circle class="mr-3"></b-icon-person-circle>我的
             <b-icon-caret-right-fill v-if="!showProfiles" style="margin-left: auto;">
@@ -116,20 +138,34 @@
             </b-icon-caret-down-fill>
           </b-list-group-item>
           <b-list-group-item  class="click" v-if="showProfiles" to="/profile"
-          :class="{ active: $route.path === '/profile' }" style="font-size: 18px;">
+          :style="{ 'background-color': $route.path !== '/profile' ?
+            isNightStyle ? 'rgb(50, 50, 50)' : null :
+            isNightStyle ? 'rgb(246, 155, 10)' : 'rgb(17, 167, 226)',
+            'color': isNightStyle ? 'gray' : null}"
+            style="font-size: 18px;">
             <b-icon-table class="mr-3"></b-icon-table>个人信息
           </b-list-group-item>
           <b-list-group-item v-if="showProfiles" to="/save" class="click"
-          :class="{ active: $route.path === '/save' }" style="font-size: 18px;">
+          :style="{ 'background-color': $route.path !== '/save' ?
+            isNightStyle ? 'rgb(50, 50, 50)' : null :
+            isNightStyle ? 'rgb(246, 155, 10)' : 'rgb(17, 167, 226)',
+            'color': isNightStyle ? 'gray' : null}"
+            style="font-size: 18px;">
             <b-icon-star-fill class="mr-3"></b-icon-star-fill>我的收藏
           </b-list-group-item>
           <b-list-group-item v-if="showProfiles" to="/history" class="click"
-          :class="{ active: $route.path === '/history' }" style="font-size: 18px;">
+          :style="{ 'background-color': $route.path !== '/history' ?
+            isNightStyle ? 'rgb(50, 50, 50)' : null :
+            isNightStyle ? 'rgb(246, 155, 10)' : 'rgb(17, 167, 226)',
+            'color': isNightStyle ? 'gray' : null}"
+            style="font-size: 18px;">
             <b-icon-clock-fill class="mr-3"></b-icon-clock-fill>历史记录
           </b-list-group-item>
           <b-list-group-item
           :style="{ 'font-size': '18px', 'display': 'flex', 'align-items': 'center',
-          'background-color': showSettings ? 'rgb(245, 245, 245)' : '' }"
+          'background-color': showSettings ? 'rgb(245, 245, 245)' : '' ,
+          'background-color': isNightStyle ? 'rgb(50, 50, 50)' : null,
+          'color': isNightStyle ? 'gray' : null}"
             @click="toggleSettings" class="click">
             <b-icon-gear-fill class="mr-3"></b-icon-gear-fill>设置
             <b-icon-caret-right-fill v-if="!showSettings" style="margin-left: auto;">
@@ -138,11 +174,15 @@
             </b-icon-caret-down-fill>
           </b-list-group-item>
           <b-list-group-item v-if="showSettings" class="click"
-           @click="toModifyPassword()" style="font-size: 18px;">
+           @click="toModifyPassword()" style="font-size: 18px;"
+           :style="{ 'background-color': isNightStyle ? 'rgb(50, 50, 50)' : null,
+            'color': isNightStyle ? 'gray' : null}">
             <b-icon-lock-fill class="mr-3"></b-icon-lock-fill>修改密码
           </b-list-group-item>
           <b-list-group-item v-if="showSettings" to="/delete" class="click"
-          :class="{ active: $route.path === '/delete' }" style="font-size: 18px;">
+          :class="{ active: $route.path === '/delete' }" style="font-size: 18px;"
+          :style="{ 'background-color': isNightStyle ? 'rgb(50, 50, 50)' : null,
+            'color': isNightStyle ? 'gray' : null}">
             <b-icon-x-circle-fill class="mr-3"></b-icon-x-circle-fill>注销账号
           </b-list-group-item>
         </b-list-group>
@@ -156,6 +196,7 @@
 import { mapState, mapActions } from 'vuex';
 import PostForm from '@/components/PostForm.vue';
 import LoginForm from '@/components/LoginForm.vue';
+import StyleButton from '@/components/StyleButton.vue';
 import store from '@/store';
 
 export default {
@@ -164,6 +205,7 @@ export default {
   components: {
     PostForm,
     LoginForm,
+    StyleButton,
   },
   computed: {
     ...mapState({
@@ -171,6 +213,15 @@ export default {
     }),
     noticesNum() {
       return store.state.noticesNum;
+    },
+    style() {
+      return store.state.style;
+    },
+    isNightStyle() {
+      if (JSON.parse(localStorage.getItem('Style')) === 'night') {
+        return true;
+      }
+      return false;
     },
   },
   data() {
@@ -184,6 +235,13 @@ export default {
       scrollPosition: 0,
       toLogin: false,
     };
+  },
+  created() {
+    if (typeof localStorage !== 'undefined') {
+      if (!localStorage.getItem('Style')) {
+        localStorage.setItem('Style', JSON.stringify('day'));
+      }
+    }
   },
   mounted() {
     window.addEventListener('scroll', this.handleScroll);
@@ -206,7 +264,9 @@ export default {
         this.toLogin = true;
         return;
       }
-      this.$router.replace({ name: 'notice' });
+      if (this.$route.path !== '/notice') {
+        this.$router.replace({ name: 'notice' });
+      }
     },
     toFeedback() {
       if (!this.userInfo) {

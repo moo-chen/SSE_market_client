@@ -5,16 +5,21 @@
       <b-icon-reply class="mr-2"></b-icon-reply>返回
     </b-button>
   <div class='postDetails' style="margin-left:200px">
-    <b-card class='mx-auto my-5' style="max-width: 1500px;">
+    <b-card class='mx-auto my-5' style="max-width: 1500px;"
+    :style="{ 'background-color': isNightStyle ? 'rgb(50,50,50)' : 'white',
+          'color': isNightStyle ? 'gray' : null}">
       <div class="text-muted" style="margin-left:850px;" @click.stop>
         <b-icon icon="three-dots-vertical" @click.stop="toggleMenu"></b-icon></div>
       <b-list-group v-if="this.post.showMenu" style="width:100px;height:1.25rem;margin-left: 880px;
         margin-top: -20px;font-size: 0.9rem;" @click.stop>
-          <b-list-group-item>
+          <b-list-group-item :style="{ 'background-color': isNightStyle ? 'rgb(50,50,50)' : 'white',
+                    'color': isNightStyle ? 'gray' : null}">
             <b-icon class="mr-2" :icon="post.isSaved ? 'star-fill' : 'star'"
             @click.stop="save()" :class="{ 'text-warning': post.isSaved }"></b-icon>收藏
           </b-list-group-item>
           <b-list-group-item v-if="this.post.authorTelephone !== userInfo.phone"
+          :style="{ 'background-color': isNightStyle ? 'rgb(50,50,50)' : 'white',
+                    'color': isNightStyle ? 'gray' : null}"
             @click.stop="showReportModal = true">
             <b-icon-exclamation-triangle class="mr-2"></b-icon-exclamation-triangle>举报
           </b-list-group-item>
@@ -24,6 +29,8 @@
             </b-form-textarea>
           </b-modal>
           <b-list-group-item v-if="this.post.authorTelephone === userInfo.phone"
+          :style="{ 'background-color': isNightStyle ? 'rgb(50,50,50)' : 'white',
+                    'color': isNightStyle ? 'gray' : null}"
             @click.stop="showDeleteModal = true">
             <b-icon-trash class="mr-2"></b-icon-trash>删除
           </b-list-group-item>
@@ -33,7 +40,9 @@
           </b-modal>
       </b-list-group>
       <b-avatar :src="post.authorAvatar" size="5rem" class="mr-3"></b-avatar>
-      <div class='author-box mb-2'>{{ post.author }}</div>
+      <div class='author-box mb-2' :style="{ 'background-color': isNightStyle ?
+                  'rgb(246, 155, 10)' : 'rgb(17, 167, 226)' }">
+        {{ post.author }}</div>
       <b-card-title>{{ post.title }}</b-card-title>
       <b-card-text>{{ post.content }}</b-card-text>
       <div v-if="fileListGet.length > 0" class="photo-viewer">
@@ -127,7 +136,8 @@
     <transition-group name="comment-list" tag="div">
     <div v-for="(comment, index) in visibleComments"
          :key="index" ref="commentRef" :id="`comment-${comment.pcommentID}`">
-      <b-card class="my-1">
+      <b-card class="my-1" :style="{ 'background-color': isNightStyle ? 'rgb(50,50,50)' : 'white',
+          'color': isNightStyle ? 'gray' : null }">
         <div class="d-flex mb-2">
           <div class="flex-shrink-0 mr-3">
             <b-avatar :src="comment.authorAvatar" size="2rem"></b-avatar>
@@ -242,57 +252,8 @@
                   </b-icon>
                   {{ subComment.likeNum }}
                 </div>
-                <!-- <div class="d-flex justify-content-end">
-                  <div class='text-muted' style='margin-top: -19px;
-                  margin-right: -250px' @click.stop>
-                    <b-icon icon='three-dots-vertical'
-                    @click.stop="subComment.showMenu =!subComment.showMenu"></b-icon>
-                  </div>
-                </div>
-                <b-list-group
-            v-if='subComment.showMenu'
-            style='
-              width: 10px;
-              height: 0.75rem;
-              margin-left: 200px;
-              margin-top: -20px;
-              font-size: 1.0rem;
-            '
-            @click.stop
-          >
-            <b-list-group-item
-              v-if='subComment.authorTelephone !== userInfo.phone'
-              @click.stop='showReportModal = true'
-            >
-              <b-icon-exclamation-triangle class='mr-2'></b-icon-exclamation-triangle>举报
-            </b-list-group-item>
-            <b-modal
-              v-model='showReportModal'
-              title='举报'
-              @hidden='clearReportReason'
-              @ok='submitReport("pcomment",comment.pcommentID)'
-              ok-title='Submit'
-            >
-              <b-form-textarea v-model='reportReason' placeholder='请输入举报原因' rows='8'>
-              </b-form-textarea>
-            </b-modal>
-            <b-list-group-item
-              v-if='subComment.authorTelephone === userInfo.phone'
-              @click.stop='showDeleteModal = true'
-            >
-              <b-icon-trash class='mr-2'></b-icon-trash>删除
-            </b-list-group-item>
-            <b-modal
-              v-model='showDeleteModal'
-              title='确认删除'
-              ok-title='Confirm'
-              @ok='pcommentdelete(comment)'
-            >
-              <p>你确定要删除这条评论吗？</p>
-            </b-modal>
-          </b-list-group> -->
           <div class="d-flex justify-content-end">
-            <div class='text-muted' style='margin-top: -19px; position: relative;'>
+            <div class='text-muted' style='margin-top: -19px; position: relative;margin-top: 50px;'>
               <div v-if="subComment.authorTelephone !== userInfo.phone"
               style="position: absolute; top: 0; right: 0;">
                 <b-icon icon='exclamation-triangle' @click.stop='showReportModal = true'></b-icon>
@@ -392,6 +353,12 @@ export default {
       }
       return num;
     },
+    isNightStyle() {
+      if (JSON.parse(localStorage.getItem('Style')) === 'night') {
+        return true;
+      }
+      return false;
+    },
   },
   mounted() {
     // 获取当前评论ID
@@ -455,6 +422,11 @@ export default {
     };
   },
   created() {
+    if (typeof localStorage !== 'undefined') {
+      if (!localStorage.getItem('Style')) {
+        localStorage.setItem('Style', JSON.stringify('day'));
+      }
+    }
     if (this.$route.query.before) {
       this.before = this.$route.query.before;
       // 将postID保存在本地缓存中

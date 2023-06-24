@@ -1,5 +1,5 @@
 <template>
-  <div style="margin-left:200px ">
+  <div style="margin-left:200px;">
     <h4>个人信息</h4>
     <el-upload
         class="avatar-uploader"
