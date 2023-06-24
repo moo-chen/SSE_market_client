@@ -27,8 +27,7 @@
     <b-navbar fixed="top" v-if="($route.name !== 'home'&&$route.name !== 'register'
     && this.$route.name != 'modifyPassword' && this.$route.name != 'identityValidate') ||
     scrollPosition > 400 || (this.$route.query.partitions && this.$route.query.partitions != '主页')"
-    :style="{ 'background-color': isNightStyle ? 'rgb(246, 155, 10)' : 'rgb(17, 167, 226)' ,
-    'z-index': '9999' }">
+    :style="{ 'background-color': isNightStyle ? 'rgb(246, 155, 10)' : 'rgb(17, 167, 226)' }">
       <b-navbar-brand>
         <b-icon-shop class="mr-3"></b-icon-shop>SSE_market
       </b-navbar-brand>
@@ -114,7 +113,7 @@
             <span v-if="noticesNum!=0"
                   class="badge badge-danger ml-2 pop">{{noticesNum}}</span>
           </b-list-group-item>
-            <b-list-group-item to="/feedback"
+            <b-list-group-item @click="toFeedback()"
             :style="{ 'background-color': $route.path !== '/feedback' ?
             isNightStyle ? 'rgb(50, 50, 50)' : null
             : isNightStyle ? 'rgb(246, 155, 10)' : 'rgb(17, 167, 226)',
@@ -124,7 +123,6 @@
           </b-list-group-item>
           <b-modal v-model='FeedbackVisible' title='反馈' ok-only ok-title="取消反馈"
           modal-class="custom-modal">
-            <PostForm :mode="'feedback'"/>
           </b-modal>
           <b-list-group-item
         :style="{ 'font-size': '18px', 'display': 'flex', 'align-items': 'center',
@@ -274,7 +272,9 @@ export default {
         this.toLogin = true;
         return;
       }
-      this.FeedbackVisible = true;
+      if (this.$route.path !== '/feedback') {
+        this.$router.replace({ name: 'feedback' });
+      }
     },
     toModifyPassword() {
       window.open('/identityValidate', '_blank');
