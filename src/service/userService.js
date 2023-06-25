@@ -73,10 +73,14 @@ const validateEmail = ({ email, mode }) => {
   return request.post('auth/validateEmail', { email, mode });
 };
 
+const identityValidate = ({ email, valiCode, mode }) => {
+  return request.post('auth/identityValidate', { email, valiCode, mode });
+};
+
 // 注销用户
-const deleteUser = ({ name }) => {
-  console.error({ name });
-  return request.post('auth/deleteMe', { name });
+const deleteUser = ({ phone, email }) => {
+  console.error({ phone, email });
+  return request.post('auth/deleteMe', { phone, email });
 };
 
 export default {
@@ -91,5 +95,6 @@ export default {
   getInfo,
   modifyPassword,
   validateEmail,
+  identityValidate,
   deleteUser,
 };

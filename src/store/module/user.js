@@ -65,10 +65,10 @@ const userModule = {
       });
     },
 
-    deleteMe(context, name) {
-      console.error(name);
+    deleteMe(context, { phone, email }) {
+      console.error(email);
       return new Promise((resolve, reject) => {
-        userService.deleteUser({ name }).then((res) => {
+        userService.deleteUser({ phone, email }).then((res) => {
           resolve(res);
         }).catch((err) => {
           reject(err);
@@ -76,15 +76,9 @@ const userModule = {
       });
     },
 
-    identityValidate(context, { email, valiCode }) {
-      // console.error('hello');
+    identityValidate(context, { email, valiCode, mode }) {
       return new Promise((resolve, reject) => {
-        userService.identityValidate({ email, valiCode }).then((res) => {
-          context.commit('SET_TOKEN', res.data.data.token);
-          return userService.info();
-        }).then((res) => {
-          // 保存用户信息
-          context.commit('SET_USERINFO', res.data.data.user);
+        userService.identityValidate({ email, valiCode, mode }).then((res) => {
           resolve(res);
         }).catch((err) => {
           reject(err);

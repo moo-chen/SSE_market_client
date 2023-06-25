@@ -37,6 +37,11 @@ const userRoutes = [
     name: 'identityValidate',
     component: () => import('@/views/identityValidate/IdentityValidateView.vue'),
   },
+  {
+    path: '/delete',
+    name: 'deleteMe',
+    component: () => import('@/views/deleteMe/deleteMeView.vue'),
+  },
 ];
 
 export default userRoutes;

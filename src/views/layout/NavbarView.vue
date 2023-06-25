@@ -25,8 +25,9 @@
     </div>
       </div>
     <b-navbar fixed="top" v-if="($route.name !== 'home'&&$route.name !== 'register'
-    && this.$route.name != 'modifyPassword' && this.$route.name != 'identityValidate') ||
-    scrollPosition > 400 || (this.$route.query.partitions && this.$route.query.partitions != '主页')"
+    && this.$route.name != 'modifyPassword' && this.$route.name != 'identityValidate' &&
+    this.$route.name != 'deleteMe') || scrollPosition > 400 ||
+    (this.$route.query.partitions && this.$route.query.partitions != '主页')"
     :style="{ 'background-color': isNightStyle ? 'rgb(246, 155, 10)' : 'rgb(17, 167, 226)' }">
       <b-navbar-brand>
         <b-icon-shop class="mr-3"></b-icon-shop>SSE_market
@@ -59,15 +60,15 @@
             <b-dropdown-item @click="logout">
               <b-icon-box-arrow-left class="mr-1"></b-icon-box-arrow-left> 退出登录
             </b-dropdown-item>
-            <b-dropdown-item @click="deleteUser">
+            <!-- <b-dropdown-item @click="deleteUser">
               <b-icon-x-circle-fill class="mr-1"></b-icon-x-circle-fill> 注销账号
-            </b-dropdown-item>
+            </b-dropdown-item> -->
           </b-nav-item-dropdown>
         </b-navbar-nav>
       </b-collapse>
     </b-navbar>
     <b-row no-gutters v-if="this.$route.name != 'register' && this.$route.name != 'modifyPassword'
-      && this.$route.name != 'identityValidate'">
+      && this.$route.name != 'identityValidate' && this.$route.name != 'deleteMe'">
       <b-col sm="2" class="nav-col" style="position:fixed;z-index: 100;">
         <b-list-group flush class="list-group"
         :style="{ marginTop: $route.name == 'home' &&
@@ -182,12 +183,12 @@
             'color': isNightStyle ? 'gray' : null}">
             <b-icon-lock-fill class="mr-3"></b-icon-lock-fill>修改密码
           </b-list-group-item>
-          <!-- <b-list-group-item v-if="showSettings" to="/delete" class="click"
+          <b-list-group-item v-if="showSettings" to="/delete" class="click"
           :class="{ active: $route.path === '/delete' }" style="font-size: 18px;"
           :style="{ 'background-color': isNightStyle ? 'rgb(50, 50, 50)' : null,
             'color': isNightStyle ? 'gray' : null}">
             <b-icon-x-circle-fill class="mr-3" @click="deleteUser"></b-icon-x-circle-fill>注销账号
-          </b-list-group-item> -->
+          </b-list-group-item>
         </b-list-group>
       </b-col>
     </b-row>
