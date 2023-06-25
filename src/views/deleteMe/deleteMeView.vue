@@ -3,7 +3,7 @@
       <div class='identityValidate' @keydown.enter="deleteMe">
     <b-row class='mt-5'>
       <b-col md='8' offset-md='2' lg='6' offset-lg='3'>
-        <b-card title='身份验证'>
+        <b-card title='注销身份验证'>
           <b-form>
             <b-form-group label='邮箱'>
               <b-form-input
