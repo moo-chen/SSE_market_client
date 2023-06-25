@@ -26,8 +26,8 @@
       </div>
     <b-navbar fixed="top" v-if="($route.name !== 'home'&&$route.name !== 'register'
     && this.$route.name != 'modifyPassword' && this.$route.name != 'identityValidate' &&
-    this.$route.name != 'deleteMe') || scrollPosition > 400 ||
-    (this.$route.query.partitions && this.$route.query.partitions != '主页')"
+    this.$route.name != 'deleteMe') ||
+    scrollPosition > 400 || (this.$route.query.partitions && this.$route.query.partitions != '主页' )"
     :style="{ 'background-color': isNightStyle ? 'rgb(246, 155, 10)' : 'rgb(17, 167, 226)' }">
       <b-navbar-brand>
         <b-icon-shop class="mr-3"></b-icon-shop>SSE_market
@@ -60,9 +60,6 @@
             <b-dropdown-item @click="logout">
               <b-icon-box-arrow-left class="mr-1"></b-icon-box-arrow-left> 退出登录
             </b-dropdown-item>
-            <!-- <b-dropdown-item @click="deleteUser">
-              <b-icon-x-circle-fill class="mr-1"></b-icon-x-circle-fill> 注销账号
-            </b-dropdown-item> -->
           </b-nav-item-dropdown>
         </b-navbar-nav>
       </b-collapse>
@@ -117,7 +114,7 @@
             <span v-if="noticesNum!=0"
                   class="badge badge-danger ml-2 pop">{{noticesNum}}</span>
           </b-list-group-item>
-            <b-list-group-item to="/feedback"
+            <b-list-group-item @click="toFeedback()"
             :style="{ 'background-color': $route.path !== '/feedback' ?
             isNightStyle ? 'rgb(50, 50, 50)' : null
             : isNightStyle ? 'rgb(246, 155, 10)' : 'rgb(17, 167, 226)',
@@ -127,7 +124,6 @@
           </b-list-group-item>
           <b-modal v-model='FeedbackVisible' title='反馈' ok-only ok-title="取消反馈"
           modal-class="custom-modal">
-            <PostForm :mode="'feedback'"/>
           </b-modal>
           <b-list-group-item
         :style="{ 'font-size': '18px', 'display': 'flex', 'align-items': 'center',
@@ -256,7 +252,6 @@ export default {
   methods: {
     // 使用map将映射'store/module'里的logout函数
     ...mapActions('userModule', ['logout']),
-    ...mapActions('userModule', ['deleteMe']),
     showPostForm() {
       if (!this.userInfo) {
         this.toLogin = true;
@@ -278,7 +273,9 @@ export default {
         this.toLogin = true;
         return;
       }
-      this.FeedbackVisible = true;
+      if (this.$route.path !== '/feedback') {
+        this.$router.replace({ name: 'feedback' });
+      }
     },
     toModifyPassword() {
       window.open('/identityValidate', '_blank');
@@ -310,11 +307,7 @@ export default {
       this.$router.push({ name: 'home', query: { searchinfo: this.searchinfo } });
       this.$router.go(0);
     },
-    waitingReload() {
-      const start = (new Date()).getTime();
-      while ((new Date()).getTime() - start < 2000);
-      this.logout();
-    },
+
   },
 };
 </script>
