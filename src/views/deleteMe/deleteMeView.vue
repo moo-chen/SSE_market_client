@@ -29,8 +29,6 @@
               <b-button @click='identityValidate' variant='outline-primary' block>身份验证</b-button>
               <b-button v-if="validateOK" @click='deleteUser'
               variant='outline-primary' block>注销账号</b-button>
-              <b-button @click="$router.replace({ name : 'login' })"
-              variant="outline-primary" block>返回登录</b-button>
             </b-form-group>
           </b-form>
         </b-card>
