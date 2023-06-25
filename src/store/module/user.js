@@ -89,6 +89,7 @@ const userModule = {
     validateEmail(context, { email, mode }) {
       return new Promise((resolve, reject) => {
         userService.validateEmail({ email, mode }).then((res) => {
+          console.error('1');
           resolve(res);
         }).catch((err) => {
           reject(err);

@@ -38,7 +38,7 @@ const userRoutes = [
     component: () => import('@/views/identityValidate/IdentityValidateView.vue'),
   },
   {
-    path: '/delete',
+    path: '/deleteMe',
     name: 'deleteMe',
     component: () => import('@/views/deleteMe/deleteMeView.vue'),
   },

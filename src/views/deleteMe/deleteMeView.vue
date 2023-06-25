@@ -95,6 +95,7 @@ export default {
         return;
       }
       this.userValidate(this.user).then(() => {
+        console.error('!');
         this.$bvToast.toast('已发送验证码，请将邮箱发送的验证码输入以完成注册验证', {
           title: '系统提醒',
           variant: 'primary',
@@ -130,6 +131,7 @@ export default {
             variant: 'danger',
             solid: true,
           });
+          this.validateOK = false;
         } else {
           console.error(err); // 输出错误
         }
@@ -152,7 +154,6 @@ export default {
           // eslint-disable-next-line no-unused-vars
           const id = setTimeout(() => {
             this.logout();
-            this.$router.push({ name: 'login' });
           }, 2000);
         }).catch((err) => {
           if (err.response && err.response.data && err.response.data.msg) { // 新增判断
@@ -161,14 +162,16 @@ export default {
               variant: 'danger',
               solid: true,
             });
+            this.validateOK = false;
           } else {
             console.error(err); // 输出错误
           }
         });
       }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消删除',
+        this.$bvToast.toast({
+          title: '已取消注销',
+          variant: 'primary',
+          solid: true,
         });
       });
     },

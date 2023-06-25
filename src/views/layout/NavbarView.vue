@@ -183,11 +183,11 @@
             'color': isNightStyle ? 'gray' : null}">
             <b-icon-lock-fill class="mr-3"></b-icon-lock-fill>修改密码
           </b-list-group-item>
-          <b-list-group-item v-if="showSettings" to="/delete" class="click"
-          :class="{ active: $route.path === '/delete' }" style="font-size: 18px;"
-          :style="{ 'background-color': isNightStyle ? 'rgb(50, 50, 50)' : null,
+          <b-list-group-item v-if="showSettings" class="click"
+           @click="toDeleteUser()" style="font-size: 18px;"
+           :style="{ 'background-color': isNightStyle ? 'rgb(50, 50, 50)' : null,
             'color': isNightStyle ? 'gray' : null}">
-            <b-icon-x-circle-fill class="mr-3" @click="deleteUser"></b-icon-x-circle-fill>注销账号
+            <b-icon-x-circle-fill class="mr-3"></b-icon-x-circle-fill>注销账号
           </b-list-group-item>
         </b-list-group>
       </b-col>
@@ -283,6 +283,9 @@ export default {
     toModifyPassword() {
       window.open('/identityValidate', '_blank');
     },
+    toDeleteUser() {
+      window.open('/deleteMe', '_blank');
+    },
     handleScroll() {
       this.scrollPosition = window.scrollY;
     },
@@ -311,40 +314,6 @@ export default {
       const start = (new Date()).getTime();
       while ((new Date()).getTime() - start < 2000);
       this.logout();
-    },
-    deleteUser() {
-      this.$confirm('此操作将永久注销用户, 是否继续?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning',
-      }).then(() => {
-        this.myName = this.userInfo.name;
-        this.deleteMe(this.myName).then(() => {
-          this.$message({
-            type: 'success',
-            message: '注销成功!',
-          });
-          // eslint-disable-next-line no-unused-vars
-          const id = setTimeout(() => {
-            this.logout();
-          }, 2000);
-        }).catch(() => {
-          this.$message({
-            type: 'warning',
-            message: 'wait!',
-          });
-        });
-        console.error(1);
-        if (this.hasDeleted === true) {
-          // this.waitingReload();
-        }
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消删除',
-        });
-      });
-      console.error(2);
     },
   },
 };
