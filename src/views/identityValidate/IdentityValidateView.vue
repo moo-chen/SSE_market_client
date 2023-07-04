@@ -102,7 +102,7 @@ export default {
       if (this.$v.user.$anyError) {
         return;
       }
-      this.userValidate(this.user).then(() => {
+      this.idValidate(this.user).then(() => {
         this.$bvToast.toast('身份验证成功,可以更改密码', {
           title: '系统提醒',
           variant: 'primary',
