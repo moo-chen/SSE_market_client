@@ -556,6 +556,7 @@ export default {
       this.userTelephone = this.userInfo.phone;
       this.submitreport({
         TargetID: this.postID,
+        Targettype: 'post',
         userTelephone: this.userTelephone,
         Reason: this.reportReason,
       })
