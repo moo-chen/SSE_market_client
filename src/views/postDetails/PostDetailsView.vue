@@ -120,6 +120,18 @@
           placeholder="请写下你的精彩评论..." rows="3">
           </b-form-textarea>
         </b-form-group>
+        <div>
+          <button  variant='primary' @click="showEmojiStatus()">😀</button>
+            <div v-if="showEmoji">
+              <picker
+                :include="['people']"
+                :showSearch="false"
+                :showPreview="false"
+                :showCategories="false"
+                @select="addEmojiToPcomment"
+              />
+            </div>
+        </div>
         <b-button @click="pcommentPost" variant="primary">提交评论</b-button>
     </div>
   </div>
@@ -214,6 +226,18 @@
                                    placeholder="请写下你的精彩评论..." rows="3">
                   </b-form-textarea>
                 </b-form-group>
+                <div>
+                  <button  type="button" variant='primary' @click="showEmojiStatus()">😀</button>
+                  <div v-if="showEmoji">
+                    <picker
+                      :include="['people']"
+                      :showSearch="false"
+                      :showPreview="false"
+                      :showCategories="false"
+                      @select="addEmojiToCcomment"
+                    />
+                  </div>
+                </div>
                 <b-button type="submit" variant="primary">
                   提交评论</b-button>
               </form>
@@ -303,6 +327,18 @@
                                      :placeholder="'回复@'+nowReplyComment.author" rows="3">
                     </b-form-textarea>
                   </b-form-group>
+                  <div>
+                    <button  type="button" variant='primary' @click="showEmojiStatus()">😀</button>
+                    <div v-if="showEmoji">
+                      <picker
+                        :include="['people']"
+                        :showSearch="false"
+                        :showPreview="false"
+                        :showCategories="false"
+                        @select="addEmojiToCcomment"
+                      />
+                    </div>
+                  </div>
                   <b-button type="submit" variant="primary">
                     提交回复</b-button>
                 </form>
@@ -332,8 +368,12 @@
 
 import { mapState, mapActions } from 'vuex';
 import { len } from 'vuelidate/lib/validators/common';
+import { Picker } from 'emoji-mart-vue';
 
 export default {
+  components: {
+    Picker,
+  },
   computed: {
     // 计算属性，根据当前展示的评论数和每次展示的评论数量，返回可见的评论
     visibleComments() {
@@ -425,6 +465,7 @@ export default {
       showcommentsindex: 0, // 当先评论的回复所对应的帖子评论
       nowReplyComment: -1, // 当前想要回复的评论的评论
       showRepliesModal: false, // 显示窗口
+      showEmoji: false,
     };
   },
   created() {
@@ -830,6 +871,15 @@ export default {
       }
       return this.comments[index].subComments.slice(0, 5);
     },
+    addEmojiToPcomment(emoji) {
+      this.pcomment.content += emoji.native;
+    },
+    addEmojiToCcomment(emoji) {
+      this.ccomment.content += emoji.native;
+    },
+    showEmojiStatus() {
+      this.showEmoji = !this.showEmoji;
+    },
   },
 };
 </script>
@@ -865,5 +915,17 @@ export default {
   animation-duration: 1.0s;
   animation-iteration-count: 3;
   background-color: transparent !important; /* 覆盖框架中的样式 */
+}
+.emoji-mart[data-v-7bc71df8] {
+  font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  height: 300px;
+  color: #ffffff !important;
+  border: 1px solid #d9d9d9;
+  border-radius: 5px;
+  background: #fff;
 }
 </style>

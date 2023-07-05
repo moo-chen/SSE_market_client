@@ -14,13 +14,16 @@
           </b-form-group>
           <b-form-group label='正文'>
             <b-form-textarea v-model='posts.content' :rows='20'></b-form-textarea>
-            <picker
-              :include="['people']"
-              :showSearch="false"
-              :showPreview="false"
-              :showCategories="false"
-              @select="addEmoji"
-            />
+            <button  variant='primary' @click="showEmojiStatus()">😀</button>
+            <div v-if="showEmoji">
+              <picker
+                :include="['people']"
+                :showSearch="false"
+                :showPreview="false"
+                :showCategories="false"
+                @select="addEmoji"
+              />
+            </div>
           </b-form-group>
           <el-upload
             action='https://localhost:8080/api/auth/uploadphotos'
@@ -82,6 +85,7 @@ export default {
         partition: '',
         photos: '',
       },
+      showEmoji: false,
     };
   },
   methods: {
@@ -135,6 +139,9 @@ export default {
     addEmoji(emoji) {
       this.posts.content += emoji.native;
     },
+    showEmojiStatus() {
+      this.showEmoji = !this.showEmoji;
+    },
   },
 };
 </script>
@@ -146,32 +153,10 @@ export default {
   display: flex;
   -ms-flex-direction: column;
   flex-direction: column;
-  height: 420px;
+  height: 300px;
   color: #ffffff !important;
   border: 1px solid #d9d9d9;
   border-radius: 5px;
   background: #fff;
-}
-.text {
-  display: block;
-  margin: 0 auto;
-  margin-bottom: 10px;
-  width: 400px;
-  resize: none;
-  box-sizing: border-box;
-  padding: 5px 10px;
-  border-radius: 8px;
-}
-.text-place {
-  height: 80px;
-  box-sizing: border-box;
-  padding: 5px 10px;
-  border-radius: 8px;
-  background: #ddd5d5;
-}
-.text-place p {
-  display: flex;
-  align-items: center;
-  margin: 0;
 }
 </style>
