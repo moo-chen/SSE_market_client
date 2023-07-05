@@ -138,33 +138,6 @@
          :key="index" ref="commentRef" :id="`comment-${comment.pcommentID}`">
       <b-card class="my-1" :style="{ 'background-color': isNightStyle ? 'rgb(50,50,50)' : 'white',
           'color': isNightStyle ? 'gray' : null }">
-          <div class='text-muted' style='margin-left: 850px'>
-            <div v-if='comment.authorTelephone !== userInfo.phone'>
-              <b-icon-exclamation-triangle class='mr-2' @click.stop='showReportModal = true'>
-              </b-icon-exclamation-triangle>
-              <b-modal
-              v-model='showReportModal'
-              title='举报'
-              @hidden='clearReportReason'
-              @ok='submitReport("pcomment",comment.pcommentID)'
-              ok-title='Submit'
-            >
-              <b-form-textarea v-model='reportReason' placeholder='请输入举报原因' rows='8'>
-              </b-form-textarea>
-            </b-modal>
-            </div>
-            <div v-if='comment.authorTelephone === userInfo.phone'>
-              <b-icon-trash class='mr-2' @click.stop='showDeleteModal = true'></b-icon-trash>
-              <b-modal
-              v-model='showDeleteModal'
-              title='确认删除'
-              ok-title='Confirm'
-              @ok='pcommentdelete(comment)'
-            >
-              <p>你确定要删除这条评论吗？</p>
-            </b-modal>
-            </div>
-          </div>
         <div class="d-flex mb-2">
           <div class="flex-shrink-0 mr-3">
             <b-avatar :src="comment.authorAvatar" size="2rem"></b-avatar>
@@ -187,6 +160,52 @@
             variant="primary" style="margin-top:10px">
               {{ comment.showReplyForm ? '隐藏评论' : '评论' }}
             </b-button>
+            <div class='text-muted' style='margin-left: 820px' @click.stop>
+              <b-icon icon='three-dots-vertical' @click.stop="comment.showMenu =
+              !comment.showMenu"></b-icon>
+            </div>
+            <b-list-group
+            v-if='comment.showMenu'
+            style='
+              width: 100px;
+              height: 1.25rem;
+              margin-left: 850px;
+              margin-top: -20px;
+              font-size: 0.9rem;
+            '
+            @click.stop
+          >
+            <b-list-group-item
+              v-if='comment.authorTelephone !== userInfo.phone'
+              @click.stop='showReportModal = true'
+            >
+              <b-icon-exclamation-triangle class='mr-2'></b-icon-exclamation-triangle>举报
+            </b-list-group-item>
+            <b-modal
+              v-model='showReportModal'
+              title='举报'
+              @hidden='clearReportReason'
+              @ok='submitReport("pcomment",comment.pcommentID)'
+              ok-title='Submit'
+            >
+              <b-form-textarea v-model='reportReason' placeholder='请输入举报原因' rows='8'>
+              </b-form-textarea>
+            </b-modal>
+            <b-list-group-item
+              v-if='comment.authorTelephone === userInfo.phone'
+              @click.stop='showDeleteModal = true'
+            >
+              <b-icon-trash class='mr-2'></b-icon-trash>删除
+            </b-list-group-item>
+            <b-modal
+              v-model='showDeleteModal'
+              title='确认删除'
+              ok-title='Confirm'
+              @ok='pcommentdelete(comment)'
+            >
+              <p>你确定要删除这条评论吗？</p>
+            </b-modal>
+          </b-list-group>
             <!--如果点击了评论，将显示评论窗口-->
             <div v-if="comment.showReplyForm" style="margin-top:10px">
               <form @submit.prevent="ccommentPost(index)">
@@ -732,6 +751,7 @@ export default {
           likeNum: pcomment.LikeNum,
           subComments: pcomment.SubComments,
           isLiked: pcomment.IsLiked,
+          showMenu: false,
           showReplyForm: false,
           showAllReplies: false,
           heat: pcomment.LikeNum + len(pcomment.SubComments),
