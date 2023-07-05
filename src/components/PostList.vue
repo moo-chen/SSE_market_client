@@ -51,13 +51,13 @@
             >
               <b-list-group-item
                 :style="{ 'background-color': isNightStyle ? 'rgb(50,50,50)' : 'white',
-                    'color': isNightStyle ? 'gray' : null}">
+                    'color': isNightStyle ? 'gray' : null, 'z-index': 9999}">
                   <b-icon class="mr-2" :icon="post.isSaved ? 'star-fill' : 'star'"
                 @click.stop="save(post)" :class="{ 'text-warning': post.isSaved }"></b-icon>收藏
               </b-list-group-item>
               <b-list-group-item
               :style="{ 'background-color': isNightStyle ? 'rgb(50,50,50)' : 'white',
-                    'color': isNightStyle ? 'gray' : null}"
+                    'color': isNightStyle ? 'gray' : null, 'z-index': 9999}"
                 v-if='post.authorTelephone !== userInfo.phone'
                 @click.stop='showReportModal = true'
               >
@@ -76,7 +76,7 @@
               <b-list-group-item
                 v-if='post.authorTelephone === userInfo.phone'
                 :style="{ 'background-color': isNightStyle ? 'rgb(50,50,50)' : 'white',
-                    'color': isNightStyle ? 'gray' : null}"
+                    'color': isNightStyle ? 'gray' : null, 'z-index': 9999}"
                 @click.stop='showDeleteModal = true'
               >
                 <b-icon-trash class='mr-2'></b-icon-trash>删除
@@ -628,6 +628,7 @@ export default {
 .home-view {
   flex: 1;
   margin-left: 0px; /* Adjust the margin as needed */
+  z-index: 1000;
 }
 .hots-bar {
   flex: 0;
