@@ -120,6 +120,18 @@
           placeholder="请写下你的精彩评论..." rows="3">
           </b-form-textarea>
         </b-form-group>
+        <div>
+          <button  variant='primary' @click="showEmojiStatus()">😀</button>
+            <div v-if="showEmoji">
+              <picker
+                :include="['people']"
+                :showSearch="false"
+                :showPreview="false"
+                :showCategories="false"
+                @select="addEmojiToPcomment"
+              />
+            </div>
+        </div>
         <b-button @click="pcommentPost" variant="primary">提交评论</b-button>
     </div>
   </div>
@@ -138,33 +150,6 @@
          :key="index" ref="commentRef" :id="`comment-${comment.pcommentID}`">
       <b-card class="my-1" :style="{ 'background-color': isNightStyle ? 'rgb(50,50,50)' : 'white',
           'color': isNightStyle ? 'gray' : null }">
-          <div class='text-muted' style='margin-left: 850px'>
-            <div v-if='comment.authorTelephone !== userInfo.phone'>
-              <b-icon-exclamation-triangle class='mr-2' @click.stop='showReportModal = true'>
-              </b-icon-exclamation-triangle>
-              <b-modal
-              v-model='showReportModal'
-              title='举报'
-              @hidden='clearReportReason'
-              @ok='submitReport("pcomment",comment.pcommentID)'
-              ok-title='Submit'
-            >
-              <b-form-textarea v-model='reportReason' placeholder='请输入举报原因' rows='8'>
-              </b-form-textarea>
-            </b-modal>
-            </div>
-            <div v-if='comment.authorTelephone === userInfo.phone'>
-              <b-icon-trash class='mr-2' @click.stop='showDeleteModal = true'></b-icon-trash>
-              <b-modal
-              v-model='showDeleteModal'
-              title='确认删除'
-              ok-title='Confirm'
-              @ok='pcommentdelete(comment)'
-            >
-              <p>你确定要删除这条评论吗？</p>
-            </b-modal>
-            </div>
-          </div>
         <div class="d-flex mb-2">
           <div class="flex-shrink-0 mr-3">
             <b-avatar :src="comment.authorAvatar" size="2rem"></b-avatar>
@@ -187,6 +172,52 @@
             variant="primary" style="margin-top:10px">
               {{ comment.showReplyForm ? '隐藏评论' : '评论' }}
             </b-button>
+            <div class='text-muted' style='margin-left: 820px' @click.stop>
+              <b-icon icon='three-dots-vertical' @click.stop="comment.showMenu =
+              !comment.showMenu"></b-icon>
+            </div>
+            <b-list-group
+            v-if='comment.showMenu'
+            style='
+              width: 100px;
+              height: 1.25rem;
+              margin-left: 850px;
+              margin-top: -20px;
+              font-size: 0.9rem;
+            '
+            @click.stop
+          >
+            <b-list-group-item
+              v-if='comment.authorTelephone !== userInfo.phone'
+              @click.stop='showReportModal = true'
+            >
+              <b-icon-exclamation-triangle class='mr-2'></b-icon-exclamation-triangle>举报
+            </b-list-group-item>
+            <b-modal
+              v-model='showReportModal'
+              title='举报'
+              @hidden='clearReportReason'
+              @ok='submitReport("pcomment",comment.pcommentID)'
+              ok-title='Submit'
+            >
+              <b-form-textarea v-model='reportReason' placeholder='请输入举报原因' rows='8'>
+              </b-form-textarea>
+            </b-modal>
+            <b-list-group-item
+              v-if='comment.authorTelephone === userInfo.phone'
+              @click.stop='showDeleteModal = true'
+            >
+              <b-icon-trash class='mr-2'></b-icon-trash>删除
+            </b-list-group-item>
+            <b-modal
+              v-model='showDeleteModal'
+              title='确认删除'
+              ok-title='Confirm'
+              @ok='pcommentdelete(comment)'
+            >
+              <p>你确定要删除这条评论吗？</p>
+            </b-modal>
+          </b-list-group>
             <!--如果点击了评论，将显示评论窗口-->
             <div v-if="comment.showReplyForm" style="margin-top:10px">
               <form @submit.prevent="ccommentPost(index)">
@@ -195,6 +226,18 @@
                                    placeholder="请写下你的精彩评论..." rows="3">
                   </b-form-textarea>
                 </b-form-group>
+                <div>
+                  <button  type="button" variant='primary' @click="showEmojiStatus()">😀</button>
+                  <div v-if="showEmoji">
+                    <picker
+                      :include="['people']"
+                      :showSearch="false"
+                      :showPreview="false"
+                      :showCategories="false"
+                      @select="addEmojiToCcomment"
+                    />
+                  </div>
+                </div>
                 <b-button type="submit" variant="primary">
                   提交评论</b-button>
               </form>
@@ -213,8 +256,9 @@
               <hr>
               <div class="d-lg-flex mb-2" @mouseover="isHovered = true;
                 nowSubIndex = subIndex;nowIndex = index"
-                   @mouseleave="isHovered = false;nowSubIndex = 0;replyshow=false;nowIndex=0"
-                   @focus="nowSubIndex = subIndex" @focusout="nowSubIndex = subIndex">
+                   @mouseleave="nowIndex =0"
+                   @focus="nowSubIndex = subIndex"
+                   @focusout="nowSubIndex = subIndex;isHovered = false">
                 <div class="flex-shrink-0 mr-3">
                   <b-avatar :src="subComment.authorAvatar" size="2rem"></b-avatar>
                 </div>
@@ -264,26 +308,41 @@
             </div>
                 <div v-if="isHovered && subIndex===nowSubIndex && index===nowIndex"
                 style="margin-left:10px">
-                  <b-button @click="replyshow = !replyshow"
+                  <!--回复按钮，点击后跳出评论的评论的回复窗口-->
+                  <b-button @click="replyshow = !replyshow; nowReplyComment=subComment"
                   variant="outline-info">
                     回复
                   </b-button>
-                  <div v-if="replyshow && subIndex===nowSubIndex" style="margin-top:10px">
-                    <form @submit.prevent=
-                              "ccommentPost(index,subComment.author,subComment.ccommentID)">
-                      <b-form-group>
-                        <b-form-textarea v-model="ccomment.content"
-                                         :placeholder="'回复@'+subComment.author" rows="3">
-                        </b-form-textarea>
-                      </b-form-group>
-                      <b-button type="submit" variant="primary">
-                        提交回复</b-button>
-                    </form>
-                  </div>
                 </div>
               </div>
             </div>
             </transition-group>
+              <b-modal hide-footer v-model="replyshow" v-if="index===showcommentsindex">
+                <form @submit.prevent=
+                          "ccommentPost(showcommentsindex,
+                          nowReplyComment.author,
+                          nowReplyComment.ccommentID)">
+                  <b-form-group>
+                    <b-form-textarea v-model="ccomment.content"
+                                     :placeholder="'回复@'+nowReplyComment.author" rows="3">
+                    </b-form-textarea>
+                  </b-form-group>
+                  <div>
+                    <button  type="button" variant='primary' @click="showEmojiStatus()">😀</button>
+                    <div v-if="showEmoji">
+                      <picker
+                        :include="['people']"
+                        :showSearch="false"
+                        :showPreview="false"
+                        :showCategories="false"
+                        @select="addEmojiToCcomment"
+                      />
+                    </div>
+                  </div>
+                  <b-button type="submit" variant="primary">
+                    提交回复</b-button>
+                </form>
+              </b-modal>
               <b-button v-if="comment.subComments.length > 0 && len(comment.subComments) > 5"
                         @click="showAllReplies(index)" variant="outline-primary"
                         style="font-size: 12px;">
@@ -309,8 +368,12 @@
 
 import { mapState, mapActions } from 'vuex';
 import { len } from 'vuelidate/lib/validators/common';
+import { Picker } from 'emoji-mart-vue';
 
 export default {
+  components: {
+    Picker,
+  },
   computed: {
     // 计算属性，根据当前展示的评论数和每次展示的评论数量，返回可见的评论
     visibleComments() {
@@ -348,6 +411,7 @@ export default {
   },
   data() {
     return {
+      // currentPcommentID和currentCcommentID是用来进行通知的跳转
       currentPcommentID: 0,
       currentCcommentID: 0,
       before: '',
@@ -398,8 +462,10 @@ export default {
       nowIndex: 0,
       replyshow: false,
       // 用来修复发表评论后页面的跳转问题（尚未修复）
-      showcommentsindex: 0,
+      showcommentsindex: 0, // 当先评论的回复所对应的帖子评论
+      nowReplyComment: -1, // 当前想要回复的评论的评论
       showRepliesModal: false, // 显示窗口
+      showEmoji: false,
     };
   },
   created() {
@@ -457,7 +523,7 @@ export default {
     this.pcommentsShow().then(() => {
       setTimeout(() => {
         this.scrollToComment();
-      }, 1000);
+      });
     });
   },
   beforeRouteLeave(to, from, next) {
@@ -469,14 +535,57 @@ export default {
   methods: {
     scrollToComment() {
       // 获取当前评论所在的元素
-      const commentEl = document.getElementById(`comment-${this.currentPcommentID}`);
+      let commentEl = document.getElementById(`comment-${this.currentPcommentID}`);
       console.log(commentEl);
       // const commentRef = this.$refs.commentRef[3];
       // if (commentRef) {
       //   commentRef.setAttribute('tabindex', '-1');
       //   commentRef.scrollIntoView({ behavior: 'smooth', duration: 500 });
       // }
-      if (commentEl) {
+      if (commentEl === null) {
+        this.allComments = true;
+        const get = new Promise((resolve, reject) => {
+          setTimeout(() => {
+            commentEl = document.getElementById(`comment-${this.currentPcommentID}`);
+            if (commentEl) resolve();
+            else reject();
+          });
+        });
+        get.then(() => {
+          // 使用vue-scrollto插件平滑滚动到元素所在位置
+          this.$scrollTo(commentEl, {
+            duration: 750, // 滚动动画持续时间，单位为毫秒
+            offset: -150, // 滚动偏移量，用于调整滚动位置
+          });
+          commentEl.classList.add('blink');
+          setTimeout(() => {
+            commentEl.classList.remove('blink');
+          }, 10000);
+          if (this.currentCcommentID) {
+            const parentEl = commentEl.parentNode;
+            this.showcommentsindex = Array.prototype.indexOf.call(parentEl.children, commentEl);
+            this.showRepliesModal = true;
+            setTimeout(() => {
+              let childEl = document.getElementById(`ccomment-${this.currentCcommentID}`);
+              console.log(childEl, this.currentCcommentID);
+              if (childEl === null) {
+                this.showAllReplies(this.showcommentsindex);
+                setTimeout(() => {
+                  childEl = document.getElementById(`ccomment-${this.currentCcommentID}`);
+                });
+              }
+              if (childEl) {
+                // 使用vue-scrollto插件平滑滚动到元素所在位置
+                childEl.focus();
+                childEl.classList.add('blink');
+                setTimeout(() => {
+                  childEl.classList.remove('blink');
+                }, 10000);
+              }
+            }, 500);
+          }
+        });
+      } else {
         // 使用vue-scrollto插件平滑滚动到元素所在位置
         this.$scrollTo(commentEl, {
           duration: 750, // 滚动动画持续时间，单位为毫秒
@@ -486,24 +595,32 @@ export default {
         setTimeout(() => {
           commentEl.classList.remove('blink');
         }, 10000);
-      }
-      if (this.currentCcommentID) {
-        const parentEl = commentEl.parentNode;
-        this.showcommentsindex = Array.prototype.indexOf.call(parentEl.children, commentEl);
-        this.showRepliesModal = true;
-        this.showAllReplies(this.showcommentsindex);
-        setTimeout(() => {
-          const childEl = document.getElementById(`ccomment-${this.currentCcommentID}`);
-          console.log(childEl, this.currentCcommentID);
-          if (childEl) {
-            // 使用vue-scrollto插件平滑滚动到元素所在位置
-            childEl.focus();
-            childEl.classList.add('blink');
-            setTimeout(() => {
-              childEl.classList.remove('blink');
-            }, 10000);
-          }
-        }, 500);
+        if (this.currentCcommentID) {
+          const parentEl = commentEl.parentNode;
+          this.showcommentsindex = Array.prototype.indexOf.call(parentEl.children, commentEl);
+          this.showRepliesModal = true;
+          setTimeout(() => {
+            let childEl = document.getElementById(`ccomment-${this.currentCcommentID}`);
+            console.log(childEl, this.currentCcommentID);
+            if (childEl === null) {
+              this.showAllReplies(this.showcommentsindex);
+              const get = new Promise((resolve, reject) => {
+                setTimeout(() => {
+                  childEl = document.getElementById(`ccomment-${this.currentCcommentID}`);
+                  if (childEl) resolve();
+                  else reject();
+                });
+              });
+              get.then(() => {
+                childEl.focus();
+                childEl.classList.add('blink');
+                setTimeout(() => {
+                  childEl.classList.remove('blink');
+                }, 10000);
+              });
+            }
+          });
+        }
       }
     },
     handlePictureCardPreview(file) {
@@ -675,6 +792,7 @@ export default {
           likeNum: pcomment.LikeNum,
           subComments: pcomment.SubComments,
           isLiked: pcomment.IsLiked,
+          showMenu: false,
           showReplyForm: false,
           showAllReplies: false,
           heat: pcomment.LikeNum + len(pcomment.SubComments),
@@ -730,6 +848,9 @@ export default {
           solid: true,
         });
         setTimeout(() => {
+          this.showcommentsindex = 0;
+          this.nowReplyComment = '';
+          this.replyshow = false;
           this.pcommentsShow();
           // 清空输入的内容
           this.ccomment.content = '';
@@ -749,6 +870,15 @@ export default {
         return this.comments[index].subComments;
       }
       return this.comments[index].subComments.slice(0, 5);
+    },
+    addEmojiToPcomment(emoji) {
+      this.pcomment.content += emoji.native;
+    },
+    addEmojiToCcomment(emoji) {
+      this.ccomment.content += emoji.native;
+    },
+    showEmojiStatus() {
+      this.showEmoji = !this.showEmoji;
     },
   },
 };
@@ -785,5 +915,17 @@ export default {
   animation-duration: 1.0s;
   animation-iteration-count: 3;
   background-color: transparent !important; /* 覆盖框架中的样式 */
+}
+.emoji-mart[data-v-7bc71df8] {
+  font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  height: 300px;
+  color: #ffffff !important;
+  border: 1px solid #d9d9d9;
+  border-radius: 5px;
+  background: #fff;
 }
 </style>
