@@ -520,11 +520,12 @@ export default {
       .catch((err) => {
         console.error(err);
       });
-    this.pcommentsShow().then(() => {
-      setTimeout(() => {
-        this.scrollToComment();
-      });
-    });
+    this.pcommentsShow();
+    // 这里或许有比setTimeout更好的写法，但是暂时写不出来，
+    // 所以先用setTimeout的方法来确保pcommentsShow执行完成之后再执行this.scrollToComment()
+    setTimeout(() => {
+      this.scrollToComment();
+    }, 500);
   },
   beforeRouteLeave(to, from, next) {
     // 返回上一页面时清空本地缓存
@@ -534,6 +535,7 @@ export default {
   },
   methods: {
     scrollToComment() {
+      console.log('scrollToComment');
       // 获取当前评论所在的元素
       let commentEl = document.getElementById(`comment-${this.currentPcommentID}`);
       console.log(commentEl);
@@ -547,8 +549,8 @@ export default {
         const get = new Promise((resolve, reject) => {
           setTimeout(() => {
             commentEl = document.getElementById(`comment-${this.currentPcommentID}`);
-            if (commentEl) resolve();
-            else reject();
+            if (commentEl) resolve(commentEl);
+            else reject(commentEl);
           });
         });
         get.then(() => {
@@ -584,6 +586,8 @@ export default {
               }
             }, 500);
           }
+        }).catch((err) => {
+          console.log(err);
         });
       } else {
         // 使用vue-scrollto插件平滑滚动到元素所在位置
@@ -617,6 +621,8 @@ export default {
                 setTimeout(() => {
                   childEl.classList.remove('blink');
                 }, 10000);
+              }).catch((error) => {
+                console.log(error);
               });
             }
           });
