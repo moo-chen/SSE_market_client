@@ -341,14 +341,21 @@ export default {
         this.toLogin = true;
         return;
       }
-      const routeLink = this.$router.resolve({
+      // const routeLink = this.$router.resolve({
+      //   name: 'postDetails',
+      //   params: { partition: this.partition },
+      //   query: {
+      //     id: post.id, title: post.title, before: this.$route.name, partition: this.partition,
+      //   },
+      // });
+      // window.open(routeLink.href, '_blank');
+      this.$router.push({
         name: 'postDetails',
         params: { partition: this.partition },
         query: {
           id: post.id, title: post.title, before: this.$route.name, partition: this.partition,
         },
       });
-      window.open(routeLink.href, '_blank');
     },
     async browsePosts() {
       if (this.userInfo) {
