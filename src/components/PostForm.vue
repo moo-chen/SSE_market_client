@@ -11,17 +11,27 @@
         <b-card style='max-width: 1200px; max-height: 2000px'>
           <b-form-group label='标题'>
             <b-form-input v-model='posts.title' type='text'></b-form-input>
-          </b-form-group>
-          <b-form-group label='正文'>
-            <b-form-textarea v-model='posts.content' :rows='20'></b-form-textarea>
-            <button  variant='primary' @click="showEmojiStatus()">😀</button>
-            <div v-if="showEmoji">
+            <button  variant='primary' @click="showEmojiOnTitle()">😀</button>
+            <div v-if="showEmojiTitle">
               <picker
                 :include="['people']"
                 :showSearch="false"
                 :showPreview="false"
                 :showCategories="false"
-                @select="addEmoji"
+                @select="addEmojiToTitle"
+              />
+            </div>
+          </b-form-group>
+          <b-form-group label='正文'>
+            <b-form-textarea v-model='posts.content' :rows='20'></b-form-textarea>
+            <button  variant='primary' @click="showEmojiOnContent()">😀</button>
+            <div v-if="showEmojiContent">
+              <picker
+                :include="['people']"
+                :showSearch="false"
+                :showPreview="false"
+                :showCategories="false"
+                @select="addEmojiToContent"
               />
             </div>
           </b-form-group>
@@ -85,7 +95,8 @@ export default {
         partition: '',
         photos: '',
       },
-      showEmoji: false,
+      showEmojiTitle: false,
+      showEmojiContent: false,
     };
   },
   methods: {
@@ -136,11 +147,17 @@ export default {
     // feedback() {
     //
     // },
-    addEmoji(emoji) {
+    addEmojiToTitle(emoji) {
+      this.posts.title += emoji.native;
+    },
+    addEmojiToContent(emoji) {
       this.posts.content += emoji.native;
     },
-    showEmojiStatus() {
-      this.showEmoji = !this.showEmoji;
+    showEmojiOnTitle() {
+      this.showEmojiTitle = !this.showEmojiTitle;
+    },
+    showEmojiOnContent() {
+      this.showEmojiContent = !this.showEmojiContent;
     },
   },
 };
