@@ -55,7 +55,7 @@ export default {
     handleUploadError() {
       this.dialogVisible = true;
     },
-    // 不要有beforeRemove
+    // 不要有beforeRemove，要不会导致大文件不能自动删除
     handleRemove(file, fileList) {
       const index = this.fileList.indexOf(file);
       if (index > -1) {
