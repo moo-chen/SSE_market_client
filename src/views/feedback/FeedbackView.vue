@@ -55,6 +55,7 @@ export default {
     handleUploadError() {
       this.dialogVisible = true;
     },
+    // 不要有beforeRemove
     handleRemove(file, fileList) {
       const index = this.fileList.indexOf(file);
       if (index > -1) {
