@@ -51,13 +51,13 @@
             >
               <b-list-group-item
                 :style="{ 'background-color': isNightStyle ? 'rgb(50,50,50)' : 'white',
-                    'color': isNightStyle ? 'gray' : null}">
+                    'color': isNightStyle ? 'gray' : null, 'z-index': 9999}">
                   <b-icon class="mr-2" :icon="post.isSaved ? 'star-fill' : 'star'"
                 @click.stop="save(post)" :class="{ 'text-warning': post.isSaved }"></b-icon>收藏
               </b-list-group-item>
               <b-list-group-item
               :style="{ 'background-color': isNightStyle ? 'rgb(50,50,50)' : 'white',
-                    'color': isNightStyle ? 'gray' : null}"
+                    'color': isNightStyle ? 'gray' : null, 'z-index': 9999}"
                 v-if='post.authorTelephone !== userInfo.phone'
                 @click.stop='showReportModal = true'
               >
@@ -76,7 +76,7 @@
               <b-list-group-item
                 v-if='post.authorTelephone === userInfo.phone'
                 :style="{ 'background-color': isNightStyle ? 'rgb(50,50,50)' : 'white',
-                    'color': isNightStyle ? 'gray' : null}"
+                    'color': isNightStyle ? 'gray' : null, 'z-index': 9999}"
                 @click.stop='showDeleteModal = true'
               >
                 <b-icon-trash class='mr-2'></b-icon-trash>删除
@@ -181,7 +181,7 @@
     </div>
     <div class='hots-bar' :style="{ marginTop: userInfo ? '500px' : '750px'}"
       v-if="this.$route.name == 'home' && partition == '主页'">
-      <b-card class="px-3 py-2 card-shadow" style="width: 310px; height: 100%;"
+      <b-card class="px-3 py-2 card-shadow" style="width: 300px; height: 100%;"
       :style="{ 'background-color': isNightStyle ? 'rgb(70, 70, 70)' : null }">
         <div>
           <b-card-header style="font-weight: bold;"
@@ -220,9 +220,9 @@
           </div>
         </b-list-group-item>
       </b-card>
-      <b-card class="px-3 py-2 card-shadow block" style="width: 310px; height: 100%;"
+      <div class="px-3 py-2 card-shadow block" style="width: 300px; height: 100%;"
       :style="{ 'background-color': isNightStyle ? 'rgb(70, 70, 70)' : null }">
-          <el-carousel height="100px">
+          <el-carousel height="120px">
             <el-carousel-item v-for="item in imagebox" :key="item.id">
               <a :href="getWebsiteURL(item.id)">
                 <span>Some text</span>
@@ -230,7 +230,7 @@
               </a>
             </el-carousel-item>
           </el-carousel>
-      </b-card>
+      </div>
     </div>
   </div>
 </template>
@@ -275,7 +275,7 @@ export default {
         { id: 0, idView: require('../assets/image/caraousel1.png') },
         { id: 1, idView: require('../assets/image/caraousel2.png') },
         { id: 2, idView: require('../assets/image/caraousel3.png') },
-        { id: 3, idView: require('../assets/image/caraousel4.png') },
+        // { id: 3, idView: require('../assets/image/caraousel4.png') },
       ],
       dialogImageUrl: '',
       dialogVisible: false,
@@ -341,14 +341,21 @@ export default {
         this.toLogin = true;
         return;
       }
-      const routeLink = this.$router.resolve({
+      // const routeLink = this.$router.resolve({
+      //   name: 'postDetails',
+      //   params: { partition: this.partition },
+      //   query: {
+      //     id: post.id, title: post.title, before: this.$route.name, partition: this.partition,
+      //   },
+      // });
+      // window.open(routeLink.href, '_blank');
+      this.$router.push({
         name: 'postDetails',
         params: { partition: this.partition },
         query: {
           id: post.id, title: post.title, before: this.$route.name, partition: this.partition,
         },
       });
-      window.open(routeLink.href, '_blank');
     },
     async browsePosts() {
       if (this.userInfo) {
@@ -556,6 +563,7 @@ export default {
       this.userTelephone = this.userInfo.phone;
       this.submitreport({
         TargetID: this.postID,
+        Targettype: 'post',
         userTelephone: this.userTelephone,
         Reason: this.reportReason,
       })
@@ -620,6 +628,7 @@ export default {
 .home-view {
   flex: 1;
   margin-left: 0px; /* Adjust the margin as needed */
+  z-index: 1000;
 }
 .hots-bar {
   flex: 0;

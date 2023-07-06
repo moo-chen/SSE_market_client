@@ -65,15 +65,20 @@ const userModule = {
       });
     },
 
-    identityValidate(context, { email, valiCode }) {
-      // console.error('hello');
+    deleteMe(context, { phone, email }) {
+      console.error(email);
       return new Promise((resolve, reject) => {
-        userService.identityValidate({ email, valiCode }).then((res) => {
-          context.commit('SET_TOKEN', res.data.data.token);
-          return userService.info();
-        }).then((res) => {
-          // 保存用户信息
-          context.commit('SET_USERINFO', res.data.data.user);
+        userService.deleteUser({ phone, email }).then((res) => {
+          resolve(res);
+        }).catch((err) => {
+          reject(err);
+        });
+      });
+    },
+
+    identityValidate(context, { email, valiCode, mode }) {
+      return new Promise((resolve, reject) => {
+        userService.identityValidate({ email, valiCode, mode }).then((res) => {
           resolve(res);
         }).catch((err) => {
           reject(err);
@@ -84,6 +89,7 @@ const userModule = {
     validateEmail(context, { email, mode }) {
       return new Promise((resolve, reject) => {
         userService.validateEmail({ email, mode }).then((res) => {
+          console.error('1');
           resolve(res);
         }).catch((err) => {
           reject(err);

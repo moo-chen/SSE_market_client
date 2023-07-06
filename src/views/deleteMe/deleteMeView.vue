@@ -1,9 +1,9 @@
 <template>
     <div class="identityValidate-view">
-      <div class='identityValidate' @keydown.enter="modifyPassword">
+      <div class='identityValidate' @keydown.enter="deleteMe">
     <b-row class='mt-5'>
       <b-col md='8' offset-md='2' lg='6' offset-lg='3'>
-        <b-card title='身份验证'>
+        <b-card title='注销身份验证'>
           <b-form>
             <b-form-group label='邮箱'>
               <b-form-input
@@ -26,7 +26,9 @@
             </b-form-group>
             <b-form-group>
               <b-button @click='validateEmail' variant='outline-primary' block>获取验证码</b-button>
-              <b-button @click='identityValidate' variant='outline-primary' block>修改密码</b-button>
+              <b-button @click='identityValidate' variant='outline-primary' block>身份验证</b-button>
+              <b-button v-if="validateOK" @click='deleteUser'
+              variant='outline-primary' block>注销账号</b-button>
             </b-form-group>
           </b-form>
         </b-card>
@@ -37,7 +39,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapState } from 'vuex';
 import { required } from 'vuelidate/lib/validators';
 import customValidator from '@/helper/validator';
 
@@ -45,10 +47,12 @@ export default {
   data() {
     return {
       user: {
+        phone: '',
         email: '',
         valiCode: '',
         mode: '',
       },
+      validateOK: false,
     };
   },
   validations: {
@@ -62,9 +66,16 @@ export default {
       },
     },
   },
+  computed: {
+    ...mapState({
+      userInfo: (state) => state.userModule.userInfo,
+    }),
+  },
   methods: {
     ...mapActions('userModule', { idValidate: 'identityValidate' }),
     ...mapActions('userModule', { userValidate: 'validateEmail' }),
+    ...mapActions('userModule', ['deleteMe']),
+    ...mapActions('userModule', ['logout']),
     validateState(name) {
       // 这里是es6 解构赋值
       const { $dirty, $error } = this.$v.user[name];
@@ -82,6 +93,7 @@ export default {
         return;
       }
       this.userValidate(this.user).then(() => {
+        console.error('!');
         this.$bvToast.toast('已发送验证码，请将邮箱发送的验证码输入以完成注册验证', {
           title: '系统提醒',
           variant: 'primary',
@@ -97,20 +109,19 @@ export default {
     },
 
     identityValidate() {
+      console.error(this.userInfo);
       this.user.mode = 1;
       this.$v.user.$touch();
       if (this.$v.user.$anyError) {
         return;
       }
       this.idValidate(this.user).then(() => {
-        this.$bvToast.toast('身份验证成功,可以更改密码', {
+        this.$bvToast.toast('身份验证成功,可以注销账号', {
           title: '系统提醒',
           variant: 'primary',
           solid: true,
         });
-        setTimeout(() => {
-          this.$router.replace({ name: 'modifyPassword' });
-        }, 1000);
+        this.validateOK = true;
       }).catch((err) => {
         if (err.response && err.response.data && err.response.data.msg) { // 新增判断
           this.$bvToast.toast(err.response.data.msg, {
@@ -118,9 +129,48 @@ export default {
             variant: 'danger',
             solid: true,
           });
+          this.validateOK = false;
         } else {
           console.error(err); // 输出错误
         }
+      });
+    },
+
+    deleteUser() {
+      console.error(this.userInfo);
+      this.$confirm('此操作将永久注销用户, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+      }).then(() => {
+        this.user.phone = this.userInfo.phone;
+        this.deleteMe(this.user).then(() => {
+          this.$message({
+            type: 'success',
+            message: '注销成功!',
+          });
+          // eslint-disable-next-line no-unused-vars
+          const id = setTimeout(() => {
+            this.logout();
+          }, 2000);
+        }).catch((err) => {
+          if (err.response && err.response.data && err.response.data.msg) { // 新增判断
+            this.$bvToast.toast(err.response.data.msg, {
+              title: '数据验证错误',
+              variant: 'danger',
+              solid: true,
+            });
+            this.validateOK = false;
+          } else {
+            console.error(err); // 输出错误
+          }
+        });
+      }).catch(() => {
+        this.$bvToast.toast({
+          title: '已取消注销',
+          variant: 'primary',
+          solid: true,
+        });
       });
     },
   },

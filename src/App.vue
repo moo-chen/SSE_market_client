@@ -1,6 +1,6 @@
 <template>
     <div id='app' :style="{ 'background-color': isNightStyle ? 'rgb(25,25,25)' : 'white',
-          'min-height':'100vh' }">
+          'min-height': $route.name == 'home' ? '300vh' : '100vh'}">
       <navbar />
         <b-container>
           <router-view :style="{ marginTop: $route.name == 'home' &&

@@ -25,10 +25,10 @@
     </div>
       </div>
     <b-navbar fixed="top" v-if="($route.name !== 'home'&&$route.name !== 'register'
-    && this.$route.name != 'modifyPassword' && this.$route.name != 'identityValidate') ||
-    scrollPosition > 400 || (this.$route.query.partitions && this.$route.query.partitions != '主页')"
-    :style="{ 'background-color': isNightStyle ? 'rgb(246, 155, 10)' : 'rgb(17, 167, 226)' ,
-    'z-index': '9999' }">
+    && this.$route.name != 'modifyPassword' && this.$route.name != 'identityValidate' &&
+    this.$route.name != 'deleteMe') ||
+    scrollPosition > 400 || (this.$route.query.partitions && this.$route.query.partitions != '主页' )"
+    :style="{ 'background-color': isNightStyle ? 'rgb(246, 155, 10)' : 'rgb(17, 167, 226)' }">
       <b-navbar-brand>
         <b-icon-shop class="mr-3"></b-icon-shop>SSE_market
       </b-navbar-brand>
@@ -65,7 +65,7 @@
       </b-collapse>
     </b-navbar>
     <b-row no-gutters v-if="this.$route.name != 'register' && this.$route.name != 'modifyPassword'
-      && this.$route.name != 'identityValidate'">
+      && this.$route.name != 'identityValidate' && this.$route.name != 'deleteMe'">
       <b-col sm="2" class="nav-col" style="position:fixed;z-index: 100;">
         <b-list-group flush class="list-group"
         :style="{ marginTop: $route.name == 'home' &&
@@ -114,7 +114,7 @@
             <span v-if="noticesNum!=0"
                   class="badge badge-danger ml-2 pop">{{noticesNum}}</span>
           </b-list-group-item>
-            <b-list-group-item to="/feedback"
+            <b-list-group-item @click="toFeedback()"
             :style="{ 'background-color': $route.path !== '/feedback' ?
             isNightStyle ? 'rgb(50, 50, 50)' : null
             : isNightStyle ? 'rgb(246, 155, 10)' : 'rgb(17, 167, 226)',
@@ -124,7 +124,6 @@
           </b-list-group-item>
           <b-modal v-model='FeedbackVisible' title='反馈' ok-only ok-title="取消反馈"
           modal-class="custom-modal">
-            <PostForm :mode="'feedback'"/>
           </b-modal>
           <b-list-group-item
         :style="{ 'font-size': '18px', 'display': 'flex', 'align-items': 'center',
@@ -180,9 +179,9 @@
             'color': isNightStyle ? 'gray' : null}">
             <b-icon-lock-fill class="mr-3"></b-icon-lock-fill>修改密码
           </b-list-group-item>
-          <b-list-group-item v-if="showSettings" to="/delete" class="click"
-          :class="{ active: $route.path === '/delete' }" style="font-size: 18px;"
-          :style="{ 'background-color': isNightStyle ? 'rgb(50, 50, 50)' : null,
+          <b-list-group-item v-if="showSettings" class="click"
+           @click="toDeleteUser()" style="font-size: 18px;"
+           :style="{ 'background-color': isNightStyle ? 'rgb(50, 50, 50)' : null,
             'color': isNightStyle ? 'gray' : null}">
             <b-icon-x-circle-fill class="mr-3"></b-icon-x-circle-fill>注销账号
           </b-list-group-item>
@@ -274,10 +273,15 @@ export default {
         this.toLogin = true;
         return;
       }
-      this.FeedbackVisible = true;
+      if (this.$route.path !== '/feedback') {
+        this.$router.replace({ name: 'feedback' });
+      }
     },
     toModifyPassword() {
       window.open('/identityValidate', '_blank');
+    },
+    toDeleteUser() {
+      window.open('/deleteMe', '_blank');
     },
     handleScroll() {
       this.scrollPosition = window.scrollY;

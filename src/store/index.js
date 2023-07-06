@@ -12,7 +12,6 @@ export default new Vuex.Store({
   strict: process.env.NODE_ENV !== 'production',
   state: {
     noticesNum: 0,
-    style: 'day',
   },
   getters: {
   },
@@ -24,18 +23,6 @@ export default new Vuex.Store({
       }).catch((error) => {
         console.error(error);
       });
-    },
-    getStyle(state) {
-      return state.style;
-    },
-    toggleStyle(state) {
-      if (state.style === 'day') {
-        state.style = 'night';
-        localStorage.setItem('style', JSON.stringify('night'));
-      } else if (state.style === 'night') {
-        state.style = 'day';
-        localStorage.setItem('style', JSON.stringify('day'));
-      }
     },
   },
   actions: {
