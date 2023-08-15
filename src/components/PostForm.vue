@@ -36,7 +36,7 @@
             </div>
           </b-form-group>
           <el-upload
-            action='https://localhost:8080/api/auth/uploadphotos'
+            :action="uploadPhotosActionURL"
             list-type='picture-card'
             multiple
             :on-preview='handlePictureCardPreview'
@@ -85,6 +85,7 @@ export default {
   },
   data() {
     return {
+      uploadPhotosActionURL: `${process.env.VUE_APP_BASE_URL}auth/uploadPhotos`,
       fileList: [],
       dialogImageUrl: '',
       dialogVisible: false,
