@@ -56,8 +56,8 @@
 
 <script>
 import { required, minLength } from 'vuelidate/lib/validators';
-import customValidator from '@/helper/validator';
 import { mapActions } from 'vuex';
+import customValidator from '@/helper/validator';
 
 export default {
   data() {

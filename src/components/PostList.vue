@@ -148,8 +148,16 @@
             </template>
               </div>
             </div>
-            <div class='d-flex justify-content-between'>
-              <small class='text-muted'>{{ formatDate(post.postTime) }}</small>
+            <div class="d-flex justify-content-between">
+              <div class='d-flex justify-content-between'>
+                <small class='text-muted'>{{ formatDate(post.postTime) }}</small>
+              </div>
+              <div class="tag-group">
+                <span class="tag-group__title"></span>
+              <el-tag v-for="tag in post.tag" :key="tag.label" :type="tag.type"
+              effect="plain" size="mini">{{ tag.label }}
+              </el-tag>
+              </div>
             </div>
             <div class='d-flex justify-content-between align-items-center mt-3'>
               <div class='text-muted'>
@@ -248,6 +256,13 @@ export default {
     ...mapState({
       userInfo: (state) => state.userModule.userInfo,
     }),
+    tagTypeMap() {
+      return {
+        大厂: '',
+        高工资: 'success',
+        实习: 'danger',
+      };
+    },
     fileListGet() {
       return (post) => {
         if (!post.photos || post.photos === '') return [];
@@ -391,6 +406,10 @@ export default {
               browse: post.Browse,
               heat: post.Heat,
               photos: post.Photos,
+              tag: post.Tag ? post.Tag.split(',').map((tagText) => ({
+                type: this.tagTypeMap[tagText.trim()], // 使用 this.tagTypeMap
+                label: tagText.trim(),
+              })) : [],
               showMenu: false,
             })).sort((a, b) => new Date(b.postTime) - new Date(a.postTime)); // 按时间倒序排序展示
           this.posts = this.posts.slice((this.currentPage - 1)
@@ -414,6 +433,10 @@ export default {
             browseNum: post.Browse,
             heat: post.Heat,
             photos: post.Photos,
+            tag: post.Tag ? post.Tag.split(',').map((tagText) => ({
+              type: this.tagTypeMap[tagText.trim()], // 使用 this.tagTypeMap
+              label: tagText.trim(),
+            })) : [],
             showMenu: false,
           })).sort((a, b) => new Date(b.postTime) - new Date(a.postTime));
           this.totalItems = this.posts.length;
@@ -438,6 +461,10 @@ export default {
             browse: post.Browse,
             heat: post.Heat,
             photos: post.Photos,
+            tag: post.Tag ? post.Tag.split(',').map((tagText) => ({
+              type: this.tagTypeMap[tagText.trim()], // 使用 this.tagTypeMap
+              label: tagText.trim(),
+            })) : [],
             showMenu: false,
           })).sort((a, b) => new Date(b.postTime) - new Date(a.postTime));
           this.totalItems = this.posts.length;
