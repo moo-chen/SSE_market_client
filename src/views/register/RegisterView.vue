@@ -120,10 +120,8 @@
 <script>
 // 引入一些需要的组件及库
 import { required, minLength, maxLength } from 'vuelidate/lib/validators';
-
-import customValidator from '@/helper/validator';
-
 import { mapActions } from 'vuex';
+import customValidator from '@/helper/validator';
 
 // export default用于导出模块中的一个默认值，函数一般放在其中
 export default {
