@@ -95,7 +95,15 @@
         </el-dialog>
       </div>
       <div class="d-flex justify-content-between">
-        <small class="text-muted">{{ formatDate(post.postTime) }}</small>
+        <div class='d-flex justify-content-between'>
+          <small class='text-muted'>{{ formatDate(post.postTime) }}</small>
+        </div>
+        <div class="tag-group">
+          <span class="tag-group__title"></span>
+          <el-tag v-for="tag in post.tag" :key="tag.label" :type="tag.type"
+          effect="plain" size="mini">{{ tag.label }}
+          </el-tag>
+        </div>
       </div>
       <div class='d-flex justify-content-between align-items-center mt-3'>
         <div class="text-muted">
@@ -403,6 +411,13 @@ export default {
       }
       return false;
     },
+    tagTypeMap() {
+      return {
+        大厂: '',
+        高工资: 'success',
+        实习: 'danger',
+      };
+    },
   },
   mounted() {
     // 获取当前评论ID
@@ -511,6 +526,10 @@ export default {
         this.post.like = post.data.Like;
         this.post.comment = post.data.Comment;
         this.post.postTime = post.data.PostTime;
+        this.post.tag = post.data.Tag ? post.data.Tag.split(',').map((tagText) => ({
+          type: this.tagTypeMap[tagText.trim()],
+          label: tagText.trim(),
+        })) : [];
         this.post.isSaved = post.data.IsSaved;
         this.post.isLiked = post.data.IsLiked;
         this.post.showMenu = false;

@@ -1,5 +1,5 @@
-import storageService from '@/service/storageService';
 import axios from 'axios';
+import storageService from '@/service/storageService';
 // eslint-disable-next-line import/no-cycle
 import store from '@/store';
 

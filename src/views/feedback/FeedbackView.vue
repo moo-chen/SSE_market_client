@@ -13,9 +13,8 @@
     <el-upload
         class="upload-demo"
         style="margin-left: 100px;"
-        action="http://localhost:8080/api/auth/uploadZip"
+        :action="uploadZipActionURL"
         :on-remove="handleRemove"
-        :before-remove="beforeRemove"
         :on-success="handleUploadSuccess"
         :on-error="handleUploadError"
         :before-upload="beforeUpload"
@@ -26,7 +25,7 @@
         accept=".zip"
     >
       <el-button size="small" type="primary" >上传附件</el-button>
-      <div slot="tip" class="el-upload__tip">只能上传zip文件,且不超过100MB</div>
+      <div slot="tip" class="el-upload__tip">只能上传zip文件,且不超过10MB</div>
     </el-upload>
     <div style="padding-bottom: 15px;" />
     <el-button type="primary" style="margin-left: 100px;" @click="submitfeedback">提交反馈</el-button>
@@ -39,6 +38,7 @@ import { mapActions } from 'vuex';
 export default {
   data() {
     return {
+      uploadZipActionURL: `${process.env.VUE_APP_BASE_URL}auth/uploadZip`,
       textarea: '',
       fileList: [],
       feedback: {
@@ -56,6 +56,7 @@ export default {
     handleUploadError() {
       this.dialogVisible = true;
     },
+    // 不要有beforeRemove，要不会导致大文件不能自动删除
     handleRemove(file, fileList) {
       const index = this.fileList.indexOf(file);
       if (index > -1) {
@@ -67,13 +68,9 @@ export default {
       console.log(files, fileList);
       this.$message.warning(`当前限制选择 1 个文件，你选择了 ${files.length} 个文件`);
     },
-    beforeRemove(file, fileList) {
-      console.log(file, fileList);
-      return this.$confirm(`确定移除 ${file.name}？`);
-    },
     beforeUpload(file) {
-      if (file.size / 1024 / 1024 > 100) {
-        this.$message.error('文件大小不能超过100MB');
+      if (file.size / 1024 / 1024 > 10) {
+        this.$message.error('文件大小不能超过10MB');
         return false;
       }
       return true;
