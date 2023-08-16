@@ -58,6 +58,12 @@ export default {
           description: '畅所欲言，创意无限。',
           linkLabel: '跳转分区',
         },
+        {
+          imageUrl: require('@/assets/image/recruit.jpg'),
+          title: '求职招募',
+          description: '梦想职路，共创未来。若有需要投稿求职信息，请投稿到邮箱：',
+          linkLabel: '跳转分区',
+        },
       ],
     };
   },
