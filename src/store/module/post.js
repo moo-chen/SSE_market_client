@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 // eslint-disable-next-line import/no-cycle
 import postService from '@/service/postService';
 
@@ -10,7 +9,7 @@ const postModule = {
     }) {
       return new Promise((resolve, reject) => {
         postService.post({
-          userTelephone, title, content, partition, photos,
+          userTelephone, title, content, partition, photos, tagList,
         }).then((res) => {
           resolve(res);
         }).catch((err) => {
@@ -123,4 +122,3 @@ const postModule = {
 };
 
 export default postModule;
->>>>>>> 78f564ee4fafa1b8d196427b5fb1eef05805e5c7
