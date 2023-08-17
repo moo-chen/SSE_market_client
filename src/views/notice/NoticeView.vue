@@ -77,8 +77,8 @@
 </template>
 
 <script>
-import request from '@/utils/request';
 import { mapState } from 'vuex';
+import request from '@/utils/request';
 
 export default {
   data() {

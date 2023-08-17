@@ -13,7 +13,7 @@
     <el-upload
         class="upload-demo"
         style="margin-left: 100px;"
-        action="https://localhost:8080/api/auth/uploadZip"
+        :action="uploadZipActionURL"
         :on-remove="handleRemove"
         :on-success="handleUploadSuccess"
         :on-error="handleUploadError"
@@ -38,6 +38,7 @@ import { mapActions } from 'vuex';
 export default {
   data() {
     return {
+      uploadZipActionURL: `${process.env.VUE_APP_BASE_URL}auth/uploadZip`,
       textarea: '',
       fileList: [],
       feedback: {

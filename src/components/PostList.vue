@@ -2,13 +2,13 @@
   <div class='page-container'>
     <div class='home-view'>
       <b-modal v-model='toLogin' title='登录' ok-only ok-title="取消登录"
-               modal-class="custom-modal">
+        modal-class="custom-modal">
         <LoginForm />
       </b-modal>
       <div class="login-section" v-if="this.$route.name == 'home' && partition == '主页'
           && !userInfo">
         <b-button variant="primary" @click="toLogin = true"
-                  style="margin-top:100px;width: 150px;border-radius: 20px;">
+        style="margin-top:100px;width: 150px;border-radius: 20px;">
           立即登录</b-button>
         <div class="register-section" style="margin-top:40px;color: white;">
           <span>还没有账号？</span>
@@ -16,25 +16,25 @@
         </div>
       </div>
       <div class="audio-section" :style="{ marginTop: userInfo ? '0px' : '250px' }"
-           v-if="this.$route.name == 'home' && partition == '主页'">
+        v-if="this.$route.name == 'home' && partition == '主页'">
         <audio ref="audio" :src="music_path" style="margin-top: 140px; z-index: 1000;" controls />
       </div>
       <div class="video-section" v-if="this.$route.name == 'home' && partition == '主页'"
-           :style="{ marginTop: userInfo ? '250px' : '500px' }">
+      :style="{ marginTop: userInfo ? '250px' : '500px' }">
         <video ref="videoPlayer" :src="video_path" style="margin-top: 10px; z-index: 1000;"
                controls></video>
       </div>
       <b-button variant="primary" v-if="this.partition != '主页'" class="back_button"
-                @click="goback" style="margin-left: 60px;">
+        @click="goback" style="margin-left: 60px;">
         <b-icon-reply class="mr-2"></b-icon-reply>返回
       </b-button>
       <b-row>
         <b-col v-for='post in posts' :key='post.id' cols='12' md='12' lg='12' class='mb-3'>
           <b-card class='px-3 py-2 card-shadow'
-                  @click="() => { showDetails(post); updatebrowse(post) }"
-                  :style="{ 'background-color': isNightStyle ? 'rgb(50,50,50)' : 'white',
+          @click="() => { showDetails(post); updatebrowse(post) }"
+          :style="{ 'background-color': isNightStyle ? 'rgb(50,50,50)' : 'white',
               'color': isNightStyle ? 'gray' : null }"
-                  style="width:900px">
+          style="width:900px">
             <div class='text-muted' style='margin-left: 820px' @click.stop>
               <b-icon icon='three-dots-vertical' @click.stop='toggleMenu(post)'></b-icon>
             </div>
@@ -52,11 +52,11 @@
               <b-list-group-item
                 :style="{ 'background-color': isNightStyle ? 'rgb(50,50,50)' : 'white',
                     'color': isNightStyle ? 'gray' : null, 'z-index': 9999}">
-                <b-icon class="mr-2" :icon="post.isSaved ? 'star-fill' : 'star'"
-                        @click.stop="save(post)" :class="{ 'text-warning': post.isSaved }"></b-icon>收藏
+                  <b-icon class="mr-2" :icon="post.isSaved ? 'star-fill' : 'star'"
+                @click.stop="save(post)" :class="{ 'text-warning': post.isSaved }"></b-icon>收藏
               </b-list-group-item>
               <b-list-group-item
-                :style="{ 'background-color': isNightStyle ? 'rgb(50,50,50)' : 'white',
+              :style="{ 'background-color': isNightStyle ? 'rgb(50,50,50)' : 'white',
                     'color': isNightStyle ? 'gray' : null, 'z-index': 9999}"
                 v-if='post.authorTelephone !== userInfo.phone'
                 @click.stop='showReportModal = true'
@@ -94,58 +94,58 @@
               <b-col md='4' class='mb-2'>
                 <b-avatar :src="post.authorAvatar" size="4rem" class="mr-2"></b-avatar>
                 <div class='author-box' @click.stop
-                     :style="{ 'background-color': isNightStyle ?
+                :style="{ 'background-color': isNightStyle ?
                   'rgb(246, 155, 10)' : 'rgb(17, 167, 226)' }">
                   {{ post.author }}
                 </div>
               </b-col>
             </b-row>
-            <b-card-title>{{ post.title }}</b-card-title>
-            <b-card-text>{{ post.content }}</b-card-text>
+                <b-card-title>{{ post.title }}</b-card-title>
+                <b-card-text>{{ post.content }}</b-card-text>
             <div v-if="fileListGet.length > 0" class="photo-viewer">
               <div class="thumbnail-container">
                 <template v-if="fileListGet(post).length === 4">
-                  <div>
-                    <img :src="fileListGet(post)[0]"
-                         width="270"
-                         height="270"
-                         @click="handlePictureCardPreview(fileListGet(post)[0])"
-                         @keyup.enter="handlePictureCardPreview(fileListGet(post)[0])"
-                         alt="Post Photo" />
-                    <img :src="fileListGet(post)[1]"
-                         width="270"
-                         height="270"
-                         style="margin-top:20px"
-                         @click="handlePictureCardPreview(fileListGet(post)[1])"
-                         @keyup.enter="handlePictureCardPreview(fileListGet(post)[1])"
-                         alt="Post Photo" />
-                  </div>
-                  <div>
-                    <img :src="fileListGet(post)[2]"
-                         width="270"
-                         height="270"
-                         @click="handlePictureCardPreview(fileListGet(post)[2])"
-                         @keyup.enter="handlePictureCardPreview(fileListGet(post)[2])"
-                         alt="Post Photo" />
-                    <img :src="fileListGet(post)[3]"
-                         width="270"
-                         height="270"
-                         style="margin-top:20px"
-                         @click="handlePictureCardPreview(fileListGet(post)[3])"
-                         @keyup.enter="handlePictureCardPreview(fileListGet(post)[3])"
-                         alt="Post Photo" />
-                  </div>
-                </template>
-                <template v-else>
-                  <div v-for="(file, index) in fileListGet(post)" :key="index">
-                    <img :src="file"
-                         width="270"
-                         height="270"
-                         @click="handlePictureCardPreview(file)"
-                         @keyup.enter="handlePictureCardPreview(file)"
-                         alt="Post Photo" />
-                  </div>
-                </template>
+            <div>
+              <img :src="fileListGet(post)[0]"
+                  width="270"
+                  height="270"
+                  @click="handlePictureCardPreview(fileListGet(post)[0])"
+                  @keyup.enter="handlePictureCardPreview(fileListGet(post)[0])"
+                  alt="Post Photo" />
+              <img :src="fileListGet(post)[1]"
+                  width="270"
+                    height="270"
+                    style="margin-top:20px"
+                    @click="handlePictureCardPreview(fileListGet(post)[1])"
+                    @keyup.enter="handlePictureCardPreview(fileListGet(post)[1])"
+                    alt="Post Photo" />
+            </div>
+            <div>
+              <img :src="fileListGet(post)[2]"
+                  width="270"
+                  height="270"
+                  @click="handlePictureCardPreview(fileListGet(post)[2])"
+                  @keyup.enter="handlePictureCardPreview(fileListGet(post)[2])"
+                  alt="Post Photo" />
+              <img :src="fileListGet(post)[3]"
+                  width="270"
+                  height="270"
+                  style="margin-top:20px"
+                  @click="handlePictureCardPreview(fileListGet(post)[3])"
+                  @keyup.enter="handlePictureCardPreview(fileListGet(post)[3])"
+                  alt="Post Photo" />
+            </div>
+          </template>
+            <template v-else>
+              <div v-for="(file, index) in fileListGet(post)" :key="index">
+                <img :src="file"
+                    width="270"
+                    height="270"
+                    @click="handlePictureCardPreview(file)"
+                    @keyup.enter="handlePictureCardPreview(file)"
+                    alt="Post Photo" />
+              </div>
+            </template>
               </div>
             </div>
             <div class="d-flex justify-content-between">
@@ -157,6 +157,16 @@
                 <el-tag v-for="tag in post.tag" :key="tag.label" :type="tag.type"
                         effect="plain" size="mini">{{ tag.label }}
                 </el-tag>
+              </div>
+            <div class="d-flex justify-content-between">
+              <div class='d-flex justify-content-between'>
+                <small class='text-muted'>{{ formatDate(post.postTime) }}</small>
+              </div>
+              <div class="tag-group">
+                <span class="tag-group__title"></span>
+              <el-tag v-for="tag in post.tag" :key="tag.label" :type="tag.type"
+              effect="plain" size="mini">{{ tag.label }}
+              </el-tag>
               </div>
             </div>
             <div class='d-flex justify-content-between align-items-center mt-3'>

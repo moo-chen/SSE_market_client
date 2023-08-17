@@ -36,7 +36,7 @@
             </div>
           </b-form-group>
           <el-upload
-            action='https://localhost:8080/api/auth/uploadphotos'
+            :action="uploadPhotosActionURL"
             list-type='picture-card'
             multiple
             :on-preview='handlePictureCardPreview'
@@ -58,6 +58,12 @@
               <b-form-select-option value='打听求助'>打听求助</b-form-select-option>
               <b-form-select-option value='其他'>其他</b-form-select-option>
             </b-form-select>
+          </b-form-group>
+          <b-form-group label='选择标签'>
+            <el-checkbox-group v-model="tagitems">
+            <el-checkbox-button v-for="tag in tags" :label="tag"
+            :key="tag">{{tag}}</el-checkbox-button>
+            </el-checkbox-group>
           </b-form-group>
           <div class='d-flex justify-content-center w-100'>
             <div class='mx-3'></div>
@@ -85,6 +91,7 @@ export default {
   },
   data() {
     return {
+      uploadPhotosActionURL: `${process.env.VUE_APP_BASE_URL}auth/uploadPhotos`,
       fileList: [],
       dialogImageUrl: '',
       dialogVisible: false,
@@ -94,9 +101,12 @@ export default {
         content: '',
         partition: '',
         photos: '',
+        tagList: [],
       },
       showEmojiTitle: false,
       showEmojiContent: false,
+      tags: ['大厂', '实习', '高工资'],
+      tagitems: [],
     };
   },
   methods: {
@@ -123,6 +133,7 @@ export default {
       this.posts.userTelephone = this.userInfo.phone;
       // 提取 fileList 中的所有 url，并连接成一个字符串
       this.posts.photos = this.fileList.map((file) => file.url).join('|');
+      this.posts.tagList = this.tagitems.join('|');
       // 请求
       this.Post(this.posts)
         .then(() => {

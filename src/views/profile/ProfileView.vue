@@ -3,7 +3,7 @@
     <h4>个人信息</h4>
     <el-upload
         class="avatar-uploader"
-        action="https://localhost:8080/api/auth/uploadavatar"
+        :action="uploadAvatarActionURL"
         :show-file-list="false"
         :on-success="handleAvatarSuccess"
         :before-upload="beforeAvatarUpload"
@@ -49,6 +49,7 @@ export default {
   }),
   data() {
     return {
+      uploadAvatarActionURL: `${process.env.VUE_APP_BASE_URL}auth/uploadAvatar`,
       imageUrl: '',
       userTelephone: '',
       userInfo: {
@@ -100,16 +101,12 @@ export default {
       this.userInfo.avatarURL = this.imageUrl;
     },
     beforeAvatarUpload(file) {
-      const isJPG = file.type === 'image/jpeg';
       const isLt2M = file.size / 1024 / 1024 < 5;
 
-      if (!isJPG) {
-        this.$message.error('上传头像图片只能是 JPG 格式!');
-      }
       if (!isLt2M) {
         this.$message.error('上传头像图片大小不能超过 5MB!');
       }
-      return isJPG && isLt2M;
+      return isLt2M;
     },
     ...mapActions('userModule', { getInfo: 'getInfo' }),
     updateUserInfo() {
@@ -121,7 +118,7 @@ export default {
         avatarURL: this.userInfo.avatarURL,
       };
 
-      request.post('https://localhost:8080/api/auth/updateUserInfo', updatedUserInfo)
+      request.post(`${process.env.VUE_APP_BASE_URL}auth/updateUserInfo`, updatedUserInfo)
         .then((response) => {
           // 处理更新成功的逻辑
           console.log(response);
