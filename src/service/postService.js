@@ -2,27 +2,18 @@
 import request from '@/utils/request';
 
 // 发帖
-const post = ({
-  userTelephone,
-  title,
-  content,
-  partition,
-  photos,
-  tagList,
-}) => {
-  return request.post('auth/post', {
-    userTelephone,
-    title,
-    content,
-    partition,
-    photos,
-    tagList,
-  });
+const post = ({ userTelephone, title, content, partition, photos, tagList,}) => {
+  return request.post('auth/post', {userTelephone, title, content, partition, photos, tagList });
 };
 
 // 看帖
-const browse = ({ userTelephone, partition, searchinfo }) => {
-  return request.post('auth/browse', { userTelephone, partition, searchinfo });
+const browse = ({ userTelephone, partition, searchinfo, limit, offset, searchsort }) => {
+  return request.post('auth/browse', { userTelephone, partition, searchinfo, limit, offset, searchsort });
+};
+
+// 查询帖子数量(用于分表查询)
+const getPostNum = ({ userTelephone, partition, searchinfo, searchsort }) => {
+  return request.post('auth/getPostNum', { userTelephone, partition, searchinfo, searchsort });
 };
 
 // 帖子点赞
@@ -34,12 +25,8 @@ const deletepost = ({ postID }) => {
   return request.post('auth/deletePost', { postID });
 };
 
-const submitreport = ({
-  TargetID, Targettype, userTelephone, Reason,
-}) => {
-  return request.post('auth/submitReport', {
-    TargetID, Targettype, userTelephone, Reason,
-  });
+const submitreport = ({ TargetID, Targettype, userTelephone, Reason}) => {
+  return request.post('auth/submitReport', { TargetID, Targettype, userTelephone, Reason });
 };
 
 // 获取帖子详情
@@ -64,6 +51,7 @@ const calculateheat = ({ postID, title, heat }) => {
 export default {
   post,
   browse,
+  getPostNum,
   like,
   deletepost,
   submitreport,

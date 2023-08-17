@@ -302,6 +302,7 @@ export default {
       title: '',
       heat: '',
       searchinfo: '',
+      searchsort: '',  //分表查询时用于区分,包含home,history,save
       showDeleteModal: false,
       showReportModal: false,
       reportReason: '',
@@ -325,11 +326,13 @@ export default {
     }
     this.searchinfo = this.$route.query.searchinfo;
     // 在页面创建时默认加载主页帖子列表
+    this.PostNum()
     this.browsePosts();
     this.calculateheat();
   },
   methods: {
     ...mapActions('postModule', { postBrowse: 'browse' }),
+    ...mapActions('postModule', { getPostNum: 'getPostNum' }),
     ...mapActions('postModule', { postLike: 'like' }),
     ...mapActions('userModule', { postSave: 'save' }),
     ...mapActions('postModule', { postUpdateBrowse: 'updatebrowse' }),
@@ -372,13 +375,29 @@ export default {
         },
       });
     },
-    async browsePosts() {
-      if (this.userInfo) {
-        this.userTelephone = this.userInfo.phone;
-      } else {
-        // 游客访问
-        this.userTelephone = '00000000000';
+    // 查询满足要求的帖子数量
+    async PostNum() {
+      try {
+        if (this.userInfo) {
+          this.userTelephone = this.userInfo.phone;
+        } else {
+          // 游客访问
+          this.userTelephone = '00000000000';
+        }
+        this.searchsort =this.$route.name
+        const { data }  = await this.getPostNum({
+          userTelephone: this.userTelephone,
+          partition: this.partition,
+          searchinfo: this.searchinfo,
+          searchsort: this.searchsort
+        })
+        this.totalItems = data.Postcount;
+      } catch (error) {
+        console.error(error);
       }
+    },
+    // 分页加载帖子
+    async browsePosts() {
       // 从后端返回一个结构体变量的方法
       try {
         // 向后端发送请求并获取帖子列表
@@ -386,67 +405,14 @@ export default {
           userTelephone: this.userTelephone,
           partition: this.partition,
           searchinfo: this.searchinfo,
+          searchsort: this.searchsort,
+          limit: this.pageSize,
+          offset: (this.currentPage-1)*this.pageSize,
         });
-        if (this.$route.name === 'home') {
-          // 将获取到的帖子列表数据赋值给 posts 变量
-          this.totalItems = data.length;
-          this.posts = data
-            .map((post) => ({
-              id: post.PostID,
-              author: post.UserName,
-              authorTelephone: post.UserTelephone,
-              authorAvatar: post.UserAvatar,
-              title: post.Title,
-              content: post.Content,
-              like: post.Like,
-              comment: post.Comment,
-              postTime: post.PostTime,
-              isSaved: post.IsSaved,
-              isLiked: post.IsLiked,
-              browse: post.Browse,
-              heat: post.Heat,
-              photos: post.Photos,
-              tag: post.Tag ? post.Tag.split(',').map((tagText) => ({
-                type: this.tagTypeMap[tagText.trim()], // 使用 this.tagTypeMap
-                label: tagText.trim(),
-              })) : [],
-              showMenu: false,
-            })).sort((a, b) => new Date(b.postTime) - new Date(a.postTime)); // 按时间倒序排序展示
-          this.posts = this.posts.slice((this.currentPage - 1)
-            * this.pageSize, this.currentPage * this.pageSize);
-        } else if (this.$route.name === 'save') {
-          // 根据是否被收藏过滤帖子列表
-          const filteredData = data.filter((post) => post.IsSaved === true);
-          // 将获取到的帖子列表数据赋值给 posts 变量
-          this.posts = filteredData.map((post) => ({
-            id: post.PostID,
-            author: post.UserName,
-            authorTelephone: post.UserTelephone,
-            authorAvatar: post.UserAvatar,
-            title: post.Title,
-            content: post.Content,
-            like: post.Like,
-            comment: post.Comment,
-            postTime: post.PostTime,
-            isSaved: post.IsSaved,
-            isLiked: post.IsLiked,
-            browseNum: post.Browse,
-            heat: post.Heat,
-            photos: post.Photos,
-            tag: post.Tag ? post.Tag.split(',').map((tagText) => ({
-              type: this.tagTypeMap[tagText.trim()], // 使用 this.tagTypeMap
-              label: tagText.trim(),
-            })) : [],
-            showMenu: false,
-          })).sort((a, b) => new Date(b.postTime) - new Date(a.postTime));
-          this.totalItems = this.posts.length;
-          this.posts = this.posts.slice((this.currentPage - 1)
-            * this.pageSize, this.currentPage * this.pageSize); // 按时间倒序排序展示
-        } else if (this.$route.name === 'history') {
-          // 根据用户电话号码过滤帖子列表
-          const filteredData = data.filter((post) => post.UserTelephone === this.userTelephone);
-          // 将获取到的帖子列表数据赋值给 posts 变量
-          this.posts = filteredData.map((post) => ({
+        console.log(data)
+        // 将获取到的帖子列表数据赋值给 posts 变量
+        this.posts = data
+          .map((post) => ({
             id: post.PostID,
             author: post.UserName,
             authorTelephone: post.UserTelephone,
@@ -466,11 +432,7 @@ export default {
               label: tagText.trim(),
             })) : [],
             showMenu: false,
-          })).sort((a, b) => new Date(b.postTime) - new Date(a.postTime));
-          this.totalItems = this.posts.length;
-          this.posts = this.posts.slice((this.currentPage - 1)
-            * this.pageSize, this.currentPage * this.pageSize);// 按时间倒序排序展示
-        }
+          })).sort((a, b) => new Date(b.postTime) - new Date(a.postTime))
       } catch (error) {
         console.error(error);
       }
