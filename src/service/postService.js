@@ -2,25 +2,18 @@
 import request from '@/utils/request';
 
 // 发帖
-const post = ({
-  userTelephone,
-  title,
-  content,
-  partition,
-  photos,
-}) => {
-  return request.post('auth/post', {
-    userTelephone,
-    title,
-    content,
-    partition,
-    photos,
-  });
+const post = ({userTelephone, title, content, partition, photos,}) => {
+  return request.post('auth/post', {userTelephone, title, content, partition, photos});
 };
 
 // 看帖
-const browse = ({ userTelephone, partition, searchinfo }) => {
-  return request.post('auth/browse', { userTelephone, partition, searchinfo });
+const browse = ({ userTelephone, partition, searchinfo, limit, offset, searchsort }) => {
+  return request.post('auth/browse', { userTelephone, partition, searchinfo, limit, offset, searchsort });
+};
+
+// 查询帖子数量(用于分表查询)
+const getPostNum = ({ userTelephone, partition, searchinfo, searchsort }) => {
+  return request.post('auth/getPostNum', { userTelephone, partition, searchinfo, searchsort });
 };
 
 // 帖子点赞
@@ -55,21 +48,14 @@ const updatebrowse = ({ userTelephone, postID }) => {
 };
 
 // 热火榜
-const calculateheat = ({
-  postID,
-  title,
-  heat,
-}) => {
-  return request.get('auth/calculateHeat', {
-    postID,
-    title,
-    heat,
-  });
+const calculateheat = ({postID, title, heat,}) => {
+  return request.get('auth/calculateHeat', {postID, title, heat,});
 };
 
 export default {
   post,
   browse,
+  getPostNum,
   like,
   deletepost,
   submitreport,
