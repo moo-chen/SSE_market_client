@@ -59,12 +59,6 @@
               <b-form-select-option value='其他'>其他</b-form-select-option>
             </b-form-select>
           </b-form-group>
-          <b-form-group label='选择标签'>
-            <el-checkbox-group v-model="tagitems">
-            <el-checkbox-button v-for="tag in tags" :label="tag"
-            :key="tag">{{tag}}</el-checkbox-button>
-            </el-checkbox-group>
-          </b-form-group>
           <div class='d-flex justify-content-center w-100'>
             <div class='mx-3'></div>
             <b-button variant='primary' @click='send()'> 确认发布 </b-button>
