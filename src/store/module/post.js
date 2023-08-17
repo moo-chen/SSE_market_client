@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 // eslint-disable-next-line import/no-cycle
 import postService from '@/service/postService';
 
@@ -113,4 +112,3 @@ const postModule = {
 };
 
 export default postModule;
->>>>>>> c3edaa99fde11cce8fc542dedb5bc7cface7c7f7

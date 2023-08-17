@@ -57,7 +57,7 @@
               </b-list-group-item>
               <b-list-group-item
               :style="{ 'background-color': isNightStyle ? 'rgb(50,50,50)' : 'white',
-                    'color': isNightStyle ? 'gray' : null, 'z-index': 9999}"
+                    'color': isNightStyle ? 'gray' : null, 'z-index': 9999 }"
                 v-if='post.authorTelephone !== userInfo.phone'
                 @click.stop='showReportModal = true'
               >
@@ -161,8 +161,8 @@
             </div>
             <div class='d-flex justify-content-between align-items-center mt-3'>
               <div class='text-muted'>
-                <b-icon :icon="post.isLiked ? 'heart-fill' : 'heart'"
-                        @click.stop="like(post)" :class="{ 'text-danger': post.isLiked }"></b-icon>
+                  <b-icon :icon="post.isLiked ? 'heart-fill' : 'heart'"
+                @click.stop="like(post)" :class="{ 'text-danger': post.isLiked }"></b-icon>
                 {{ post.like }}
               </div>
               <div class='text-muted'><b-icon-eye-fill></b-icon-eye-fill>
@@ -185,35 +185,35 @@
         :page-size="pageSize"
         layout="total, sizes, prev, pager, next, jumper"
         :total="totalItems">
-      </el-pagination>
+    </el-pagination>
     </div>
     <div class='hots-bar' :style="{ marginTop: userInfo ? '500px' : '750px'}"
-         v-if="this.$route.name == 'home' && partition == '主页'">
+      v-if="this.$route.name == 'home' && partition == '主页'">
       <b-card class="px-3 py-2 card-shadow" style="width: 300px; height: 100%;"
-              :style="{ 'background-color': isNightStyle ? 'rgb(70, 70, 70)' : null }">
+      :style="{ 'background-color': isNightStyle ? 'rgb(70, 70, 70)' : null }">
         <div>
           <b-card-header style="font-weight: bold;"
-                         :style="{ 'color': isNightStyle ? 'gray' : null }">
+          :style="{ 'color': isNightStyle ? 'gray' : null }">
             24小时火文
             <b-button class="bi bi-arrow-clockwise"
-                      :style="{ 'background-color': isNightStyle ? 'rgb(70, 70, 70)' : 'white',
+            :style="{ 'background-color': isNightStyle ? 'rgb(70, 70, 70)' : 'white',
             'color': isNightStyle ? 'gray' : 'black' }"
-                      @click="calculateheat()">
-              <b-icon-arrow-clockwise></b-icon-arrow-clockwise>刷新
-            </b-button>
+            @click="calculateheat()">
+            <b-icon-arrow-clockwise></b-icon-arrow-clockwise>刷新
+          </b-button>
           </b-card-header>
         </div>
         <b-list-group-item v-for="(hotpost, index) in hotposts" :key="index"
-                           :style="{ 'background-color': isNightStyle ? 'rgb(70, 70, 70)' : null,
+        :style="{ 'background-color': isNightStyle ? 'rgb(70, 70, 70)' : null,
             'color': isNightStyle ? 'gray' : null }"
-                           @click="() => { showDetails(hotpost); updatebrowse(hotpost) }">
+        @click="() => { showDetails(hotpost); updatebrowse(hotpost) }">
           <div>
             <template v-if="index<3">
               <span style="color: red; font-weight: bold;">{{ index + 1 }}</span>
             </template>
             <template v-else>
               <span style="font-weight: bold;"
-                    :style="{ 'color': isNightStyle ? 'gray' : 'black'}">
+                :style="{ 'color': isNightStyle ? 'gray' : 'black'}">
                 {{ index + 1 }}</span>
             </template>
             <template v-if="hotpost.title.length > 8">
@@ -229,15 +229,15 @@
         </b-list-group-item>
       </b-card>
       <div class="px-3 py-2 card-shadow block" style="width: 300px; height: 100%;"
-           :style="{ 'background-color': isNightStyle ? 'rgb(70, 70, 70)' : null }">
-        <el-carousel height="120px">
-          <el-carousel-item v-for="item in imagebox" :key="item.id">
-            <a :href="getWebsiteURL(item.id)">
-              <span>Some text</span>
-              <img :src="item.idView" class="image" alt="">
-            </a>
-          </el-carousel-item>
-        </el-carousel>
+      :style="{ 'background-color': isNightStyle ? 'rgb(70, 70, 70)' : null }">
+          <el-carousel height="120px">
+            <el-carousel-item v-for="item in imagebox" :key="item.id">
+              <a :href="getWebsiteURL(item.id)">
+                <span>Some text</span>
+                <img :src="item.idView" class="image" alt="">
+              </a>
+            </el-carousel-item>
+          </el-carousel>
       </div>
     </div>
   </div>
@@ -302,7 +302,6 @@ export default {
       title: '',
       heat: '',
       searchinfo: '',
-      searchsort:'',  //分表查询时用于区分,包含home,history,save
       showDeleteModal: false,
       showReportModal: false,
       reportReason: '',
@@ -326,13 +325,11 @@ export default {
     }
     this.searchinfo = this.$route.query.searchinfo;
     // 在页面创建时默认加载主页帖子列表
-    this.PostNum()
     this.browsePosts();
     this.calculateheat();
   },
   methods: {
     ...mapActions('postModule', { postBrowse: 'browse' }),
-    ...mapActions('postModule', { getPostNum: 'getPostNum' }),
     ...mapActions('postModule', { postLike: 'like' }),
     ...mapActions('userModule', { postSave: 'save' }),
     ...mapActions('postModule', { postUpdateBrowse: 'updatebrowse' }),
@@ -375,30 +372,13 @@ export default {
         },
       });
     },
-    // 查询满足要求的帖子数量
-    async PostNum() {
-      try {
-        if (this.userInfo) {
-          this.userTelephone = this.userInfo.phone;
-        } else {
-          // 游客访问
-          this.userTelephone = '00000000000';
-        }
-        this.searchsort =this.$route.name
-        const { data }  = await this.getPostNum({
-          userTelephone: this.userTelephone,
-          partition: this.partition,
-          searchinfo: this.searchinfo,
-          searchsort: this.searchsort
-        })
-        console.log(data.Postcount)
-        this.totalItems = data.Postcount;
-      } catch (error) {
-        console.error(error);
-      }
-    },
-    // 分页加载帖子
     async browsePosts() {
+      if (this.userInfo) {
+        this.userTelephone = this.userInfo.phone;
+      } else {
+        // 游客访问
+        this.userTelephone = '00000000000';
+      }
       // 从后端返回一个结构体变量的方法
       try {
         // 向后端发送请求并获取帖子列表
@@ -406,14 +386,67 @@ export default {
           userTelephone: this.userTelephone,
           partition: this.partition,
           searchinfo: this.searchinfo,
-          searchsort: this.searchsort,
-          limit: this.pageSize,
-          offset: (this.currentPage-1)*this.pageSize,
         });
-        console.log(data)
-        // 将获取到的帖子列表数据赋值给 posts 变量
-        this.posts = data
-          .map((post) => ({
+        if (this.$route.name === 'home') {
+          // 将获取到的帖子列表数据赋值给 posts 变量
+          this.totalItems = data.length;
+          this.posts = data
+            .map((post) => ({
+              id: post.PostID,
+              author: post.UserName,
+              authorTelephone: post.UserTelephone,
+              authorAvatar: post.UserAvatar,
+              title: post.Title,
+              content: post.Content,
+              like: post.Like,
+              comment: post.Comment,
+              postTime: post.PostTime,
+              isSaved: post.IsSaved,
+              isLiked: post.IsLiked,
+              browse: post.Browse,
+              heat: post.Heat,
+              photos: post.Photos,
+              tag: post.Tag ? post.Tag.split(',').map((tagText) => ({
+                type: this.tagTypeMap[tagText.trim()], // 使用 this.tagTypeMap
+                label: tagText.trim(),
+              })) : [],
+              showMenu: false,
+            })).sort((a, b) => new Date(b.postTime) - new Date(a.postTime)); // 按时间倒序排序展示
+          this.posts = this.posts.slice((this.currentPage - 1)
+            * this.pageSize, this.currentPage * this.pageSize);
+        } else if (this.$route.name === 'save') {
+          // 根据是否被收藏过滤帖子列表
+          const filteredData = data.filter((post) => post.IsSaved === true);
+          // 将获取到的帖子列表数据赋值给 posts 变量
+          this.posts = filteredData.map((post) => ({
+            id: post.PostID,
+            author: post.UserName,
+            authorTelephone: post.UserTelephone,
+            authorAvatar: post.UserAvatar,
+            title: post.Title,
+            content: post.Content,
+            like: post.Like,
+            comment: post.Comment,
+            postTime: post.PostTime,
+            isSaved: post.IsSaved,
+            isLiked: post.IsLiked,
+            browseNum: post.Browse,
+            heat: post.Heat,
+            photos: post.Photos,
+            tag: post.Tag ? post.Tag.split(',').map((tagText) => ({
+              type: this.tagTypeMap[tagText.trim()], // 使用 this.tagTypeMap
+              label: tagText.trim(),
+            })) : [],
+            showMenu: false,
+          })).sort((a, b) => new Date(b.postTime) - new Date(a.postTime));
+          this.totalItems = this.posts.length;
+          this.posts = this.posts.slice((this.currentPage - 1)
+            * this.pageSize, this.currentPage * this.pageSize); // 按时间倒序排序展示
+        } else if (this.$route.name === 'history') {
+          // 根据用户电话号码过滤帖子列表
+          const filteredData = data.filter((post) => post.UserTelephone === this.userTelephone);
+          // 将获取到的帖子列表数据赋值给 posts 变量
+          this.posts = filteredData.map((post) => ({
             id: post.PostID,
             author: post.UserName,
             authorTelephone: post.UserTelephone,
@@ -433,12 +466,15 @@ export default {
               label: tagText.trim(),
             })) : [],
             showMenu: false,
-          })).sort((a, b) => new Date(b.postTime) - new Date(a.postTime))
+          })).sort((a, b) => new Date(b.postTime) - new Date(a.postTime));
+          this.totalItems = this.posts.length;
+          this.posts = this.posts.slice((this.currentPage - 1)
+            * this.pageSize, this.currentPage * this.pageSize);// 按时间倒序排序展示
+        }
       } catch (error) {
         console.error(error);
       }
     },
-
     formatDate(date) {
       // 格式化日期时间
       const d = new Date(date);
@@ -448,7 +484,6 @@ export default {
         d.getSeconds(),
       ).padStart(2, '0')}`;
     },
-
     toggleMenu(post) {
       if (!this.userInfo) {
         this.toLogin = true;

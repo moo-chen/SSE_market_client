@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 // eslint-disable-next-line import/no-cycle
 import request from '@/utils/request';
 
@@ -58,14 +57,13 @@ const updatebrowse = ({ userTelephone, postID }) => {
 };
 
 // 热火榜
-const calculateheat = ({postID, title, heat,}) => {
-  return request.get('auth/calculateHeat', {postID, title, heat,});
+const calculateheat = ({ postID, title, heat }) => {
+  return request.get('auth/calculateHeat', { postID, title, heat });
 };
 
 export default {
   post,
   browse,
-  getPostNum,
   like,
   deletepost,
   submitreport,
