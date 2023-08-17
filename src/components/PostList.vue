@@ -154,9 +154,9 @@
               </div>
               <div class="tag-group">
                 <span class="tag-group__title"></span>
-                <el-tag v-for="tag in post.tag" :key="tag.label" :type="tag.type"
-                        effect="plain" size="mini">{{ tag.label }}
-                </el-tag>
+              <el-tag v-for="tag in post.tag" :key="tag.label" :type="tag.type"
+              effect="plain" size="mini">{{ tag.label }}
+              </el-tag>
               </div>
             </div>
             <div class='d-flex justify-content-between align-items-center mt-3'>

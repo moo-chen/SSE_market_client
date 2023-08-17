@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 // eslint-disable-next-line import/no-cycle
 import postService from '@/service/postService';
 
@@ -18,19 +19,9 @@ const postModule = {
       });
     },
 
-    browse(context, { userTelephone, partition, searchinfo, limit, offset, searchsort }) {
+    browse(context, { userTelephone, partition, searchinfo }) {
       return new Promise((resolve, reject) => {
-        postService.browse({ userTelephone, partition, searchinfo, limit, offset, searchsort }).then((res) => {
-          resolve(res);
-        }).catch((err) => {
-          reject(err);
-        });
-      });
-    },
-
-    getPostNum(context, { userTelephone, partition, searchinfo, searchsort }) {
-      return new Promise((resolve, reject) => {
-        postService.getPostNum({ userTelephone, partition, searchinfo, searchsort }).then((res) => {
+        postService.browse({ userTelephone, partition, searchinfo }).then((res) => {
           resolve(res);
         }).catch((err) => {
           reject(err);
@@ -122,3 +113,4 @@ const postModule = {
 };
 
 export default postModule;
+>>>>>>> c3edaa99fde11cce8fc542dedb5bc7cface7c7f7

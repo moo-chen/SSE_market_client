@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 // eslint-disable-next-line import/no-cycle
 import request from '@/utils/request';
 
@@ -17,6 +18,28 @@ const post = ({
     partition,
     photos,
     tagList,
+  });
+};
+
+// 看帖
+const browse = ({ userTelephone, partition, searchinfo }) => {
+  return request.post('auth/browse', { userTelephone, partition, searchinfo });
+};
+
+// 帖子点赞
+const like = ({ userTelephone, postID, isLiked }) => {
+  return request.post('auth/updateLike', { userTelephone, postID, isLiked });
+};
+
+const deletepost = ({ postID }) => {
+  return request.post('auth/deletePost', { postID });
+};
+
+const submitreport = ({
+  TargetID, Targettype, userTelephone, Reason,
+}) => {
+  return request.post('auth/submitReport', {
+    TargetID, Targettype, userTelephone, Reason,
   });
 };
 
@@ -51,4 +74,3 @@ export default {
   updatebrowse,
   calculateheat,
 };
-
