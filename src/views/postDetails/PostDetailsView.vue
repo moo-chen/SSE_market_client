@@ -123,14 +123,14 @@
     </b-button>
   <!--显示帖子评论窗口-->
   <div v-if="post.showCommentForm" style="margin-top:10px">
-        <b-form-group>
-          <b-form-textarea v-model="pcomment.content"
+    <b-form-group>
+          <b-form-textarea ref="pcommentTextarea" v-model="pcomment.content"
           placeholder="请写下你的精彩评论..." rows="3">
           </b-form-textarea>
         </b-form-group>
         <div>
-          <button  variant='primary' @click="showEmojiStatus()">😀</button>
-            <div v-if="showEmoji">
+          <button  variant='primary' @click="showEmojiOnPcomment()">😀</button>
+            <div v-if="showEmojiPcomment">
               <picker
                 :include="['people']"
                 :showSearch="false"
@@ -230,13 +230,13 @@
             <div v-if="comment.showReplyForm" style="margin-top:10px">
               <form @submit.prevent="ccommentPost(index)">
                 <b-form-group>
-                  <b-form-textarea v-model="ccomment.content"
+                  <b-form-textarea ref="ccommentTextarea" v-model="ccomment.content"
                                    placeholder="请写下你的精彩评论..." rows="3">
                   </b-form-textarea>
                 </b-form-group>
                 <div>
-                  <button  type="button" variant='primary' @click="showEmojiStatus()">😀</button>
-                  <div v-if="showEmoji">
+                  <button  type="button" variant='primary' @click="showEmojiOnCcomment()">😀</button>
+                  <div v-if="showEmojiCcomment">
                     <picker
                       :include="['people']"
                       :showSearch="false"
@@ -331,13 +331,14 @@
                           nowReplyComment.author,
                           nowReplyComment.ccommentID)">
                   <b-form-group>
-                    <b-form-textarea v-model="ccomment.content"
+                    <b-form-textarea ref="ccommentTextarea" v-model="ccomment.content"
                                      :placeholder="'回复@'+nowReplyComment.author" rows="3">
                     </b-form-textarea>
                   </b-form-group>
                   <div>
-                    <button  type="button" variant='primary' @click="showEmojiStatus()">😀</button>
-                    <div v-if="showEmoji">
+                    <button  type="button" variant='primary' @click="showEmojiOnCcomment()">
+                      😀</button>
+                    <div v-if="showEmojiCcomment">
                       <picker
                         :include="['people']"
                         :showSearch="false"
@@ -480,7 +481,8 @@ export default {
       showcommentsindex: 0, // 当先评论的回复所对应的帖子评论
       nowReplyComment: -1, // 当前想要回复的评论的评论
       showRepliesModal: false, // 显示窗口
-      showEmoji: false,
+      showEmojiPcomment: false,
+      showEmojiCcomment: false,
     };
   },
   created() {
@@ -897,13 +899,40 @@ export default {
       return this.comments[index].subComments.slice(0, 5);
     },
     addEmojiToPcomment(emoji) {
-      this.pcomment.content += emoji.native;
+      const textarea = this.$refs.pcommentTextarea.$el; // Get the textarea element
+      const startPos = textarea.selectionStart; // Get the cursor's start position
+      const endPos = textarea.selectionEnd; // Get the cursor's end position
+
+      // Insert the emoji at the cursor position
+      this.pcomment.content = this.pcomment.content.slice(0, startPos)
+      + emoji.native + this.pcomment.content.slice(endPos);
+
+      // Update the cursor position to be after the inserted emoji
+      const newCursorPos = startPos + emoji.native.length;
+      textarea.setSelectionRange(newCursorPos, newCursorPos);
     },
     addEmojiToCcomment(emoji) {
+      // console.log(this.$refs.ccommentTextarea);
+      // const textarea = this.$refs.ccommentTextarea.$el; // Get the textarea element
+      // const startPos = textarea.selectionStart; // Get the cursor's start position
+      // const endPos = textarea.selectionEnd; // Get the cursor's end position
+      // console.log('Start Position:', startPos);
+      // console.log('End Position:', endPos);
+
+      // // Insert the emoji at the cursor position
+      // this.ccomment.content = this.ccomment.content.slice(0, startPos)
+      // + emoji.native + this.ccomment.content.slice(endPos);
+
+      // // Update the cursor position to be after the inserted emoji
+      // const newCursorPos = startPos + emoji.native.length;
+      // textarea.setSelectionRange(newCursorPos, newCursorPos);
       this.ccomment.content += emoji.native;
     },
-    showEmojiStatus() {
-      this.showEmoji = !this.showEmoji;
+    showEmojiOnPcomment() {
+      this.showEmojiPcomment = !this.showEmojiPcomment;
+    },
+    showEmojiOnCcomment() {
+      this.showEmojiCcomment = !this.showEmojiCcomment;
     },
   },
 };
