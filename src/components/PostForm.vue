@@ -10,7 +10,7 @@
       <b-col md='8' offset-md='2' lg='10' offset-lg='1'>
         <b-card style='max-width: 1200px; max-height: 2000px'>
           <b-form-group label='标题'>
-            <b-form-input v-model='posts.title' type='text'></b-form-input>
+            <b-form-input ref="titleInput" v-model='posts.title' type='text'></b-form-input>
             <button  variant='primary' @click="showEmojiOnTitle()">😀</button>
             <div v-if="showEmojiTitle">
               <picker
@@ -23,7 +23,8 @@
             </div>
           </b-form-group>
           <b-form-group label='正文'>
-            <b-form-textarea v-model='posts.content' :rows='20'></b-form-textarea>
+            <b-form-textarea ref="contentTextarea" v-model="posts.content" :rows="20">
+            </b-form-textarea>
             <button  variant='primary' @click="showEmojiOnContent()">😀</button>
             <div v-if="showEmojiContent">
               <picker
@@ -153,10 +154,30 @@ export default {
     //
     // },
     addEmojiToTitle(emoji) {
-      this.posts.title += emoji.native;
+      const titleInput = this.$refs.titleInput.$el; // Get the title input element
+      const startPos = titleInput.selectionStart; // Get the cursor's start position
+      const endPos = titleInput.selectionEnd; // Get the cursor's end position
+
+      // Insert the emoji at the cursor position in the title
+      this.posts.title = this.posts.title.slice(0, startPos)
+      + emoji.native + this.posts.title.slice(endPos);
+
+      // Update the cursor position to be after the inserted emoji
+      const newCursorPos = startPos + emoji.native.length;
+      titleInput.setSelectionRange(newCursorPos, newCursorPos);
     },
     addEmojiToContent(emoji) {
-      this.posts.content += emoji.native;
+      const textarea = this.$refs.contentTextarea.$el; // Get the textarea element
+      const startPos = textarea.selectionStart; // Get the cursor's start position
+      const endPos = textarea.selectionEnd; // Get the cursor's end position
+
+      // Insert the emoji at the cursor position
+      this.posts.content = this.posts.content.slice(0, startPos)
+      + emoji.native + this.posts.content.slice(endPos);
+
+      // Update the cursor position to be after the inserted emoji
+      const newCursorPos = startPos + emoji.native.length;
+      textarea.setSelectionRange(newCursorPos, newCursorPos);
     },
     showEmojiOnTitle() {
       this.showEmojiTitle = !this.showEmojiTitle;
