@@ -302,7 +302,7 @@ export default {
       title: '',
       heat: '',
       searchinfo: '',
-      searchsort: '',  //分表查询时用于区分,包含home,history,save
+      searchsort: '', // 分表查询时用于区分,包含home,history,save
       showDeleteModal: false,
       showReportModal: false,
       reportReason: '',
@@ -326,7 +326,7 @@ export default {
     }
     this.searchinfo = this.$route.query.searchinfo;
     // 在页面创建时默认加载主页帖子列表
-    this.PostNum()
+    this.PostNum();
     this.browsePosts();
     this.calculateheat();
   },
@@ -384,13 +384,13 @@ export default {
           // 游客访问
           this.userTelephone = '00000000000';
         }
-        this.searchsort =this.$route.name
-        const { data }  = await this.getPostNum({
+        this.searchsort = this.$route.name;
+        const { data } = await this.getPostNum({
           userTelephone: this.userTelephone,
           partition: this.partition,
           searchinfo: this.searchinfo,
-          searchsort: this.searchsort
-        })
+          searchsort: this.searchsort,
+        });
         this.totalItems = data.Postcount;
       } catch (error) {
         console.error(error);
@@ -407,9 +407,9 @@ export default {
           searchinfo: this.searchinfo,
           searchsort: this.searchsort,
           limit: this.pageSize,
-          offset: (this.currentPage-1)*this.pageSize,
+          offset: (this.currentPage - 1) * this.pageSize,
         });
-        console.log(data)
+        console.log(data);
         // 将获取到的帖子列表数据赋值给 posts 变量
         this.posts = data
           .map((post) => ({
@@ -432,7 +432,7 @@ export default {
               label: tagText.trim(),
             })) : [],
             showMenu: false,
-          })).sort((a, b) => new Date(b.postTime) - new Date(a.postTime))
+          })).sort((a, b) => new Date(b.postTime) - new Date(a.postTime));
       } catch (error) {
         console.error(error);
       }

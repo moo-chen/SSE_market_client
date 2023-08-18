@@ -4,7 +4,9 @@ import postService from '@/service/postService';
 const postModule = {
   namespaced: true,
   actions: {
-    post(context, { userTelephone, title, content, partition, photos, tagList }) {
+    post(context, {
+      userTelephone, title, content, partition, photos, tagList,
+    }) {
       return new Promise((resolve, reject) => {
         postService.post({
           userTelephone, title, content, partition, photos, tagList,
@@ -16,9 +18,13 @@ const postModule = {
       });
     },
 
-    browse(context, { userTelephone, partition, searchinfo, limit, offset, searchsort }) {
+    browse(context, {
+      userTelephone, partition, searchinfo, limit, offset, searchsort,
+    }) {
       return new Promise((resolve, reject) => {
-        postService.browse({ userTelephone, partition, searchinfo, limit, offset, searchsort }).then((res) => {
+        postService.browse({
+          userTelephone, partition, searchinfo, limit, offset, searchsort,
+        }).then((res) => {
           resolve(res);
         }).catch((err) => {
           reject(err);
@@ -26,9 +32,13 @@ const postModule = {
       });
     },
 
-    getPostNum(context, { userTelephone, partition, searchinfo, searchsort }) {
+    getPostNum(context, {
+      userTelephone, partition, searchinfo, searchsort,
+    }) {
       return new Promise((resolve, reject) => {
-        postService.getPostNum({ userTelephone, partition, searchinfo, searchsort }).then((res) => {
+        postService.getPostNum({
+          userTelephone, partition, searchinfo, searchsort,
+        }).then((res) => {
           resolve(res);
         }).catch((err) => {
           reject(err);
@@ -56,7 +66,9 @@ const postModule = {
       });
     },
 
-    submitreport(context, { TargetID, Targettype, userTelephone, Reason }) {
+    submitreport(context, {
+      TargetID, Targettype, userTelephone, Reason,
+    }) {
       return new Promise((resolve, reject) => {
         postService.submitreport({
           TargetID, Targettype, userTelephone, Reason,
