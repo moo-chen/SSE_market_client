@@ -55,9 +55,9 @@ const userModule = {
       });
     },
 
-    modifyPassword(context, { phone, password, password2 }) {
+    modifyPassword(context, { email, password, password2 }) {
       return new Promise((resolve, reject) => {
-        userService.modifyPassword({ phone, password, password2 }).then((res) => {
+        userService.modifyPassword({ email, password, password2 }).then((res) => {
           resolve(res);
         }).catch((err) => {
           reject(err);
@@ -97,9 +97,9 @@ const userModule = {
       });
     },
 
-    login(context, { phone, password }) {
+    login(context, { email, password }) {
       return new Promise((resolve, reject) => {
-        userService.login({ phone, password }).then((res) => {
+        userService.login({ email, password }).then((res) => {
           // 保存token
           context.commit('SET_TOKEN', res.data.data.token);
           return userService.info();

@@ -5,15 +5,15 @@
         <b-col md='8' offset-md='2' lg='6' offset-lg='3'>
           <b-card style="margin-top:-50px">
             <b-form>
-              <b-form-group label='手机号'>
+              <b-form-group label='邮箱'>
                 <b-form-input
-                  v-model='$v.user.phone.$model'
-                  type='number'
-                  placeholder='输入手机号'
-                  :state="validateState('phone')"
+                  v-model='$v.user.email.$model'
+                  type='email'
+                  placeholder='输入邮箱'
+                  :state="validateState('email')"
                 ></b-form-input>
-                <b-form-invalid-feedback :state="validateState('phone')">
-                  手机号不符合要求
+                <b-form-invalid-feedback :state="validateState('email')">
+                  邮箱不符合要求
                 </b-form-invalid-feedback>
               </b-form-group>
               <b-form-group label='密码'>
@@ -63,7 +63,7 @@ export default {
   data() {
     return {
       user: {
-        phone: '',
+        email: '',
         password: '',
       },
       rememberMe: false, // Added rememberMe property
@@ -71,9 +71,9 @@ export default {
   },
   validations: {
     user: {
-      phone: {
+      email: {
         required,
-        phone: customValidator.telephoneValidator,
+        email: customValidator.emailValidator,
       },
       password: {
         required,
@@ -85,7 +85,7 @@ export default {
   mounted() {
     // Load saved login information if rememberMe is true
     if (localStorage.rememberMe === 'true') {
-      this.user.phone = localStorage.phone || '';
+      this.user.email = localStorage.email || '';
       this.user.password = localStorage.password || '';
       this.rememberMe = true;
     }
@@ -105,12 +105,12 @@ export default {
       // Save login information if rememberMe is true
       if (this.rememberMe) {
         localStorage.rememberMe = true;
-        localStorage.phone = this.user.phone;
+        localStorage.email = this.user.email;
         localStorage.password = this.user.password;
       } else {
         // Clear saved login information if rememberMe is false
         localStorage.removeItem('rememberMe');
-        localStorage.removeItem('phone');
+        localStorage.removeItem('email');
         localStorage.removeItem('password');
       }
 

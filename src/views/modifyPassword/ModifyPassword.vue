@@ -1,58 +1,55 @@
 <template>
-    <div class="modifyPassword-view">
-      <div class='modifyPassword' @keydown.enter="modifyPassword">
-    <b-row class='mt-5'>
-      <b-col md='8' offset-md='2' lg='6' offset-lg='3'>
-        <b-card title='修改密码'>
-          <b-form>
-            <b-form-group label='密码'>
-              <b-form-input
-                v-model='$v.user.password.$model'
-                type='password'
-                placeholder='输入密码'
-                :state="validateState('password')"
-              ></b-form-input>
-              <b-form-invalid-feedback :state="validateState('password')">
-                密码必须大于等于 6 位
-              </b-form-invalid-feedback>
-            </b-form-group>
+  <div class="modifyPassword-view">
+    <div class='modifyPassword' @keydown.enter="modifyPassword">
+  <b-row class='mt-5'>
+    <b-col md='8' offset-md='2' lg='6' offset-lg='3'>
+      <b-card title='修改密码'>
+        <b-form>
+          <b-form-group label='密码'>
+            <b-form-input
+              v-model='$v.user.password.$model'
+              type='password'
+              placeholder='输入密码'
+              :state="validateState('password')"
+            ></b-form-input>
+            <b-form-invalid-feedback :state="validateState('password')">
+              密码必须大于等于 6 位
+            </b-form-invalid-feedback>
+          </b-form-group>
 
-            <b-form-group label='再次输入密码'>
-              <b-form-input
-                v-model='$v.user.password2.$model'
-                type='password'
-                placeholder='再次输入密码'
-                :state="validateState('password2')"
-              ></b-form-input>
-              <b-form-invalid-feedback :state="validateState('password2')">
-                密码必须大于等于 6 位
-              </b-form-invalid-feedback>
-            </b-form-group>
-            <b-form-group>
-              <b-button @click='modifyPassword' variant='outline-primary' block>修改密码</b-button>
-              <b-button @click="$router.replace({ name : 'login' })"
-              variant="outline-primary" block>返回登录</b-button>
-            </b-form-group>
-          </b-form>
-        </b-card>
-      </b-col>
-    </b-row>
+          <b-form-group label='再次输入密码'>
+            <b-form-input
+              v-model='$v.user.password2.$model'
+              type='password'
+              placeholder='再次输入密码'
+              :state="validateState('password2')"
+            ></b-form-input>
+            <b-form-invalid-feedback :state="validateState('password2')">
+              密码必须大于等于 6 位
+            </b-form-invalid-feedback>
+          </b-form-group>
+          <b-form-group>
+            <b-button @click='modifyPassword' variant='outline-primary' block>修改密码</b-button>
+            <b-button @click="$router.replace({ name : 'login' })"
+            variant="outline-primary" block>返回登录</b-button>
+          </b-form-group>
+        </b-form>
+      </b-card>
+    </b-col>
+  </b-row>
+</div>
   </div>
-    </div>
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
+import { mapActions } from 'vuex';
 import { required, minLength } from 'vuelidate/lib/validators';
 
 export default {
-  computed: mapState({
-    userInfo: (state) => state.userModule.userInfo,
-  }),
   data() {
     return {
       user: {
-        phone: '',
+        email: '',
         password: '',
         password2: '',
       },
@@ -60,7 +57,7 @@ export default {
   },
   validations: {
     user: {
-      phone: {
+      email: {
 
       },
       password: {
@@ -73,6 +70,15 @@ export default {
       },
     },
   },
+
+  created() {
+    const data = this.$route.query;
+    console.error(data);
+    if (data.email) {
+      this.user.email = data.email;
+    }
+  },
+
   methods: {
     ...mapActions('userModule', { userModify: 'modifyPassword' }),
     validateState(name) {
@@ -86,8 +92,7 @@ export default {
         console.error('error!');
         return;
       }
-      this.user.phone = this.userInfo.phone;
-      console.error(this.user.phone);
+      console.error(this.user);
       this.userModify(this.user).then(() => {
         this.$bvToast.toast('修改密码成功', {
           title: '系统提醒',
