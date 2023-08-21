@@ -14,8 +14,8 @@ const register = ({
 };
 
 // 用户登录
-const login = ({ phone, password }) => {
-  return request.post('auth/login', { phone, password });
+const login = ({ email, password }) => {
+  return request.post('auth/login', { email, password });
 };
 
 // 发帖
@@ -64,8 +64,8 @@ const getInfo = ({ phone }) => {
 };
 
 // 获取密码
-const modifyPassword = ({ phone, password, password2 }) => {
-  return request.post('auth/modifyPassword', { phone, password, password2 });
+const modifyPassword = ({ email, password, password2 }) => {
+  return request.post('auth/modifyPassword', { email, password, password2 });
 };
 
 // 注册验证邮箱
