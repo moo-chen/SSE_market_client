@@ -128,12 +128,15 @@ export default {
             variant: 'primary',
             solid: true,
           });
+          // Commit updated user information to Vuex
+          this.updateLocalUserInfo(updatedUserInfo);
         })
         .catch((error) => {
           // 处理更新失败的逻辑
           console.error('用户信息更新失败', error);
         });
     },
+    ...mapActions('userModule', { getInfo: 'getInfo', updateLocalUserInfo: 'updateLocalUserInfo' }),
   },
 };
 </script>
