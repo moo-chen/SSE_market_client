@@ -26,6 +26,19 @@ const userModule = {
   },
 
   actions: {
+    updateLocalUserInfo(context, updatedUserInfo) {
+      return new Promise((resolve) => {
+        // merge the updated fields with the existing user information
+        const userInfo = {
+          ...context.state.userInfo,
+          ...updatedUserInfo,
+        };
+
+        // Commit the mutation to update the state
+        context.commit('SET_USERINFO', userInfo);
+        resolve();
+      });
+    },
     // context是浏览器store上下文对象，用于保存token
     // { name, telephone, password }为传送给后端的数据的结构体变量
     register(context, {
@@ -55,9 +68,9 @@ const userModule = {
       });
     },
 
-    modifyPassword(context, { phone, password, password2 }) {
+    modifyPassword(context, { email, password, password2 }) {
       return new Promise((resolve, reject) => {
-        userService.modifyPassword({ phone, password, password2 }).then((res) => {
+        userService.modifyPassword({ email, password, password2 }).then((res) => {
           resolve(res);
         }).catch((err) => {
           reject(err);
@@ -97,9 +110,9 @@ const userModule = {
       });
     },
 
-    login(context, { phone, password }) {
+    login(context, { email, password }) {
       return new Promise((resolve, reject) => {
-        userService.login({ phone, password }).then((res) => {
+        userService.login({ email, password }).then((res) => {
           // 保存token
           context.commit('SET_TOKEN', res.data.data.token);
           return userService.info();

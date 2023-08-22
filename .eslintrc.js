@@ -9,7 +9,7 @@ module.exports = {
   },
   rules: {
     'vuejs-accessibility/media-has-caption': 'off',
-    'linebreak-style': ["error", "windows"],
+    'linebreak-style': ['error', 'windows'],
     'global-require': 'off',
     'arrow-body-style': ['off'],
     'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',

@@ -4,7 +4,7 @@
     <b-list-group v-if="notices.length > 0" class="notification-list">
       <transition-group name="list" tag="div" ref="listGroup">
       <b-list-group-item
-          v-for="(notice, index) in nownotices"
+          v-for="(notice, index) in notices"
           :key="index"
           @click="viewNotice(notice,index)"
           class="notification-item"
@@ -100,9 +100,6 @@ export default {
     ...mapState({
       userInfo: (state) => state.userModule.userInfo,
     }),
-    nownotices() {
-      return this.notices.slice(0, this.page * this.pagesize);
-    },
     isNightStyle() {
       if (JSON.parse(localStorage.getItem('Style')) === 'night') {
         return true;
@@ -130,52 +127,65 @@ export default {
       });
     },
     async loadMoreNotices() {
-      window.removeEventListener('scroll', this.handleScroll);
       this.loading = true;
       setTimeout(() => {
-        this.page += 1;
+        this.getNotices();
       }, 500);
       this.loading = false;
-      window.addEventListener('scroll', this.handleScroll);
     },
     // 获取通知列表
     getNotices() {
-      request.get('/auth/getNotice').then((response) => {
-        // 注意这里接受的notice的字段是小写开头的驼峰,下面是对应的go结构体
-        // type NoticeResponse struct {
-        //   NoticeID     int    `json:"noticeID"`
-        //   ReceiverName string `json:"receiverName"`
-        //   SenderName   string `json:"senderName"`
-        //   SenderAvatar string `json:"senderAvatar"`
-        //   Type         string `json:"type"`
-        //   Content      string `json:"content"`
-        //   Read         bool   `json:"read"`
-        //   PostID       int    `json:"postID"`
-        //   Target       int    `json:"target"`
-        //   PcommentID   int    `json:"pcommentID"`
-        // }
-        this.notices = response.data.sort((a, b) => {
-          // 先比较是否已读
-          if (a.read && !b.read) {
-            return 1;
-          } if (!a.read && b.read) {
-            return -1;
+      request.get('/auth/getNotice', {
+        params: {
+          requireID: this.getparams.requireID,
+          pageSize: this.getparams.pageSize,
+          read: this.getparams.read,
+        },
+      })
+        .then((response) => {
+          // 注意这里接受的notice的字段是小写开头的驼峰,下面是对应的go结构体
+          // type NoticeResponse struct {
+          //   NoticeID     int    `json:"noticeID"`
+          //   ReceiverName string `json:"receiverName"`
+          //   SenderName   string `json:"senderName"`
+          //   SenderAvatar string `json:"senderAvatar"`
+          //   Type         string `json:"type"`
+          //   Content      string `json:"content"`
+          //   Read         bool   `json:"read"`
+          //   PostID       int    `json:"postID"`
+          //   Target       int    `json:"target"`
+          //   PcommentID   int    `json:"pcommentID"`
+          // }
+          if (response.data.code === 201) {
+            this.more = false;
+            return;
           }
-          // 如果两个通知都已读或都未读，则比较时间
-          const timeA = Date.parse(a.time);
-          const timeB = Date.parse(b.time);
-          if (timeA < timeB) {
-            return 1;
-          } if (timeA > timeB) {
-            return -1;
-          }
-          return 0;
+          this.getparams.requireID = response.data.lastID;
+          const newNotices = response.data.noticeList.sort((a, b) => {
+            // 先比较是否已读
+            if (a.read && !b.read) {
+              return 1;
+            }
+            if (!a.read && b.read) {
+              return -1;
+            }
+            // 如果两个通知都已读或都未读，则比较时间
+            const timeA = Date.parse(a.time);
+            const timeB = Date.parse(b.time);
+            if (timeA < timeB) {
+              return 1;
+            }
+            if (timeA > timeB) {
+              return -1;
+            }
+            return 0;
+          });
+          this.notices.push(...newNotices);
+          if (response.data.noticeList.length < 5) this.more = false;
+        })
+        .catch((error) => {
+          console.error(error);
         });
-      }).then(() => {
-        this.loadMoreNotices();
-      }).catch((error) => {
-        console.error(error);
-      });
     },
     // 查看通知
     viewNotice(notice, index) {

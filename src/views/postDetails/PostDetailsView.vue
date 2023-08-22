@@ -853,7 +853,7 @@ export default {
         }, 1000);
       })
         .catch((err) => {
-          this.$bvToast.toast(err.msg, {
+          this.$bvToast.toast(err.response.data.msg, {
             title: '发帖失败',
             variant: 'danger',
             solid: true,
