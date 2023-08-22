@@ -26,6 +26,19 @@ const userModule = {
   },
 
   actions: {
+    updateLocalUserInfo(context, updatedUserInfo) {
+      return new Promise((resolve) => {
+        // merge the updated fields with the existing user information
+        const userInfo = {
+          ...context.state.userInfo,
+          ...updatedUserInfo,
+        };
+
+        // Commit the mutation to update the state
+        context.commit('SET_USERINFO', userInfo);
+        resolve();
+      });
+    },
     // context是浏览器store上下文对象，用于保存token
     // { name, telephone, password }为传送给后端的数据的结构体变量
     register(context, {
