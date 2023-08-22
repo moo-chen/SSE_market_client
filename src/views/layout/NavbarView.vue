@@ -14,7 +14,7 @@
         <h1 class="typing">SSE_market</h1>
       </vue-typed-js>
       <div class="search-box">
-        <b-form-input placeholder="搜索" v-model="searchinfo"
+        <b-form-input placeholder="搜索  支持标签和内容" v-model="searchinfo"
         style="height: 50px;border-radius: 20px;">
         </b-form-input>
         <b-button variant="dark" @click="refreshPageAndNavigate"
@@ -38,7 +38,7 @@
           <b-navbar-form>
             <b-input-group v-if="this.$route.name == 'home' &&
             (this.$route.query.partitions == '主页' || !this.$route.query.partitions)">
-              <b-form-input style="width: 600px; border-radius: 5px;"
+              <!-- <b-form-input style="width: 600px; border-radius: 5px;"
               placeholder="搜索" v-model="searchinfo"></b-form-input>
               <b-input-group-append>
                 <b-button style="margin-left:20px; border-radius: 5px;"
@@ -46,7 +46,18 @@
                 @click="refreshPageAndNavigate">
                 <b-icon-search class="mr-2"></b-icon-search>搜索
               </b-button>
-              </b-input-group-append>
+              </b-input-group-append> -->
+              <div class="search-box2">
+                <b-form-input
+                placeholder="搜索  支持标签和内容" v-model="searchinfo"
+                style="height: 50px; flex: 1; width: 100%; margin-top: 75px; margin-left:20px;"
+                @keyup.enter="refreshPageAndNavigate">
+                </b-form-input>
+                <b-navbar-brand style="transform: scale(0.6);
+                margin-bottom: 65px; margin-left:0px;" >
+                  <b-icon-search class="mr-2"></b-icon-search>按回车键搜索
+                </b-navbar-brand>
+              </div>
             </b-input-group>
           </b-navbar-form>
         </b-navbar-nav>
