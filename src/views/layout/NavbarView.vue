@@ -33,31 +33,21 @@
         <b-icon-shop class="mr-3"></b-icon-shop>SSE_market
       </b-navbar-brand>
       <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
-      <b-collapse is-nav id="nav_collapse">
+      <b-collapse is-nav id="nav_collapse" style="pointer-events: none;">
         <b-navbar-nav style="margin-left:100px;">
           <b-navbar-form>
             <b-input-group v-if="this.$route.name == 'home' &&
             (this.$route.query.partitions == '主页' || !this.$route.query.partitions)">
-              <!-- <b-form-input style="width: 600px; border-radius: 5px;"
+              <b-form-input style="width: 600px; border-radius: 5px; height: 50px;
+              pointer-events: auto;"
               placeholder="搜索" v-model="searchinfo"></b-form-input>
               <b-input-group-append>
-                <b-button style="margin-left:20px; border-radius: 5px;"
+                <b-button style="margin-left:20px; border-radius: 5px; pointer-events: auto;"
                 variant="dark"
                 @click="refreshPageAndNavigate">
                 <b-icon-search class="mr-2"></b-icon-search>搜索
               </b-button>
-              </b-input-group-append> -->
-              <div class="search-box2">
-                <b-form-input
-                placeholder="搜索  支持标签和内容" v-model="searchinfo"
-                style="height: 50px; flex: 1; width: 100%; margin-top: 75px; margin-left:20px;"
-                @keyup.enter="refreshPageAndNavigate">
-                </b-form-input>
-                <b-navbar-brand style="transform: scale(0.6);
-                margin-bottom: 65px; margin-left:0px;" >
-                  <b-icon-search class="mr-2"></b-icon-search>按回车键搜索
-                </b-navbar-brand>
-              </div>
+              </b-input-group-append>
             </b-input-group>
           </b-navbar-form>
         </b-navbar-nav>
