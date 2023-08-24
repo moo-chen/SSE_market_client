@@ -46,8 +46,14 @@
             </div>
           </div>
         </b-list-group-item>
-        <b-card class="loading" v-if="loading">正在加载...</b-card>
       </transition-group>
+      <div v-if="more">
+        <b-card class="loading" v-if="loading">正在加载...</b-card>
+        <b-button v-else block @click="loadMoreNotices">加载更多</b-button>
+      </div>
+      <div style="font-size: 20px;font-family: 'Teko', sans-serif" v-else>
+        ∑(っ°Д°;)っ已无更多通知
+      </div>
     </b-list-group>
     <p v-else>没有通知</p>
 
@@ -91,7 +97,7 @@ import request from '@/utils/request';
 export default {
   data() {
     return {
-      loading: true,
+      loading: false,
       page: 1,
       pagesize: 10,
       notices: [],
