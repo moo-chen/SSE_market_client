@@ -28,18 +28,18 @@
     && this.$route.name != 'modifyPassword' && this.$route.name != 'identityValidate' &&
     this.$route.name != 'deleteMe') ||
     scrollPosition > 400 || (this.$route.query.partitions && this.$route.query.partitions != '主页' )"
-    :style="{ 'background-color': isNightStyle ? 'rgb(246, 155, 10)' : 'rgb(17, 167, 226)' }">
+    :style="{ 'background-color': isNightStyle ? 'rgb(246, 155, 10)' : 'rgb(17, 167, 226)'}">
       <b-navbar-brand>
         <b-icon-shop class="mr-3"></b-icon-shop>SSE_market
       </b-navbar-brand>
       <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
-      <b-collapse is-nav id="nav_collapse" style="pointer-events: none;">
+      <b-collapse is-nav id="nav_collapse">
         <b-navbar-nav style="margin-left:100px;">
           <b-navbar-form>
             <b-input-group v-if="this.$route.name == 'home' &&
             (this.$route.query.partitions == '主页' || !this.$route.query.partitions)">
               <b-form-input style="width: 600px; border-radius: 5px; height: 50px;
-              pointer-events: auto;"
+              z-index: 9999;"
               placeholder="搜索" v-model="searchinfo"></b-form-input>
               <b-input-group-append>
                 <b-button style="margin-left:20px; border-radius: 5px; pointer-events: auto;"
