@@ -28,6 +28,7 @@
         @click="goback" style="margin-left: 60px;">
         <b-icon-reply class="mr-2"></b-icon-reply>返回
       </b-button>
+      <div v-if="posts.length > 0">
       <b-row>
         <b-col v-for='post in posts' :key='post.id' cols='12' md='12' lg='12' class='mb-3'>
           <b-card class='px-3 py-2 card-shadow'
@@ -174,7 +175,10 @@
             </div>
           </b-card>
         </b-col>
-      </b-row>
+      </b-row></div>
+      <div v-else>
+        <el-empty description="没有符合要求的帖子哦"></el-empty>
+      </div>
       <el-pagination
         class="is-background"
         style="margin-left: 300px"
