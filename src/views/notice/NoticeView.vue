@@ -1,9 +1,13 @@
 <template>
   <div>
+    <b-nav pills>
+      <b-nav-item :active="noticesType==='unread'" @click="changeType('unread')">未读通知</b-nav-item>
+      <b-nav-item :active="noticesType==='read'" @click="changeType('read')">已读通知</b-nav-item>
+    </b-nav>
     <!-- 通知列表 -->
     <b-list-group v-if="notices.length > 0" class="notification-list">
       <transition-group name="list" tag="div" ref="listGroup">
-      <b-list-group-item
+        <b-list-group-item
           v-for="(notice, index) in notices"
           :key="index"
           @click="viewNotice(notice,index)"
@@ -11,34 +15,37 @@
           :class="{ 'notification-unread': !notice.read }"
           :style="{ 'background-color': isNightStyle ? 'rgb(50,50,50)' : 'white',
                     'color': isNightStyle ? 'gray' : null}">
-        <div class="d-flex align-items-center">
-          <!-- 头像 -->
-          <b-avatar  v-if="notice.type==='pcomment'|| notice.type==='ccomment'"
-                     :src="notice.senderAvatar" size="2rem" class="mr-2"></b-avatar>
-          <!-- 发送者名字和通知内容 -->
-          <div class="d-flex flex-column justify-content-center">
-            <small class="text-muted">{{ formatDate(notice.time) }}</small>
-            <div class="d-flex align-items-center justify-content-between">
+          <div class="d-flex align-items-center">
+            <!-- 头像 -->
+            <b-avatar v-if="notice.type==='pcomment'|| notice.type==='ccomment'"
+                      :src="notice.senderAvatar" size="2rem" class="mr-2"></b-avatar>
+            <!-- 发送者名字和通知内容 -->
+            <div class="d-flex flex-column justify-content-center">
+              <small class="text-muted">{{ formatDate(notice.time) }}</small>
+              <div class="d-flex align-items-center justify-content-between">
               <span v-if="notice.type==='pcomment'|| notice.type==='ccomment'"
                     STYLE="color: #409EFF" class="mr-2">{{ notice.senderName }}</span>
-              <span v-else STYLE="color:saddlebrown" class="mr-2">系统通知：</span>
-              <!-- 内容和类型 -->
-              <span v-if="notice.type === 'pcomment'">评论了你的帖子:</span>
-              <span v-if="notice.type === 'ccomment'">回复了你的评论:</span>
-              <span v-if="notice.type === 'punishment'" style="color: red">警告，你的账号出现违规：</span>
-              <span v-if="notice.type === 'sue'">你的举报已得到处理：</span>
-              <span v-if="notice.type === 'feedback'">你的反馈已得到处理回复：</span>
-              <span style="color: gray">
-                {{ notice.content.length > 5 ?
-                  notice.content.slice(0,5)+'...' : notice.content+'' }}</span>
-              <!-- 标记未读 -->
-              <transition name="fade">
-                <span v-if="!notice.read" class="badge badge-danger ml-2 pop">New</span>
-              </transition>
+                <span v-else STYLE="color:saddlebrown" class="mr-2">系统通知：</span>
+                <!-- 内容和类型 -->
+                <span v-if="notice.type === 'pcomment'">评论了你的帖子:</span>
+                <span v-if="notice.type === 'ccomment'">回复了你的评论:</span>
+                <span v-if="notice.type === 'punishment'"
+                      style="color: red">警告，你的账号出现违规：</span>
+                <span v-if="notice.type === 'sue'">你的举报已得到处理：</span>
+                <span v-if="notice.type === 'feedback'">你的反馈已得到处理回复：</span>
+                <span style="color: gray">
+                {{
+                    notice.content.length > 5 ?
+                      notice.content.slice(0, 5) + '...' : notice.content + ''
+                  }}</span>
+                <!-- 标记未读 -->
+                <transition name="fade">
+                  <span v-if="!notice.read" class="badge badge-danger ml-2 pop">New</span>
+                </transition>
+              </div>
             </div>
-        </div>
-        </div>
-      </b-list-group-item>
+          </div>
+        </b-list-group-item>
         <b-card class="loading" v-if="loading">正在加载...</b-card>
       </transition-group>
     </b-list-group>
@@ -65,7 +72,8 @@
                   class="postjump" @click="showDetails">评论了你的帖子: </span>
             <span v-if="currentNotice.type === 'ccomment'" @keydown.enter="showDetails"
                   class="postjump" @click="showDetails">回复了你的评论: </span>
-            <span v-if="currentNotice.type === 'punishment'" style="color: red">警告，你的账号出现违规： </span>
+            <span v-if="currentNotice.type === 'punishment'"
+                  style="color: red">警告，你的账号出现违规： </span>
             <span v-if="currentNotice.type === 'sue'">你的举报已得到处理： </span>
             <span v-if="currentNotice.type === 'feedback'">你的反馈已得到处理回复： </span>
             <span class="preview mb-1" style="color:gray">{{ currentNotice.content }}</span>
@@ -87,9 +95,17 @@ export default {
       page: 1,
       pagesize: 10,
       notices: [],
+      more: true,
+      noticesType: 'unread',
       currentNotice: null,
       currentIndex: 0,
       modalVisible: false, // 弹出窗口是否可见
+      // 用来存通知分页查询的相关参数
+      getparams: {
+        pageSize: 5, // 每页查询条数
+        requireID: 0, // 查询ID，查询在此noticeID之前的通知，由于ID是越新越大的，也就是不管新来的通知
+        read: 0, // 获取未读的通知,read=0;获取已读的通知,read=1
+      },
     };
   },
   mounted() {
@@ -197,12 +213,14 @@ export default {
     markAsRead() {
       if (this.currentNotice.read === false) {
         const { noticeID } = this.currentNotice;
-        request.patch(`/auth/readNotice/${noticeID}`, { read: true }).then(() => {
-          this.notices[this.currentIndex].read = true;
-          this.currentIndex = 0;
-        }).catch((error) => {
-          console.error(error);
-        });
+        request.patch(`/auth/readNotice/${noticeID}`, { read: true })
+          .then(() => {
+            this.notices[this.currentIndex].read = true;
+            this.currentIndex = 0;
+          })
+          .catch((error) => {
+            console.error(error);
+          });
       }
       this.currentNotice = null;
     },
@@ -221,7 +239,10 @@ export default {
           const link = this.$router.resolve({
             name: 'postDetails',
             query: {
-              id: nowNotice.postID, partition: this.partition, before: 'notice', pcommentID: nowNotice.target,
+              id: nowNotice.postID,
+              partition: this.partition,
+              before: 'notice',
+              pcommentID: nowNotice.target,
             },
           });
           window.open(link.href, '_blank');
@@ -229,7 +250,11 @@ export default {
           const link = this.$router.resolve({
             name: 'postDetails',
             query: {
-              id: nowNotice.postID, partition: this.partition, before: 'notice', pcommentID: nowNotice.pcommentID, ccommentID: nowNotice.target,
+              id: nowNotice.postID,
+              partition: this.partition,
+              before: 'notice',
+              pcommentID: nowNotice.pcommentID,
+              ccommentID: nowNotice.target,
             },
           });
           window.open(link.href, '_blank');
@@ -241,7 +266,22 @@ export default {
       const d = new Date(date);
       return `${d.getFullYear()}年${
         d.getMonth() + 1
-      }月${d.getDate()}日 ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}:${String(d.getSeconds()).padStart(2, '0')}`;
+      }月${d.getDate()}日 ${String(d.getHours())
+        .padStart(2, '0')}:${String(d.getMinutes())
+        .padStart(2, '0')}:${String(d.getSeconds())
+        .padStart(2, '0')}`;
+    },
+    changeType(name) {
+      this.notices = [];
+      this.noticesType = name;
+      this.getparams.requireID = 0;
+      this.more = true;
+      if (name === 'unread') {
+        this.getparams.read = 0;
+      } else {
+        this.getparams.read = 1;
+      }
+      this.getNotices();
     },
   },
 };
@@ -270,6 +310,7 @@ export default {
     opacity: 0;
   }
 }
+
 .pop {
   animation: pop 0.5s ease-in-out;
 }
