@@ -651,7 +651,8 @@ export default {
       }
     },
     handlePictureCardPreview(file) {
-      this.dialogImageUrl = file;
+      const replacedUrl = file.replace('/resized/', '/uploads/');
+      this.dialogImageUrl = replacedUrl;
       this.dialogVisible = true;
     },
     len,
