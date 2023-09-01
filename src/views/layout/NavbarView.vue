@@ -25,8 +25,8 @@
     </div>
       </div>
     <b-navbar fixed="top" v-if="($route.name !== 'home'&&$route.name !== 'register'
-    && this.$route.name != 'modifyPassword' && this.$route.name != 'identityValidate' &&
-    this.$route.name != 'deleteMe') ||
+    && $route.name !== 'login' && this.$route.name != 'modifyPassword'
+    && this.$route.name != 'identityValidate' && this.$route.name != 'deleteMe' ) ||
     scrollPosition > 400 || (this.$route.query.partitions && this.$route.query.partitions != '主页' )"
     :style="{ 'background-color': isNightStyle ? 'rgb(246, 155, 10)' : 'rgb(17, 167, 226)'}">
       <b-navbar-brand>
@@ -66,7 +66,8 @@
       </b-collapse>
     </b-navbar>
     <b-row no-gutters v-if="this.$route.name != 'register' && this.$route.name != 'modifyPassword'
-      && this.$route.name != 'identityValidate' && this.$route.name != 'deleteMe'">
+      && this.$route.name != 'identityValidate' && this.$route.name != 'deleteMe'
+        && $route.name !== 'login'">
       <b-col sm="2" class="nav-col" style="position:fixed;z-index: 100;">
         <b-list-group flush class="list-group"
         :style="{ marginTop: $route.name == 'home' &&
