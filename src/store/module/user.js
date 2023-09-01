@@ -49,6 +49,7 @@ const userModule = {
       email,
       num,
       valiCode,
+      CDKey,
     }) {
       return new Promise((resolve, reject) => {
         // userService.register()为发送网络请求的函数，用于向后端发送注册信息
@@ -60,6 +61,7 @@ const userModule = {
           email,
           num,
           valiCode,
+          CDKey,
         }).then((res) => {
           resolve(res);
         }).catch((err) => {

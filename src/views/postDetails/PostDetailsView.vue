@@ -548,13 +548,13 @@ export default {
       this.scrollToComment();
     }, 500);
   },
-  beforeRouteLeave(to, from, next) {
-    // 返回上一页面时清空本地缓存
-    localStorage.removeItem('PostID');
-    localStorage.removeItem('Before');
-    next();
-  },
   methods: {
+    beforeRouteLeave(to, from, next) {
+      // 返回上一页面时清空本地缓存
+      localStorage.removeItem('PostID');
+      localStorage.removeItem('Before');
+      next();
+    },
     scrollToComment() {
       console.log('scrollToComment');
       // 获取当前评论所在的元素
