@@ -6,10 +6,10 @@ import request from '@/utils/request';
 // post中的路径与后端对于功能处理函数的路由后缀保持一致，前缀已在环境变量中定义
 // 添加新的函数记得在下方export default中添加导出
 const register = ({
-  name, phone, password, password2, email, num, valiCode,
+  name, phone, password, password2, email, num, valiCode, CDKey,
 }) => {
   return request.post('auth/register', {
-    name, phone, password, password2, email, num, valiCode,
+    name, phone, password, password2, email, num, valiCode, CDKey,
   });
 };
 
