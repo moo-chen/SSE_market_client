@@ -59,6 +59,9 @@ import { required, minLength } from 'vuelidate/lib/validators';
 import { mapActions } from 'vuex';
 import customValidator from '@/helper/validator';
 
+// eslint-disable-next-line import/no-extraneous-dependencies
+import CryptoJS from 'crypto-js';
+
 export default {
   data() {
     return {
@@ -93,6 +96,13 @@ export default {
 
   methods: {
     ...mapActions('userModule', { userlogin: 'login' }),
+    setPassword(data, key) {
+      const cypherKey = CryptoJS.enc.Utf8.parse(key);
+      CryptoJS.pad.ZeroPadding.pad(cypherKey, 4);
+      const iv = CryptoJS.SHA256(key).toString();
+      const cfg = { iv: CryptoJS.enc.Utf8.parse(iv) };
+      return CryptoJS.AES.encrypt(data, cypherKey, cfg).toString();
+    },
     validateState(name) {
       const { $dirty, $error } = this.$v.user[name];
       return $dirty ? !$error : null;
@@ -113,7 +123,8 @@ export default {
         localStorage.removeItem('email');
         localStorage.removeItem('password');
       }
-
+      this.user.password = this.setPassword(this.user.password, '16bit secret key');
+      console.error(this.user);
       this.userlogin(this.user)
         .then(() => {
           this.$router.replace({ name: 'home' });

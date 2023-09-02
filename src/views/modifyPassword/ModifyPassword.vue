@@ -45,6 +45,9 @@
 import { mapActions } from 'vuex';
 import { required, minLength } from 'vuelidate/lib/validators';
 
+// eslint-disable-next-line import/no-extraneous-dependencies
+import CryptoJS from 'crypto-js';
+
 export default {
   data() {
     return {
@@ -53,6 +56,7 @@ export default {
         password: '',
         password2: '',
       },
+      key: '16bit secret key',
     };
   },
   validations: {
@@ -81,6 +85,13 @@ export default {
 
   methods: {
     ...mapActions('userModule', { userModify: 'modifyPassword' }),
+    setPassword(data, key) {
+      const cypherKey = CryptoJS.enc.Utf8.parse(key);
+      CryptoJS.pad.ZeroPadding.pad(cypherKey, 4);
+      const iv = CryptoJS.SHA256(key).toString();
+      const cfg = { iv: CryptoJS.enc.Utf8.parse(iv) };
+      return CryptoJS.AES.encrypt(data, cypherKey, cfg).toString();
+    },
     validateState(name) {
       // 这里是es6 解构赋值
       const { $dirty, $error } = this.$v.user[name];
@@ -92,6 +103,8 @@ export default {
         console.error('error!');
         return;
       }
+      this.user.password = this.setPassword(this.user.password, this.key);
+      this.user.password2 = this.setPassword(this.user.password2, this.key);
       console.error(this.user);
       this.userModify(this.user).then(() => {
         this.$bvToast.toast('修改密码成功', {
