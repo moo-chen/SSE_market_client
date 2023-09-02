@@ -15,6 +15,7 @@
 
 <script>
 import Navbar from './views/layout/NavbarView.vue';
+import DevicePixelRatio from './utils/devicePixelRatio';
 
 export default {
   components: { Navbar },
@@ -30,6 +31,7 @@ export default {
     return {};
   },
   created() {
+    new DevicePixelRatio().init();
     if (typeof localStorage !== 'undefined') {
       if (!localStorage.getItem('Style')) {
         localStorage.setItem('Style', JSON.stringify('day'));
