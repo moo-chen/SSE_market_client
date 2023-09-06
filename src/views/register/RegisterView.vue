@@ -119,6 +119,9 @@ import { required, minLength } from 'vuelidate/lib/validators';
 import { mapActions } from 'vuex';
 import customValidator from '@/helper/validator';
 
+// eslint-disable-next-line import/no-extraneous-dependencies
+import CryptoJS from 'crypto-js';
+
 // export default用于导出模块中的一个默认值，函数一般放在其中
 export default {
   // data 函数用于定义组件的数据。它返回一个对象，其中包含组件的各种数据属性和初始值。
@@ -134,6 +137,7 @@ export default {
         CDKey: '',
         mode: '',
       },
+      key: '16bit secret key',
     };
   },
   // 用于定义数据的格式规则
@@ -182,7 +186,13 @@ export default {
       } = this.$v.onlyEmail[name];
       return $dirty ? !$error : null;
     },
-
+    setPassword(data, key) {
+      const cypherKey = CryptoJS.enc.Utf8.parse(key);
+      CryptoJS.pad.ZeroPadding.pad(cypherKey, 4);
+      const iv = CryptoJS.SHA256(key).toString();
+      const cfg = { iv: CryptoJS.enc.Utf8.parse(iv) };
+      return CryptoJS.AES.encrypt(data, cypherKey, cfg).toString();
+    },
     validateEmail() {
       this.user.mode = 0;
       this.$v.user.$touch();
@@ -212,6 +222,9 @@ export default {
       if (this.$v.user.$anyError) {
         return;
       }
+      this.user.password = this.setPassword(this.user.password, this.key);
+      this.user.password2 = this.setPassword(this.user.password2, this.key);
+      console.error(this.user);
       // 请求
       this.userRegister(this.user)
         .then(() => {
