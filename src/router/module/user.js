@@ -4,11 +4,19 @@ const userRoutes = [
   {
     path: '/register',
     name: 'register',
+    meta: {
+      auth: true,
+      keepAlive: false,
+    },
     component: () => import('@/views/register/RegisterView.vue'),
   },
   {
     path: '/login',
     name: 'login',
+    meta: {
+      auth: true,
+      keepAlive: false,
+    },
     component: () => import('@/views/login/LoginView.vue'),
   },
   {
@@ -16,6 +24,7 @@ const userRoutes = [
     name: 'save',
     meta: {
       auth: true,
+      keepAlive: false,
     },
     component: () => import('@/views/save/SaveView.vue'),
   },
@@ -24,22 +33,35 @@ const userRoutes = [
     name: 'history',
     meta: {
       auth: true,
+      keepAlive: false,
     },
     component: () => import('@/views/history/HistoryView.vue'),
   },
   {
     path: '/modifyPassword',
     name: 'modifyPassword',
+    meta: {
+      auth: false,
+      keepAlive: false,
+    },
     component: () => import('@/views/modifyPassword/ModifyPassword.vue'),
   },
   {
     path: '/identityValidate',
     name: 'identityValidate',
+    meta: {
+      auth: false,
+      keepAlive: false,
+    },
     component: () => import('@/views/identityValidate/IdentityValidateView.vue'),
   },
   {
     path: '/deleteMe',
     name: 'deleteMe',
+    meta: {
+      auth: false,
+      keepAlive: false,
+    },
     component: () => import('@/views/deleteMe/deleteMeView.vue'),
   },
 ];

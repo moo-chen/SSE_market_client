@@ -12,6 +12,7 @@ const routes = [
     name: 'home',
     meta: {
       auth: true,
+      keepAlive: true,
     },
     component: () => import('../views/home/HomeView.vue'),
   },
@@ -23,9 +24,17 @@ const routes = [
 const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
+  scrollBehavior(to, from, savedPosition) {
+    if (savedPosition) { // 如果savedPosition存在，滚动条会自动跳到记录的值的地方
+      return savedPosition;
+    }
+    return {
+      x: 0,
+      y: 0,
+    };// savedPosition也是一个记录x轴和y轴位置的对象
+  },
   routes,
 });
-
 router.beforeEach((to, from, next) => {
   if (to.meta.auth) { // 判断是否需要登录
     // 判断用户是否登录

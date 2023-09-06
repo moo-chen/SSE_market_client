@@ -1,373 +1,398 @@
 <template>
   <div>
     <b-button variant="primary" class="back_button"
-      @click="goback" style="margin-left: 60px;">
-      <b-icon-reply class="mr-2"></b-icon-reply>返回
+              @click="goback" style="margin-left: 60px;">
+      <b-icon-reply class="mr-2"></b-icon-reply>
+      返回
     </b-button>
-  <div class='postDetails' style="margin-left:200px">
-    <b-card class='mx-auto my-5' style="max-width: 1500px;"
-    :style="{ 'background-color': isNightStyle ? 'rgb(50,50,50)' : 'white',
+    <div class='postDetails' style="margin-left:200px">
+      <b-card class='mx-auto my-5' style="max-width: 1500px;"
+              :style="{ 'background-color': isNightStyle ? 'rgb(50,50,50)' : 'white',
           'color': isNightStyle ? 'gray' : null}">
-      <div class="text-muted" style="margin-left:850px;" @click.stop>
-        <b-icon icon="three-dots-vertical" @click.stop="toggleMenu"></b-icon></div>
-      <b-list-group v-if="this.post.showMenu" style="width:100px;height:1.25rem;margin-left: 880px;
+        <div class="text-muted" style="margin-left:850px;" @click.stop>
+          <b-icon icon="three-dots-vertical" @click.stop="toggleMenu"></b-icon>
+        </div>
+        <b-list-group v-if="this.post.showMenu"
+                      style="width:100px;height:1.25rem;margin-left: 880px;
         margin-top: -20px;font-size: 0.9rem;" @click.stop>
           <b-list-group-item :style="{ 'background-color': isNightStyle ? 'rgb(50,50,50)' : 'white',
                     'color': isNightStyle ? 'gray' : null}">
             <b-icon class="mr-2" :icon="post.isSaved ? 'star-fill' : 'star'"
-            @click.stop="save()" :class="{ 'text-warning': post.isSaved }"></b-icon>收藏
+                    @click.stop="save()" :class="{ 'text-warning': post.isSaved }"></b-icon>
+            收藏
           </b-list-group-item>
           <b-list-group-item v-if="this.post.authorTelephone !== userInfo.phone"
-          :style="{ 'background-color': isNightStyle ? 'rgb(50,50,50)' : 'white',
+                             :style="{ 'background-color': isNightStyle ? 'rgb(50,50,50)' : 'white',
                     'color': isNightStyle ? 'gray' : null}"
-            @click.stop="showReportModal = true">
-            <b-icon-exclamation-triangle class="mr-2"></b-icon-exclamation-triangle>举报
+                             @click.stop="showReportModal = true">
+            <b-icon-exclamation-triangle class="mr-2"></b-icon-exclamation-triangle>
+            举报
           </b-list-group-item>
           <b-modal v-model="showReportModal" title="举报" @hidden="clearReportReason"
-            @ok="submitReport('post',post.postID)" ok-title="Submit">
+                   @ok="submitReport('post',post.postID)" ok-title="Submit">
             <b-form-textarea v-model="reportReason" placeholder="请输入举报原因" rows="8">
             </b-form-textarea>
           </b-modal>
           <b-list-group-item v-if="this.post.authorTelephone === userInfo.phone"
-          :style="{ 'background-color': isNightStyle ? 'rgb(50,50,50)' : 'white',
+                             :style="{ 'background-color': isNightStyle ? 'rgb(50,50,50)' : 'white',
                     'color': isNightStyle ? 'gray' : null}"
-            @click.stop="showDeleteModal = true">
-            <b-icon-trash class="mr-2"></b-icon-trash>删除
+                             @click.stop="showDeleteModal = true">
+            <b-icon-trash class="mr-2"></b-icon-trash>
+            删除
           </b-list-group-item>
           <b-modal v-model="showDeleteModal" title="确认删除" ok-title="Confirm"
-            @ok="postdelete(post)">
+                   @ok="postdelete(post)">
             <p>你确定要删除这个帖子吗？</p>
           </b-modal>
-      </b-list-group>
-      <b-avatar :src="post.authorAvatar" size="5rem" class="mr-3"></b-avatar>
-      <div class='author-box mb-2' :style="{ 'background-color': isNightStyle ?
+        </b-list-group>
+        <b-avatar :src="post.authorAvatar" size="5rem" class="mr-3"></b-avatar>
+        <div class='author-box mb-2' :style="{ 'background-color': isNightStyle ?
                   'rgb(246, 155, 10)' : 'rgb(17, 167, 226)' }">
-        {{ post.author }}</div>
-      <b-card-title>{{ post.title }}</b-card-title>
-      <b-card-text>{{ post.content }}</b-card-text>
-      <div v-if="fileListGet.length > 0" class="photo-viewer">
-        <div class="thumbnail-container">
-          <template v-if="fileListGet.length === 4">
-            <div>
-              <img :src="fileListGet[0]"
-                  width="270"
-                  height="270"
-                  @click="handlePictureCardPreview(fileListGet[0])"
-                  @keyup.enter="handlePictureCardPreview(fileListGet[0])"
-                  alt="Post Photo" />
-              <img :src="fileListGet[1]"
-                  width="270"
-                  height="270"
-                  style="margin-top:20px"
-                  @click="handlePictureCardPreview(fileListGet[1])"
-                  @keyup.enter="handlePictureCardPreview(fileListGet[1])"
-                  alt="Post Photo" />
-            </div>
-            <div>
-              <img :src="fileListGet[2]"
-                  width="270"
-                  height="270"
-                  @click="handlePictureCardPreview(fileListGet[2])"
-                  @keyup.enter="handlePictureCardPreview(fileListGet[2])"
-                  alt="Post Photo" />
-              <img :src="fileListGet[3]"
-                  width="270"
-                  height="270"
-                  style="margin-top:20px"
-                  @click="handlePictureCardPreview(fileListGet[3])"
-                  @keyup.enter="handlePictureCardPreview(fileListGet[3])"
-                  alt="Post Photo" />
-            </div>
-          </template>
-          <template v-else>
-            <div v-for="(file, index) in fileListGet" :key="index">
-              <img :src="file"
-                  width="270"
-                  height="270"
-                  @click="handlePictureCardPreview(file)"
-                  @keyup.enter="handlePictureCardPreview(file)"
-                  alt="Post Photo" />
-            </div>
-          </template>
+          {{ post.author }}
         </div>
-        <el-dialog :visible.sync="dialogVisible">
-          <img width="100%" :src="dialogImageUrl" alt="Preview" />
-        </el-dialog>
-      </div>
-      <div class="d-flex justify-content-between">
-        <div class='d-flex justify-content-between'>
-          <small class='text-muted'>{{ formatDate(post.postTime) }}</small>
+        <b-card-title>{{ post.title }}</b-card-title>
+        <b-card-text>{{ post.content }}</b-card-text>
+        <div v-if="fileListGet.length > 0" class="photo-viewer">
+          <div class="thumbnail-container">
+            <template v-if="fileListGet.length === 4">
+              <div>
+                <img :src="fileListGet[0]"
+                     width="270"
+                     height="270"
+                     @click="handlePictureCardPreview(fileListGet[0])"
+                     @keyup.enter="handlePictureCardPreview(fileListGet[0])"
+                     alt="Post Photo"/>
+                <img :src="fileListGet[1]"
+                     width="270"
+                     height="270"
+                     style="margin-top:20px"
+                     @click="handlePictureCardPreview(fileListGet[1])"
+                     @keyup.enter="handlePictureCardPreview(fileListGet[1])"
+                     alt="Post Photo"/>
+              </div>
+              <div>
+                <img :src="fileListGet[2]"
+                     width="270"
+                     height="270"
+                     @click="handlePictureCardPreview(fileListGet[2])"
+                     @keyup.enter="handlePictureCardPreview(fileListGet[2])"
+                     alt="Post Photo"/>
+                <img :src="fileListGet[3]"
+                     width="270"
+                     height="270"
+                     style="margin-top:20px"
+                     @click="handlePictureCardPreview(fileListGet[3])"
+                     @keyup.enter="handlePictureCardPreview(fileListGet[3])"
+                     alt="Post Photo"/>
+              </div>
+            </template>
+            <template v-else>
+              <div v-for="(file, index) in fileListGet" :key="index">
+                <img :src="file"
+                     width="270"
+                     height="270"
+                     @click="handlePictureCardPreview(file)"
+                     @keyup.enter="handlePictureCardPreview(file)"
+                     alt="Post Photo"/>
+              </div>
+            </template>
+          </div>
+          <el-dialog :visible.sync="dialogVisible">
+            <img width="100%" :src="dialogImageUrl" alt="Preview"/>
+          </el-dialog>
         </div>
-        <div class="tag-group">
-          <span class="tag-group__title"></span>
-          <el-tag v-for="tag in post.tag" :key="tag.label" :type="tag.type"
-          effect="plain" size="mini">{{ tag.label }}
-          </el-tag>
+        <div class="d-flex justify-content-between">
+          <div class='d-flex justify-content-between'>
+            <small class='text-muted'>{{ formatDate(post.postTime) }}</small>
+          </div>
+          <div class="tag-group">
+            <span class="tag-group__title"></span>
+            <el-tag v-for="tag in post.tag" :key="tag.label" :type="tag.type"
+                    effect="plain" size="mini">{{ tag.label }}
+            </el-tag>
+          </div>
         </div>
-      </div>
-      <div class='d-flex justify-content-between align-items-center mt-3'>
-        <div class="text-muted">
-          <b-icon :icon="post.isLiked ? 'heart-fill' : 'heart'"
-          @click.stop="like()" :class="{ 'text-danger': post.isLiked }"></b-icon>
-          {{ post.like }}
+        <div class='d-flex justify-content-between align-items-center mt-3'>
+          <div class="text-muted">
+            <b-icon :icon="post.isLiked ? 'heart-fill' : 'heart'"
+                    @click.stop="like()" :class="{ 'text-danger': post.isLiked }"></b-icon>
+            {{ post.like }}
+          </div>
+          <div class="text-muted">
+            <b-icon-eye-fill></b-icon-eye-fill>
+            {{ post.browse }}
+          </div>
+          <div class='text-muted'>
+            <b-icon icon='chat-dots-fill'></b-icon>
+            {{ commentsNum }}
+          </div>
         </div>
-        <div class="text-muted">
-              <b-icon-eye-fill></b-icon-eye-fill> {{ post.browse }}
-        </div>
-        <div class='text-muted'><b-icon icon='chat-dots-fill'></b-icon> {{ commentsNum }}</div>
-      </div>
-    </b-card>
-    <b-button @click="post.showCommentForm
+      </b-card>
+      <b-button @click="post.showCommentForm
             = !post.showCommentForm" variant="primary">
-      {{ post.showCommentForm ? '隐藏评论' : '评论' }}
-    </b-button>
-  <!--显示帖子评论窗口-->
-  <div v-if="post.showCommentForm" style="margin-top:10px">
-    <b-form-group>
+        {{ post.showCommentForm ? '隐藏评论' : '评论' }}
+      </b-button>
+      <!--显示帖子评论窗口-->
+      <div v-if="post.showCommentForm" style="margin-top:10px">
+        <b-form-group>
           <b-form-textarea ref="pcommentTextarea" v-model="pcomment.content"
-          placeholder="请写下你的精彩评论..." rows="3">
+                           placeholder="请写下你的精彩评论..." rows="3">
           </b-form-textarea>
         </b-form-group>
         <div>
-          <button  variant='primary' @click="showEmojiOnPcomment()">😀</button>
-            <div v-if="showEmojiPcomment">
-              <picker
-                :include="['people']"
-                :showSearch="false"
-                :showPreview="false"
-                :showCategories="false"
-                @select="addEmojiToPcomment"
-              />
-            </div>
+          <button variant='primary' @click="showEmojiOnPcomment()">😀</button>
+          <div v-if="showEmojiPcomment">
+            <picker
+              :include="['people']"
+              :showSearch="false"
+              :showPreview="false"
+              :showCategories="false"
+              @select="addEmojiToPcomment"
+            />
+          </div>
         </div>
         <b-button @click="pcommentPost" variant="primary">提交评论</b-button>
+      </div>
     </div>
-  </div>
 
- <!--显示和发表帖子评论、评论的评论-->
-  <div class='comment' style="margin-left: 200px" >
-    <!--排序-->
-    <div class="d-flex justify-content-end">
-      <b-button @click="sortkind='Date';comments=sortcomments(comments)"
-                variant="primary" class="mr-2 btn-sm">按时间排序</b-button>
-      <b-button @click="sortkind='heat';comments=sortcomments(comments)"
-                variant="primary" class="btn-sm">按热度排序</b-button>
-    </div>
-    <transition-group name="comment-list" tag="div">
-    <div v-for="(comment, index) in visibleComments"
-         :key="index" ref="commentRef" :id="`comment-${comment.pcommentID}`">
-      <b-card class="my-1" :style="{ 'background-color': isNightStyle ? 'rgb(50,50,50)' : 'white',
+    <!--显示和发表帖子评论、评论的评论-->
+    <div class='comment' style="margin-left: 200px">
+      <!--排序-->
+      <div class="d-flex justify-content-end">
+        <b-button @click="sortkind='Date';comments=sortcomments(comments)"
+                  variant="primary" class="mr-2 btn-sm">按时间排序
+        </b-button>
+        <b-button @click="sortkind='heat';comments=sortcomments(comments)"
+                  variant="primary" class="btn-sm">按热度排序
+        </b-button>
+      </div>
+      <transition-group name="comment-list" tag="div">
+        <div v-for="(comment, index) in visibleComments"
+             :key="index" ref="commentRef" :id="`comment-${comment.pcommentID}`">
+          <b-card class="my-1"
+                  :style="{ 'background-color': isNightStyle ? 'rgb(50,50,50)' : 'white',
           'color': isNightStyle ? 'gray' : null }">
-        <div class="d-flex mb-2">
-          <div class="flex-shrink-0 mr-3">
-            <b-avatar :src="comment.authorAvatar" size="2rem"></b-avatar>
-          </div>
-          <div>
-            <div class="font-weight-bold">{{ comment.author }}</div>
-            <div>{{ comment.content }}</div>
-            <!--显示每个评论的点赞和回复数-->
-            <div class='d-flex justify-content-between align-items-center mt-3'>
-              <div class="text-muted">
-                <b-icon :icon="comment.isLiked ? 'heart-fill' : 'heart'"
-                        @click.stop="pclike(index)" :class="{ 'text-danger': comment.isLiked }">
-                </b-icon>
-                {{ comment.likeNum }}
+            <div class="d-flex mb-2">
+              <div class="flex-shrink-0 mr-3">
+                <b-avatar :src="comment.authorAvatar" size="2rem"></b-avatar>
               </div>
-            </div>
-            <div class="text-muted">{{ formatDate(comment.commentTime) }}</div>
-            <b-button @click="comment.showReplyForm
+              <div>
+                <div class="font-weight-bold">{{ comment.author }}</div>
+                <div>{{ comment.content }}</div>
+                <!--显示每个评论的点赞和回复数-->
+                <div class='d-flex justify-content-between align-items-center mt-3'>
+                  <div class="text-muted">
+                    <b-icon :icon="comment.isLiked ? 'heart-fill' : 'heart'"
+                            @click.stop="pclike(index)" :class="{ 'text-danger': comment.isLiked }">
+                    </b-icon>
+                    {{ comment.likeNum }}
+                  </div>
+                </div>
+                <div class="text-muted">{{ formatDate(comment.commentTime) }}</div>
+                <b-button @click="comment.showReplyForm
             = !comment.showReplyForm" class="mr-2 btn-sm"
-            variant="primary" style="margin-top:10px">
-              {{ comment.showReplyForm ? '隐藏评论' : '评论' }}
-            </b-button>
-            <div class='text-muted' style='margin-left: 820px' @click.stop>
-              <b-icon icon='three-dots-vertical' @click.stop="comment.showMenu =
+                          variant="primary" style="margin-top:10px">
+                  {{ comment.showReplyForm ? '隐藏评论' : '评论' }}
+                </b-button>
+                <div class='text-muted' style='margin-left: 820px' @click.stop>
+                  <b-icon icon='three-dots-vertical' @click.stop="comment.showMenu =
               !comment.showMenu"></b-icon>
-            </div>
-            <b-list-group
-            v-if='comment.showMenu'
-            style='
+                </div>
+                <b-list-group
+                  v-if='comment.showMenu'
+                  style='
               width: 100px;
               height: 1.25rem;
               margin-left: 850px;
               margin-top: -20px;
               font-size: 0.9rem;
             '
-            @click.stop
-          >
-            <b-list-group-item
-              v-if='comment.authorTelephone !== userInfo.phone'
-              @click.stop='showReportModal = true'
-            >
-              <b-icon-exclamation-triangle class='mr-2'></b-icon-exclamation-triangle>举报
-            </b-list-group-item>
-            <b-modal
-              v-model='showReportModal'
-              title='举报'
-              @hidden='clearReportReason'
-              @ok='submitReport("pcomment",comment.pcommentID)'
-              ok-title='Submit'
-            >
-              <b-form-textarea v-model='reportReason' placeholder='请输入举报原因' rows='8'>
-              </b-form-textarea>
-            </b-modal>
-            <b-list-group-item
-              v-if='comment.authorTelephone === userInfo.phone'
-              @click.stop='showDeleteModal = true'
-            >
-              <b-icon-trash class='mr-2'></b-icon-trash>删除
-            </b-list-group-item>
-            <b-modal
-              v-model='showDeleteModal'
-              title='确认删除'
-              ok-title='Confirm'
-              @ok='pcommentdelete(comment)'
-            >
-              <p>你确定要删除这条评论吗？</p>
-            </b-modal>
-          </b-list-group>
-            <!--如果点击了评论，将显示评论窗口-->
-            <div v-if="comment.showReplyForm" style="margin-top:10px">
-              <form @submit.prevent="ccommentPost(index)">
-                <b-form-group>
-                  <b-form-textarea ref="ccommentTextarea" v-model="ccomment.content"
-                                   placeholder="请写下你的精彩评论..." rows="3">
-                  </b-form-textarea>
-                </b-form-group>
-                <div>
-                  <button  type="button" variant='primary' @click="showEmojiOnCcomment()">😀</button>
-                  <div v-if="showEmojiCcomment">
-                    <picker
-                      :include="['people']"
-                      :showSearch="false"
-                      :showPreview="false"
-                      :showCategories="false"
-                      @select="addEmojiToCcomment"
-                    />
-                  </div>
+                  @click.stop
+                >
+                  <b-list-group-item
+                    v-if='comment.authorTelephone !== userInfo.phone'
+                    @click.stop='showReportModal = true'
+                  >
+                    <b-icon-exclamation-triangle class='mr-2'></b-icon-exclamation-triangle>
+                    举报
+                  </b-list-group-item>
+                  <b-modal
+                    v-model='showReportModal'
+                    title='举报'
+                    @hidden='clearReportReason'
+                    @ok='submitReport("pcomment",comment.pcommentID)'
+                    ok-title='Submit'
+                  >
+                    <b-form-textarea v-model='reportReason' placeholder='请输入举报原因' rows='8'>
+                    </b-form-textarea>
+                  </b-modal>
+                  <b-list-group-item
+                    v-if='comment.authorTelephone === userInfo.phone'
+                    @click.stop='showDeleteModal = true'
+                  >
+                    <b-icon-trash class='mr-2'></b-icon-trash>
+                    删除
+                  </b-list-group-item>
+                  <b-modal
+                    v-model='showDeleteModal'
+                    title='确认删除'
+                    ok-title='Confirm'
+                    @ok='pcommentdelete(comment)'
+                  >
+                    <p>你确定要删除这条评论吗？</p>
+                  </b-modal>
+                </b-list-group>
+                <!--如果点击了评论，将显示评论窗口-->
+                <div v-if="comment.showReplyForm" style="margin-top:10px">
+                  <form @submit.prevent="ccommentPost(index)">
+                    <b-form-group>
+                      <b-form-textarea ref="ccommentTextarea" v-model="ccomment.content"
+                                       placeholder="请写下你的精彩评论..." rows="3">
+                      </b-form-textarea>
+                    </b-form-group>
+                    <div>
+                      <button type="button" variant='primary' @click="showEmojiOnCcomment()">😀
+                      </button>
+                      <div v-if="showEmojiCcomment">
+                        <picker
+                          :include="['people']"
+                          :showSearch="false"
+                          :showPreview="false"
+                          :showCategories="false"
+                          @select="addEmojiToCcomment"
+                        />
+                      </div>
+                    </div>
+                    <b-button type="submit" variant="primary">
+                      提交评论
+                    </b-button>
+                  </form>
                 </div>
-                <b-button type="submit" variant="primary">
-                  提交评论</b-button>
-              </form>
-            </div>
-            <!-- 显示评论的评论 -->
-            <b-button v-if="comment.subComments.length > 0"
-                      @click="showRepliesModal=true;showcommentsindex=index"
-                      variant="outline-primary"
-                      style="font-size: 12px;margin-top:10px">
-              查看评论共{{len(comment.subComments)}}条
-            </b-button>
-            <b-modal hide-footer v-model="showRepliesModal"  v-if="index===showcommentsindex">
-            <transition-group name="comment-list" tag="div">
-            <div v-for="(subComment, subIndex) in visibleSubComments(index)"
-                 :key="subIndex" :id="`ccomment-${subComment.ccommentID}`" tabindex="0">
-              <hr>
-              <div class="d-lg-flex mb-2" @mouseover="isHovered = true;
+                <!-- 显示评论的评论 -->
+                <b-button v-if="comment.subComments.length > 0"
+                          @click="showRepliesModal=true;showcommentsindex=index"
+                          variant="outline-primary"
+                          style="font-size: 12px;margin-top:10px">
+                  查看评论共{{ len(comment.subComments) }}条
+                </b-button>
+                <b-modal hide-footer v-model="showRepliesModal" v-if="index===showcommentsindex">
+                  <transition-group name="comment-list" tag="div">
+                    <div v-for="(subComment, subIndex) in visibleSubComments(index)"
+                         :key="subIndex" :id="`ccomment-${subComment.ccommentID}`" tabindex="0">
+                      <hr>
+                      <div class="d-lg-flex mb-2" @mouseover="isHovered = true;
                 nowSubIndex = subIndex;nowIndex = index"
-                   @mouseleave="nowIndex =0"
-                   @focus="nowSubIndex = subIndex"
-                   @focusout="nowSubIndex = subIndex;isHovered = false">
-                <div class="flex-shrink-0 mr-3">
-                  <b-avatar :src="subComment.authorAvatar" size="2rem"></b-avatar>
-                </div>
-                <div>
-                  <div class="font-weight-bold">{{ subComment.author }}</div>
-                  <div v-if="subComment.userTargetName !== ''">
-                    <span style="color: cadetblue">回复@{{ subComment.userTargetName }}:</span>
-                  </div>
-                  <div>{{ subComment.content }}</div>
-                  <div class="text-muted">{{ formatDate(subComment.commentTime) }}</div>
-                </div>
-                <div class="text-muted">
-                  <b-icon :icon="subComment.isLiked ? 'heart-fill' : 'heart'"
-                          @click.stop="cclike(index,subIndex)"
-                          :class="{ 'text-danger': subComment.isLiked }">
-                  </b-icon>
-                  {{ subComment.likeNum }}
-                </div>
-          <div class="d-flex justify-content-end">
-            <div class='text-muted' style='margin-top: -19px; position: relative;margin-top: 50px;'>
-              <div v-if="subComment.authorTelephone !== userInfo.phone"
-              style="position: absolute; top: 0; right: 0;">
-                <b-icon icon='exclamation-triangle' @click.stop='showReportModal = true'></b-icon>
-                <b-modal
-                  v-model='showReportModal'
-                  title='举报'
-                  @hidden='clearReportReason'
-                  @ok='submitReport("ccomment",subComment.ccommentID)'
-                  ok-title='Submit'
-                >
-                  <b-form-textarea v-model='reportReason'
-                  placeholder='请输入举报原因' rows='8'></b-form-textarea>
-                </b-modal>
-              </div>
-              <div v-else style="position: absolute; top: 0; right: 0;">
-                <b-icon icon='trash' @click.stop='showDeleteModal = true'></b-icon>
-                <b-modal
-                  v-model='showDeleteModal'
-                  title='确认删除'
-                  ok-title='Confirm'
-                  @ok='ccommentdelete(subComment)'
-                >
-                  <p>你确定要删除这条评论吗？</p>
-                </b-modal>
-              </div>
-              </div>
-            </div>
-                <div v-if="isHovered && subIndex===nowSubIndex && index===nowIndex"
-                style="margin-left:10px">
-                  <!--回复按钮，点击后跳出评论的评论的回复窗口-->
-                  <b-button @click="replyshow = !replyshow; nowReplyComment=subComment"
-                  variant="outline-info">
-                    回复
-                  </b-button>
-                </div>
-              </div>
-            </div>
-            </transition-group>
-              <b-modal hide-footer v-model="replyshow" v-if="index===showcommentsindex">
-                <form @submit.prevent=
-                          "ccommentPost(showcommentsindex,
+                           @mouseleave="nowIndex =0"
+                           @focus="nowSubIndex = subIndex"
+                           @focusout="nowSubIndex = subIndex;isHovered = false">
+                        <div class="flex-shrink-0 mr-3">
+                          <b-avatar :src="subComment.authorAvatar" size="2rem"></b-avatar>
+                        </div>
+                        <div>
+                          <div class="font-weight-bold">{{ subComment.author }}</div>
+                          <div v-if="subComment.userTargetName !== ''">
+                            <span style="color: cadetblue">回复@{{
+                                subComment.userTargetName
+                              }}:</span>
+                          </div>
+                          <div>{{ subComment.content }}</div>
+                          <div class="text-muted">{{ formatDate(subComment.commentTime) }}</div>
+                        </div>
+                        <div class="text-muted">
+                          <b-icon :icon="subComment.isLiked ? 'heart-fill' : 'heart'"
+                                  @click.stop="cclike(index,subIndex)"
+                                  :class="{ 'text-danger': subComment.isLiked }">
+                          </b-icon>
+                          {{ subComment.likeNum }}
+                        </div>
+                        <div class="d-flex justify-content-end">
+                          <div class='text-muted'
+                               style='margin-top: -19px; position: relative;margin-top: 50px;'>
+                            <div v-if="subComment.authorTelephone !== userInfo.phone"
+                                 style="position: absolute; top: 0; right: 0;">
+                              <b-icon icon='exclamation-triangle'
+                                      @click.stop='showReportModal = true'></b-icon>
+                              <b-modal
+                                v-model='showReportModal'
+                                title='举报'
+                                @hidden='clearReportReason'
+                                @ok='submitReport("ccomment",subComment.ccommentID)'
+                                ok-title='Submit'
+                              >
+                                <b-form-textarea v-model='reportReason'
+                                                 placeholder='请输入举报原因'
+                                                 rows='8'></b-form-textarea>
+                              </b-modal>
+                            </div>
+                            <div v-else style="position: absolute; top: 0; right: 0;">
+                              <b-icon icon='trash' @click.stop='showDeleteModal = true'></b-icon>
+                              <b-modal
+                                v-model='showDeleteModal'
+                                title='确认删除'
+                                ok-title='Confirm'
+                                @ok='ccommentdelete(subComment)'
+                              >
+                                <p>你确定要删除这条评论吗？</p>
+                              </b-modal>
+                            </div>
+                          </div>
+                        </div>
+                        <div v-if="isHovered && subIndex===nowSubIndex && index===nowIndex"
+                             style="margin-left:10px">
+                          <!--回复按钮，点击后跳出评论的评论的回复窗口-->
+                          <b-button @click="replyshow = !replyshow; nowReplyComment=subComment"
+                                    variant="outline-info">
+                            回复
+                          </b-button>
+                        </div>
+                      </div>
+                    </div>
+                  </transition-group>
+                  <b-modal hide-footer v-model="replyshow" v-if="index===showcommentsindex">
+                    <form @submit.prevent=
+                            "ccommentPost(showcommentsindex,
                           nowReplyComment.author,
                           nowReplyComment.ccommentID)">
-                  <b-form-group>
-                    <b-form-textarea ref="ccommentTextarea" v-model="ccomment.content"
-                                     :placeholder="'回复@'+nowReplyComment.author" rows="3">
-                    </b-form-textarea>
-                  </b-form-group>
-                  <div>
-                    <button  type="button" variant='primary' @click="showEmojiOnCcomment()">
-                      😀</button>
-                    <div v-if="showEmojiCcomment">
-                      <picker
-                        :include="['people']"
-                        :showSearch="false"
-                        :showPreview="false"
-                        :showCategories="false"
-                        @select="addEmojiToCcomment"
-                      />
-                    </div>
-                  </div>
-                  <b-button type="submit" variant="primary">
-                    提交回复</b-button>
-                </form>
-              </b-modal>
-              <b-button v-if="comment.subComments.length > 0 && len(comment.subComments) > 5"
-                        @click="showAllReplies(index)" variant="outline-primary"
-                        style="font-size: 12px;">
-                <div v-if="comment.showAllReplies">折叠评论</div>
-                <div v-else>展开全部评论共{{len(comment.subComments)}}条</div>
-              </b-button>
-            </b-modal >
-          </div>
+                      <b-form-group>
+                        <b-form-textarea ref="ccommentTextarea" v-model="ccomment.content"
+                                         :placeholder="'回复@'+nowReplyComment.author" rows="3">
+                        </b-form-textarea>
+                      </b-form-group>
+                      <div>
+                        <button type="button" variant='primary' @click="showEmojiOnCcomment()">
+                          😀
+                        </button>
+                        <div v-if="showEmojiCcomment">
+                          <picker
+                            :include="['people']"
+                            :showSearch="false"
+                            :showPreview="false"
+                            :showCategories="false"
+                            @select="addEmojiToCcomment"
+                          />
+                        </div>
+                      </div>
+                      <b-button type="submit" variant="primary">
+                        提交回复
+                      </b-button>
+                    </form>
+                  </b-modal>
+                  <b-button v-if="comment.subComments.length > 0 && len(comment.subComments) > 5"
+                            @click="showAllReplies(index)" variant="outline-primary"
+                            style="font-size: 12px;">
+                    <div v-if="comment.showAllReplies">折叠评论</div>
+                    <div v-else>展开全部评论共{{ len(comment.subComments) }}条</div>
+                  </b-button>
+                </b-modal>
+              </div>
+            </div>
+          </b-card>
         </div>
-      </b-card>
-    </div>
       </transition-group>
-    <b-button v-if="visibleComments.length < comments.length" @click="showAllComments()">
-      {{ allComments ? '折叠评论' : '展开全部评论' }}
-    </b-button>
-  </div>
+      <b-button v-if="visibleComments.length < comments.length" @click="showAllComments()">
+        {{ allComments ? '折叠评论' : '展开全部评论' }}
+      </b-button>
+    </div>
 
   </div>
 
@@ -421,9 +446,11 @@ export default {
     },
   },
   mounted() {
-    // 获取当前评论ID
-    this.currentPcommentID = this.$route.query.pcommentID;
-    this.currentCcommentID = this.$route.query.ccommentID;
+    // 获取当前评论ID,不过要看当前是以什么方式传递，网址传是query，参数传是params
+    if (this.$route.query.pcommentID) this.currentPcommentID = this.$route.query.pcommentID;
+    // else this.currentPcommentID = this.$route.params.pcommentID;
+    if (this.$route.query.ccommentID) this.currentCcommentID = this.$route.query.ccommentID;
+    // else this.currentCcommentID = this.$route.params.ccommentID;
   },
   data() {
     return {
@@ -517,7 +544,10 @@ export default {
     }
     this.userTelephone = this.userInfo.phone;
     // 根据该id向后端发送请求，获取该帖子的详细信息，并展示在页面上
-    this.postShowDetails({ userTelephone: this.userTelephone, postID: this.post.postID })
+    this.postShowDetails({
+      userTelephone: this.userTelephone,
+      postID: this.post.postID,
+    })
       .then((post) => {
         this.post.postID = post.data.PostID;
         this.post.author = post.data.UserName;
@@ -528,10 +558,11 @@ export default {
         this.post.like = post.data.Like;
         this.post.comment = post.data.Comment;
         this.post.postTime = post.data.PostTime;
-        this.post.tag = post.data.Tag ? post.data.Tag.split(',').map((tagText) => ({
-          type: this.tagTypeMap[tagText.trim()],
-          label: tagText.trim(),
-        })) : [];
+        this.post.tag = post.data.Tag ? post.data.Tag.split(',')
+          .map((tagText) => ({
+            type: this.tagTypeMap[tagText.trim()],
+            label: tagText.trim(),
+          })) : [];
         this.post.isSaved = post.data.IsSaved;
         this.post.isLiked = post.data.IsLiked;
         this.post.showMenu = false;
@@ -570,8 +601,11 @@ export default {
         const get = new Promise((resolve, reject) => {
           setTimeout(() => {
             commentEl = document.getElementById(`comment-${this.currentPcommentID}`);
-            if (commentEl) resolve(commentEl);
-            else reject(commentEl);
+            if (commentEl) {
+              resolve(commentEl);
+            } else {
+              reject(commentEl);
+            }
           });
         });
         get.then(() => {
@@ -607,9 +641,10 @@ export default {
               }
             }, 500);
           }
-        }).catch((err) => {
-          console.log(err);
-        });
+        })
+          .catch((err) => {
+            console.log(err);
+          });
       } else {
         // 使用vue-scrollto插件平滑滚动到元素所在位置
         this.$scrollTo(commentEl, {
@@ -632,8 +667,11 @@ export default {
               const get = new Promise((resolve, reject) => {
                 setTimeout(() => {
                   childEl = document.getElementById(`ccomment-${this.currentCcommentID}`);
-                  if (childEl) resolve();
-                  else reject();
+                  if (childEl) {
+                    resolve();
+                  } else {
+                    reject();
+                  }
                 });
               });
               get.then(() => {
@@ -642,9 +680,10 @@ export default {
                 setTimeout(() => {
                   childEl.classList.remove('blink');
                 }, 10000);
-              }).catch((error) => {
-                console.log(error);
-              });
+              })
+                .catch((error) => {
+                  console.log(error);
+                });
             }
           });
         }
@@ -677,15 +716,18 @@ export default {
     },
     goback() {
       console.log(this.before);
-      if (this.before === 'home') {
-        this.$router.replace({ name: 'home', query: { partitions: this.partition } });
-      } else if (this.before === 'save') {
-        this.$router.replace({ name: 'save' });
-      } else if (this.before === 'history') {
-        this.$router.replace({ name: 'history' });
-      } else if (this.before === 'notice') {
-        this.$router.replace({ name: 'notice' });
-      }
+      // if (this.before === 'home') {
+      //   this.$router.replace({ name: 'home', query: { partitions: this.partition } });
+      // } else if (this.before === 'save') {
+      //   this.$router.replace({ name: 'save' });
+      // } else if (this.before === 'history') {
+      //   this.$router.replace({ name: 'history' });
+      // } else if (this.before === 'notice') {
+      //   this.$router.replace({ name: 'notice' });
+      // }
+      // 要想记住滚动位置的函数生效，需要用popstate的导航方式
+      // eslint-disable-next-line no-restricted-globals
+      history.back();
     },
     toggleMenu() {
       this.post.showMenu = !this.post.showMenu;
@@ -695,17 +737,24 @@ export default {
       const d = new Date(date);
       return `${d.getFullYear()}年${
         d.getMonth() + 1
-      }月${d.getDate()}日 ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}:${String(d.getSeconds()).padStart(2, '0')}`;
+      }月${d.getDate()}日 ${String(d.getHours())
+        .padStart(2, '0')}:${String(d.getMinutes())
+        .padStart(2, '0')}:${String(d.getSeconds())
+        .padStart(2, '0')}`;
     },
     save() {
       const userTelephone = this.userInfo.phone;
       // 请求
       this.postSave({
-        userTelephone, postID: this.post.postID, isSaved: this.post.isSaved,
-      }).then(() => {
-      }).catch((err) => {
-        console.error(err);
-      });
+        userTelephone,
+        postID: this.post.postID,
+        isSaved: this.post.isSaved,
+      })
+        .then(() => {
+        })
+        .catch((err) => {
+          console.error(err);
+        });
       // 更新点赞状态及点赞数
       this.post.isSaved = !this.post.isSaved;
     },
@@ -713,72 +762,95 @@ export default {
       const userTelephone = this.userInfo.phone;
       // 请求
       this.postLike({
-        userTelephone, postID: this.post.postID, isLiked: this.post.isLiked,
-      }).then(() => {
-      }).catch((err) => {
-        console.error(err);
-      });
+        userTelephone,
+        postID: this.post.postID,
+        isLiked: this.post.isLiked,
+      })
+        .then(() => {
+        })
+        .catch((err) => {
+          console.error(err);
+        });
       // 更新点赞状态及点赞数
       this.post.isLiked = !this.post.isLiked;
-      if (this.post.isLiked) this.post.like += 1;
-      else this.post.like -= 1;
+      if (this.post.isLiked) {
+        this.post.like += 1;
+      } else {
+        this.post.like -= 1;
+      }
     },
     pclike(index) {
       this.pcommentlike({
         userTelephone: this.userTelephone,
         pcommentID: this.comments[index].pcommentID,
         isLiked: this.comments[index].isLiked,
-      }).then(() => {
-      }).catch((err) => {
-        console.error(err);
-      });
+      })
+        .then(() => {
+        })
+        .catch((err) => {
+          console.error(err);
+        });
       // 更新点赞状态及点赞数
       this.comments[index].isLiked = !this.comments[index].isLiked;
-      if (this.comments[index].isLiked) this.comments[index].likeNum += 1;
-      else this.comments[index].likeNum -= 1;
+      if (this.comments[index].isLiked) {
+        this.comments[index].likeNum += 1;
+      } else {
+        this.comments[index].likeNum -= 1;
+      }
     },
     cclike(index, subIndex) {
       this.ccommentlike({
         userTelephone: this.userTelephone,
         ccommentID: this.comments[index].subComments[subIndex].ccommentID,
         isLiked: this.comments[index].subComments[subIndex].isLiked,
-      }).then(() => {
-      }).catch((err) => {
-        console.error(err);
-      });
+      })
+        .then(() => {
+        })
+        .catch((err) => {
+          console.error(err);
+        });
       // 更新点赞状态及点赞数
       // eslint-disable-next-line max-len
       this.comments[index].subComments[subIndex].isLiked = !this.comments[index].subComments[subIndex].isLiked;
       // eslint-disable-next-line max-len
-      if (this.comments[index].subComments[subIndex].isLiked) this.comments[index].subComments[subIndex].likeNum += 1;
-      else this.comments[index].subComments[subIndex].likeNum -= 1;
+      if (this.comments[index].subComments[subIndex].isLiked) {
+        this.comments[index].subComments[subIndex].likeNum += 1;
+      } else {
+        this.comments[index].subComments[subIndex].likeNum -= 1;
+      }
     },
     postdelete() {
       this.deletepost({
         postID: this.post.postID,
-      }).then(() => {
-        this.$router.go(-1);
-      }).catch((err) => {
-        console.error(err);
-      });
+      })
+        .then(() => {
+          this.$router.go(-1);
+        })
+        .catch((err) => {
+          console.error(err);
+        });
     },
     pcommentdelete(comment) {
       this.deletePcomment({
         pcommentID: comment.pcommentID,
-      }).then(() => {
-        this.$router.go(0);
-      }).catch((err) => {
-        console.error(err);
-      });
+      })
+        .then(() => {
+          this.$router.go(0);
+        })
+        .catch((err) => {
+          console.error(err);
+        });
     },
     ccommentdelete(SubComment) {
       this.deleteCcomment({
         ccommentID: SubComment.ccommentID,
-      }).then(() => {
-        this.$router.go(0);
-      }).catch((err) => {
-        console.error(err);
-      });
+      })
+        .then(() => {
+          this.$router.go(0);
+        })
+        .catch((err) => {
+          console.error(err);
+        });
     },
     submitReport(type, idnum) {
       this.submitreport({
@@ -786,19 +858,21 @@ export default {
         Targettype: type,
         userTelephone: this.userInfo.phone,
         Reason: this.reportReason,
-      }).then(() => {
-        this.$bvToast.toast('举报发送成功', {
-          title: '系统提醒',
-          variant: 'primary',
-          solid: true,
+      })
+        .then(() => {
+          this.$bvToast.toast('举报发送成功', {
+            title: '系统提醒',
+            variant: 'primary',
+            solid: true,
+          });
+        })
+        .catch((err) => {
+          this.$bvToast.toast(err.response.data.msg, {
+            title: '数据验证错误',
+            variant: 'danger',
+            solid: true,
+          });
         });
-      }).catch((err) => {
-        this.$bvToast.toast(err.response.data.msg, {
-          title: '数据验证错误',
-          variant: 'danger',
-          solid: true,
-        });
-      });
     },
     clearReportReason() {
       this.reportReason = '';
@@ -808,7 +882,8 @@ export default {
       // 请求
       try {
         const { data } = await this.showPcomments({
-          userTelephone: this.userTelephone, postID: postid,
+          userTelephone: this.userTelephone,
+          postID: postid,
         });
         const comments = data.map((pcomment) => ({
           pcommentID: pcomment.PcommentID,
@@ -842,17 +917,18 @@ export default {
     pcommentPost() {
       this.pcomment.postID = this.post.postID;
       this.pcomment.userTelephone = this.userTelephone;
-      this.postPcomment(this.pcomment).then(() => {
-        this.$bvToast.toast('评论成功', {
-          title: '系统提醒',
-          variant: 'primary',
-          solid: true,
-        });
-        setTimeout(() => {
-          this.pcommentsShow();
-          this.pcomment.content = '';
-        }, 1000);
-      })
+      this.postPcomment(this.pcomment)
+        .then(() => {
+          this.$bvToast.toast('评论成功', {
+            title: '系统提醒',
+            variant: 'primary',
+            solid: true,
+          });
+          setTimeout(() => {
+            this.pcommentsShow();
+            this.pcomment.content = '';
+          }, 1000);
+        })
         .catch((err) => {
           this.$bvToast.toast(err.response.data.msg, {
             title: '发帖失败',
@@ -869,22 +945,23 @@ export default {
       this.ccomment.userTelephone = this.userTelephone;
       this.ccomment.userTargetName = author;
       this.ccomment.ccommentID = ccommentID;
-      this.postCcomment(this.ccomment).then(() => {
-        this.$bvToast.toast('回复成功', {
-          title: '系统提醒',
-          variant: 'primary',
-          solid: true,
-        });
-        setTimeout(() => {
-          this.showcommentsindex = 0;
-          this.nowReplyComment = '';
-          this.replyshow = false;
-          this.pcommentsShow();
-          // 清空输入的内容
-          this.ccomment.content = '';
-          this.ccomment.ccommentID = 0;
-        }, 1000);
-      })
+      this.postCcomment(this.ccomment)
+        .then(() => {
+          this.$bvToast.toast('回复成功', {
+            title: '系统提醒',
+            variant: 'primary',
+            solid: true,
+          });
+          setTimeout(() => {
+            this.showcommentsindex = 0;
+            this.nowReplyComment = '';
+            this.replyshow = false;
+            this.pcommentsShow();
+            // 清空输入的内容
+            this.ccomment.content = '';
+            this.ccomment.ccommentID = 0;
+          }, 1000);
+        })
         .catch((err) => {
           this.$bvToast.toast(err.response.data.msg, {
             title: '回复失败',
@@ -906,7 +983,7 @@ export default {
 
       // Insert the emoji at the cursor position
       this.pcomment.content = this.pcomment.content.slice(0, startPos)
-      + emoji.native + this.pcomment.content.slice(endPos);
+        + emoji.native + this.pcomment.content.slice(endPos);
 
       // Update the cursor position to be after the inserted emoji
       const newCursorPos = startPos + emoji.native.length;
@@ -941,15 +1018,18 @@ export default {
 
 <style>
 @import '../../style/css/PostDetailsView.css';
+
 .thumbnail-container {
   display: flex;
   flex-wrap: wrap;
 }
+
 .thumbnail-container div {
   width: calc(100% / 3);
   padding: 10px;
   box-sizing: border-box;
 }
+
 @keyframes blink {
   0% {
     opacity: 1;
@@ -964,6 +1044,7 @@ export default {
     background-color: transparent;
   }
 }
+
 /* 使用更具体的选择器 */
 .blink {
   animation-name: blink;
@@ -971,6 +1052,7 @@ export default {
   animation-iteration-count: 3;
   background-color: transparent !important; /* 覆盖框架中的样式 */
 }
+
 .emoji-mart[data-v-7bc71df8] {
   font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
   display: -ms-flexbox;

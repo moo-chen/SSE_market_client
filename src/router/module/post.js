@@ -11,6 +11,7 @@ const postRoutes = [
     name: 'postDetails',
     meta: {
       auth: true,
+      keepAlive: false,
     },
     component: () => import('../../views/postDetails/PostDetailsView.vue'),
   },
@@ -24,6 +25,7 @@ const postRoutes = [
     name: 'profile',
     meta: {
       auth: true,
+      keepAlive: false,
     },
     component: () => import('../../views/profile/ProfileView.vue'),
   },
@@ -32,6 +34,7 @@ const postRoutes = [
     name: 'notice',
     meta: {
       auth: true,
+      keepAlive: true,
     },
     component: () => import('../../views/notice/NoticeView.vue'),
   },
@@ -40,6 +43,7 @@ const postRoutes = [
     name: 'feedback',
     meta: {
       auth: true,
+      keepAlive: false,
     },
     component: () => import('../../views/feedback/FeedbackView.vue'),
   },
