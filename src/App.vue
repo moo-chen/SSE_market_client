@@ -1,16 +1,23 @@
 <template>
-    <div id='app' :style="{ 'background-color': isNightStyle ? 'rgb(25,25,25)' : 'white',
+  <div id='app' :style="{ 'background-color': isNightStyle ? 'rgb(25,25,25)' : 'white',
           'min-height': $route.name == 'home' ? '300vh' : '100vh'}">
-      <navbar />
-        <b-container>
-          <router-view :style="{ marginTop: $route.name == 'home' &&
+    <navbar/>
+    <b-container>
+      <keep-alive >
+        <router-view v-if="this.$route.meta.keepAlive" :style="{ marginTop: $route.name == 'home' &&
           (!this.$route.query.partitions || this.$route.query.partitions == '主页')
               ? '20px' : '120px', marginLeft: $route.name == 'home' &&
           (!this.$route.query.partitions || this.$route.query.partitions == '主页')
-              ? '-120px' : '0px'}">>
-            </router-view>
-        </b-container>
-    </div>
+              ? '-120px' : '0px'}">
+        </router-view>
+      </keep-alive>
+      <router-view v-if="!this.$route.meta.keepAlive" :style="{ marginTop: $route.name == 'home' &&
+          (!this.$route.query.partitions || this.$route.query.partitions == '主页')
+              ? '20px' : '120px', marginLeft: $route.name == 'home' &&
+          (!this.$route.query.partitions || this.$route.query.partitions == '主页')
+              ? '-120px' : '0px'}"></router-view>
+    </b-container>
+  </div>
 </template>
 
 <script>

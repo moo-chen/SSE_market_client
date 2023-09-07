@@ -11,9 +11,9 @@ import VueTypedJs from 'vue-typed-js';
 import { Picker } from 'emoji-mart-vue';
 import mouse from '@/utils/mouseClick';
 import App from './App.vue';
-import router from './router';
 import store from './store';
 import './style/scss/index.scss';
+import router from './router';
 
 Vue.config.productionTip = false;
 

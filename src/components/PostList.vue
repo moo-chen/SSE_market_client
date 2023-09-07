@@ -2,180 +2,190 @@
   <div class='page-container'>
     <div class='home-view'>
       <b-modal v-model='toLogin' title='登录' ok-only ok-title="取消登录"
-        modal-class="custom-modal">
-        <LoginForm />
+               modal-class="custom-modal">
+        <LoginForm/>
       </b-modal>
       <div class="login-section" v-if="this.$route.name == 'home' && partition == '主页'
           && !userInfo">
         <b-button variant="primary" @click="toLogin = true"
-        style="margin-top:100px;width: 150px;border-radius: 20px;">
-          立即登录</b-button>
+                  style="margin-top:100px;width: 150px;border-radius: 20px;">
+          立即登录
+        </b-button>
         <div class="register-section" style="margin-top:40px;color: white;">
           <span>还没有账号？</span>
           <a href="#" onclick="window.open('/register', '_blank');">立即注册！</a>
         </div>
       </div>
       <div class="audio-section" :style="{ marginTop: userInfo ? '0px' : '250px' }"
-        v-if="this.$route.name == 'home' && partition == '主页'">
-        <audio ref="audio" :src="music_path" style="margin-top: 140px; z-index: 1000;" controls />
+           v-if="this.$route.name == 'home' && partition == '主页'">
+        <audio ref="audio" :src="music_path" style="margin-top: 140px; z-index: 1000;" controls/>
       </div>
       <div class="video-section" v-if="this.$route.name == 'home' && partition == '主页'"
-      :style="{ marginTop: userInfo ? '250px' : '500px' }">
+           :style="{ marginTop: userInfo ? '250px' : '500px' }">
         <video ref="videoPlayer" :src="video_path" style="margin-top: 10px; z-index: 1000;"
                controls></video>
       </div>
       <b-button variant="primary" v-if="this.partition != '主页'" class="back_button"
-        @click="goback" style="margin-left: 60px;">
-        <b-icon-reply class="mr-2"></b-icon-reply>返回
+                @click="goback" style="margin-left: 60px;">
+        <b-icon-reply class="mr-2"></b-icon-reply>
+        返回
       </b-button>
       <div v-if="posts.length > 0">
-      <b-row>
-        <b-col v-for='post in posts' :key='post.id' cols='12' md='12' lg='12' class='mb-3'>
-          <b-card class='px-3 py-2 card-shadow'
-          @click="() => { showDetails(post); updatebrowse(post) }"
-          :style="{ 'background-color': isNightStyle ? 'rgb(50,50,50)' : 'white',
+        <b-row>
+          <b-col v-for='post in posts' :key='post.id' cols='12' md='12' lg='12' class='mb-3'>
+            <b-card class='px-3 py-2 card-shadow'
+                    @click="() => { showDetails(post); updatebrowse(post) }"
+                    :style="{ 'background-color': isNightStyle ? 'rgb(50,50,50)' : 'white',
               'color': isNightStyle ? 'gray' : null }"
-          style="width:900px">
-            <div class='text-muted' style='margin-left: 820px' @click.stop>
-              <b-icon icon='three-dots-vertical' @click.stop='toggleMenu(post)'></b-icon>
-            </div>
-            <b-list-group
-              v-if='post.showMenu'
-              style='
+                    style="width:900px">
+              <div class='text-muted' style='margin-left: 820px' @click.stop>
+                <b-icon icon='three-dots-vertical' @click.stop='toggleMenu(post)'></b-icon>
+              </div>
+              <b-list-group
+                v-if='post.showMenu'
+                style='
                 width: 100px;
                 height: 1.25rem;
                 margin-left: 850px;
                 margin-top: -20px;
                 font-size: 0.9rem;
               '
-              @click.stop
-            >
-              <b-list-group-item
-                :style="{ 'background-color': isNightStyle ? 'rgb(50,50,50)' : 'white',
+                @click.stop
+              >
+                <b-list-group-item
+                  :style="{ 'background-color': isNightStyle ? 'rgb(50,50,50)' : 'white',
                     'color': isNightStyle ? 'gray' : null, 'z-index': 9999}">
                   <b-icon class="mr-2" :icon="post.isSaved ? 'star-fill' : 'star'"
-                @click.stop="save(post)" :class="{ 'text-warning': post.isSaved }"></b-icon>收藏
-              </b-list-group-item>
-              <b-list-group-item
-              :style="{ 'background-color': isNightStyle ? 'rgb(50,50,50)' : 'white',
+                          @click.stop="save(post)"
+                          :class="{ 'text-warning': post.isSaved }"></b-icon>
+                  收藏
+                </b-list-group-item>
+                <b-list-group-item
+                  :style="{ 'background-color': isNightStyle ? 'rgb(50,50,50)' : 'white',
                     'color': isNightStyle ? 'gray' : null, 'z-index': 9999 }"
-                v-if='post.authorTelephone !== userInfo.phone'
-                @click.stop='showReportModal = true'
-              >
-                <b-icon-exclamation-triangle class='mr-2'></b-icon-exclamation-triangle>举报
-              </b-list-group-item>
-              <b-modal
-                v-model='showReportModal'
-                title='举报'
-                @hidden='clearReportReason'
-                @ok='submitReport(post)'
-                ok-title='Submit'
-              >
-                <b-form-textarea v-model='reportReason' placeholder='请输入举报原因' rows='8'>
-                </b-form-textarea>
-              </b-modal>
-              <b-list-group-item
-                v-if='post.authorTelephone === userInfo.phone'
-                :style="{ 'background-color': isNightStyle ? 'rgb(50,50,50)' : 'white',
+                  v-if='post.authorTelephone !== userInfo.phone'
+                  @click.stop='showReportModal = true'
+                >
+                  <b-icon-exclamation-triangle class='mr-2'></b-icon-exclamation-triangle>
+                  举报
+                </b-list-group-item>
+                <b-modal
+                  v-model='showReportModal'
+                  title='举报'
+                  @hidden='clearReportReason'
+                  @ok='submitReport(post)'
+                  ok-title='Submit'
+                >
+                  <b-form-textarea v-model='reportReason' placeholder='请输入举报原因' rows='8'>
+                  </b-form-textarea>
+                </b-modal>
+                <b-list-group-item
+                  v-if='post.authorTelephone === userInfo.phone'
+                  :style="{ 'background-color': isNightStyle ? 'rgb(50,50,50)' : 'white',
                     'color': isNightStyle ? 'gray' : null, 'z-index': 9999}"
-                @click.stop='showDeleteModal = true'
-              >
-                <b-icon-trash class='mr-2'></b-icon-trash>删除
-              </b-list-group-item>
-              <b-modal
-                v-model='showDeleteModal'
-                title='确认删除'
-                ok-title='Confirm'
-                @ok='postdelete(post)'
-              >
-                <p>你确定要删除这个帖子吗？</p>
-              </b-modal>
-            </b-list-group>
-            <b-row class='mt-0'>
-              <b-col md='4' class='mb-2'>
-                <b-avatar :src="post.authorAvatar" size="4rem" class="mr-2"></b-avatar>
-                <div class='author-box' @click.stop
-                :style="{ 'background-color': isNightStyle ?
+                  @click.stop='showDeleteModal = true'
+                >
+                  <b-icon-trash class='mr-2'></b-icon-trash>
+                  删除
+                </b-list-group-item>
+                <b-modal
+                  v-model='showDeleteModal'
+                  title='确认删除'
+                  ok-title='Confirm'
+                  @ok='postdelete(post)'
+                >
+                  <p>你确定要删除这个帖子吗？</p>
+                </b-modal>
+              </b-list-group>
+              <b-row class='mt-0'>
+                <b-col md='4' class='mb-2'>
+                  <b-avatar :src="post.authorAvatar" size="4rem" class="mr-2"></b-avatar>
+                  <div class='author-box' @click.stop
+                       :style="{ 'background-color': isNightStyle ?
                   'rgb(246, 155, 10)' : 'rgb(17, 167, 226)' }">
-                  {{ post.author }}
+                    {{ post.author }}
+                  </div>
+                </b-col>
+              </b-row>
+              <b-card-title>{{ post.title }}</b-card-title>
+              <b-card-text>{{ post.content }}</b-card-text>
+              <div v-if="fileListGet.length > 0" class="photo-viewer">
+                <div class="thumbnail-container">
+                  <template v-if="fileListGet(post).length === 4">
+                    <div>
+                      <img :src="fileListGet(post)[0]"
+                           width="270"
+                           height="270"
+                           @click="handlePictureCardPreview(fileListGet(post)[0])"
+                           @keyup.enter="handlePictureCardPreview(fileListGet(post)[0])"
+                           alt="Post Photo"/>
+                      <img :src="fileListGet(post)[1]"
+                           width="270"
+                           height="270"
+                           style="margin-top:20px"
+                           @click="handlePictureCardPreview(fileListGet(post)[1])"
+                           @keyup.enter="handlePictureCardPreview(fileListGet(post)[1])"
+                           alt="Post Photo"/>
+                    </div>
+                    <div>
+                      <img :src="fileListGet(post)[2]"
+                           width="270"
+                           height="270"
+                           @click="handlePictureCardPreview(fileListGet(post)[2])"
+                           @keyup.enter="handlePictureCardPreview(fileListGet(post)[2])"
+                           alt="Post Photo"/>
+                      <img :src="fileListGet(post)[3]"
+                           width="270"
+                           height="270"
+                           style="margin-top:20px"
+                           @click="handlePictureCardPreview(fileListGet(post)[3])"
+                           @keyup.enter="handlePictureCardPreview(fileListGet(post)[3])"
+                           alt="Post Photo"/>
+                    </div>
+                  </template>
+                  <template v-else>
+                    <div v-for="(file, index) in fileListGet(post)" :key="index">
+                      <img :src="file"
+                           width="270"
+                           height="270"
+                           @click="handlePictureCardPreview(file)"
+                           @keyup.enter="handlePictureCardPreview(file)"
+                           alt="Post Photo"/>
+                    </div>
+                  </template>
                 </div>
-              </b-col>
-            </b-row>
-                <b-card-title>{{ post.title }}</b-card-title>
-                <b-card-text>{{ post.content }}</b-card-text>
-            <div v-if="fileListGet.length > 0" class="photo-viewer">
-              <div class="thumbnail-container">
-                <template v-if="fileListGet(post).length === 4">
-            <div>
-              <img :src="fileListGet(post)[0]"
-                  width="270"
-                  height="270"
-                  @click="handlePictureCardPreview(fileListGet(post)[0])"
-                  @keyup.enter="handlePictureCardPreview(fileListGet(post)[0])"
-                  alt="Post Photo" />
-              <img :src="fileListGet(post)[1]"
-                  width="270"
-                    height="270"
-                    style="margin-top:20px"
-                    @click="handlePictureCardPreview(fileListGet(post)[1])"
-                    @keyup.enter="handlePictureCardPreview(fileListGet(post)[1])"
-                    alt="Post Photo" />
-            </div>
-            <div>
-              <img :src="fileListGet(post)[2]"
-                  width="270"
-                  height="270"
-                  @click="handlePictureCardPreview(fileListGet(post)[2])"
-                  @keyup.enter="handlePictureCardPreview(fileListGet(post)[2])"
-                  alt="Post Photo" />
-              <img :src="fileListGet(post)[3]"
-                  width="270"
-                  height="270"
-                  style="margin-top:20px"
-                  @click="handlePictureCardPreview(fileListGet(post)[3])"
-                  @keyup.enter="handlePictureCardPreview(fileListGet(post)[3])"
-                  alt="Post Photo" />
-            </div>
-          </template>
-            <template v-else>
-              <div v-for="(file, index) in fileListGet(post)" :key="index">
-                <img :src="file"
-                    width="270"
-                    height="270"
-                    @click="handlePictureCardPreview(file)"
-                    @keyup.enter="handlePictureCardPreview(file)"
-                    alt="Post Photo" />
               </div>
-            </template>
+              <div class="d-flex justify-content-between">
+                <div class='d-flex justify-content-between'>
+                  <small class='text-muted'>{{ formatDate(post.postTime) }}</small>
+                </div>
+                <div class="tag-group">
+                  <span class="tag-group__title"></span>
+                  <el-tag v-for="tag in post.tag" :key="tag.label" :type="tag.type"
+                          effect="plain" size="mini">{{ tag.label }}
+                  </el-tag>
+                </div>
               </div>
-            </div>
-            <div class="d-flex justify-content-between">
-              <div class='d-flex justify-content-between'>
-                <small class='text-muted'>{{ formatDate(post.postTime) }}</small>
-              </div>
-              <div class="tag-group">
-                <span class="tag-group__title"></span>
-              <el-tag v-for="tag in post.tag" :key="tag.label" :type="tag.type"
-              effect="plain" size="mini">{{ tag.label }}
-              </el-tag>
-              </div>
-            </div>
-            <div class='d-flex justify-content-between align-items-center mt-3'>
-              <div class='text-muted'>
+              <div class='d-flex justify-content-between align-items-center mt-3'>
+                <div class='text-muted'>
                   <b-icon :icon="post.isLiked ? 'heart-fill' : 'heart'"
-                @click.stop="like(post)" :class="{ 'text-danger': post.isLiked }"></b-icon>
-                {{ post.like }}
+                          @click.stop="like(post)"
+                          :class="{ 'text-danger': post.isLiked }"></b-icon>
+                  {{ post.like }}
+                </div>
+                <div class='text-muted'>
+                  <b-icon-eye-fill></b-icon-eye-fill>
+                  {{ post.browse }}
+                </div>
+                <div class='text-muted'>
+                  <b-icon icon='chat-dots-fill'></b-icon>
+                  {{ post.comment }}
+                </div>
               </div>
-              <div class='text-muted'><b-icon-eye-fill></b-icon-eye-fill>
-                {{ post.browse }}
-              </div>
-              <div class='text-muted'><b-icon icon='chat-dots-fill'></b-icon>
-                {{ post.comment }}
-              </div>
-            </div>
-          </b-card>
-        </b-col>
-      </b-row></div>
+            </b-card>
+          </b-col>
+        </b-row>
+      </div>
       <div v-else>
         <el-empty description="没有符合要求的帖子哦"></el-empty>
       </div>
@@ -189,35 +199,36 @@
         :page-size="pageSize"
         layout="total, sizes, prev, pager, next, jumper"
         :total="totalItems">
-    </el-pagination>
+      </el-pagination>
     </div>
     <div class='hots-bar' :style="{ marginTop: userInfo ? '500px' : '750px'}"
-      v-if="this.$route.name == 'home' && partition == '主页'">
+         v-if="this.$route.name == 'home' && partition == '主页'">
       <b-card class="px-3 py-2 card-shadow" style="width: 300px; height: 100%;"
-      :style="{ 'background-color': isNightStyle ? 'rgb(70, 70, 70)' : null }">
+              :style="{ 'background-color': isNightStyle ? 'rgb(70, 70, 70)' : null }">
         <div>
           <b-card-header style="font-weight: bold;"
-          :style="{ 'color': isNightStyle ? 'gray' : null }">
+                         :style="{ 'color': isNightStyle ? 'gray' : null }">
             24小时火文
             <b-button class="bi bi-arrow-clockwise"
-            :style="{ 'background-color': isNightStyle ? 'rgb(70, 70, 70)' : 'white',
+                      :style="{ 'background-color': isNightStyle ? 'rgb(70, 70, 70)' : 'white',
             'color': isNightStyle ? 'gray' : 'black' }"
-            @click="calculateheat()">
-            <b-icon-arrow-clockwise></b-icon-arrow-clockwise>刷新
-          </b-button>
+                      @click="calculateheat()">
+              <b-icon-arrow-clockwise></b-icon-arrow-clockwise>
+              刷新
+            </b-button>
           </b-card-header>
         </div>
         <b-list-group-item v-for="(hotpost, index) in hotposts" :key="index"
-        :style="{ 'background-color': isNightStyle ? 'rgb(70, 70, 70)' : null,
+                           :style="{ 'background-color': isNightStyle ? 'rgb(70, 70, 70)' : null,
             'color': isNightStyle ? 'gray' : null }"
-        @click="() => { showDetails(hotpost); updatebrowse(hotpost) }">
+                           @click="() => { showDetails(hotpost); updatebrowse(hotpost) }">
           <div>
             <template v-if="index<3">
               <span style="color: red; font-weight: bold;">{{ index + 1 }}</span>
             </template>
             <template v-else>
               <span style="font-weight: bold;"
-                :style="{ 'color': isNightStyle ? 'gray' : 'black'}">
+                    :style="{ 'color': isNightStyle ? 'gray' : 'black'}">
                 {{ index + 1 }}</span>
             </template>
             <template v-if="hotpost.title.length > 8">
@@ -233,15 +244,15 @@
         </b-list-group-item>
       </b-card>
       <div class="px-3 py-2 card-shadow block" style="width: 300px; height: 100%;"
-      :style="{ 'background-color': isNightStyle ? 'rgb(70, 70, 70)' : null }">
-          <el-carousel height="120px">
-            <el-carousel-item v-for="item in imagebox" :key="item.id">
-              <a :href="getWebsiteURL(item.id)">
-                <span>Some text</span>
-                <img :src="item.idView" class="image" alt="">
-              </a>
-            </el-carousel-item>
-          </el-carousel>
+           :style="{ 'background-color': isNightStyle ? 'rgb(70, 70, 70)' : null }">
+        <el-carousel height="120px">
+          <el-carousel-item v-for="item in imagebox" :key="item.id">
+            <a :href="getWebsiteURL(item.id)">
+              <span>Some text</span>
+              <img :src="item.idView" class="image" alt="">
+            </a>
+          </el-carousel-item>
+        </el-carousel>
       </div>
     </div>
   </div>
@@ -255,6 +266,10 @@ import LoginForm from '@/components/LoginForm.vue';
 export default {
   components: {
     LoginForm,
+  },
+  activated() {
+    // 返回到页面的时候刷新一下
+    this.browsePosts();
   },
   computed: {
     ...mapState({
@@ -291,9 +306,18 @@ export default {
       fileList: [],
       hotposts: [],
       imagebox: [
-        { id: 0, idView: require('../assets/image/caraousel1.png') },
-        { id: 1, idView: require('../assets/image/caraousel2.png') },
-        { id: 2, idView: require('../assets/image/caraousel3.png') },
+        {
+          id: 0,
+          idView: require('../assets/image/caraousel1.png'),
+        },
+        {
+          id: 1,
+          idView: require('../assets/image/caraousel2.png'),
+        },
+        {
+          id: 2,
+          idView: require('../assets/image/caraousel3.png'),
+        },
         // { id: 3, idView: require('../assets/image/caraousel4.png') },
       ],
       dialogImageUrl: '',
@@ -373,9 +397,17 @@ export default {
       // window.open(routeLink.href, '_blank');
       this.$router.push({
         name: 'postDetails',
-        params: { partition: this.partition },
+        params: {
+          id: post.id,
+          title: post.title,
+          before: this.$route.name,
+          partition: this.partition,
+        },
         query: {
-          id: post.id, title: post.title, before: this.$route.name, partition: this.partition,
+          id: post.id,
+          title: post.title,
+          before: this.$route.name,
+          partition: this.partition,
         },
       });
     },
@@ -431,12 +463,14 @@ export default {
             browse: post.Browse,
             heat: post.Heat,
             photos: post.Photos,
-            tag: post.Tag ? post.Tag.split(',').map((tagText) => ({
-              type: this.tagTypeMap[tagText.trim()], // 使用 this.tagTypeMap
-              label: tagText.trim(),
-            })) : [],
+            tag: post.Tag ? post.Tag.split(',')
+              .map((tagText) => ({
+                type: this.tagTypeMap[tagText.trim()], // 使用 this.tagTypeMap
+                label: tagText.trim(),
+              })) : [],
             showMenu: false,
-          })).sort((a, b) => new Date(b.postTime) - new Date(a.postTime));
+          }))
+          .sort((a, b) => new Date(b.postTime) - new Date(a.postTime));
       } catch (error) {
         console.error(error);
       }
@@ -446,21 +480,30 @@ export default {
       const d = new Date(date);
       return `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日 ${String(
         d.getHours(),
-      ).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}:${String(
+      )
+        .padStart(2, '0')}:${String(d.getMinutes())
+        .padStart(2, '0')}:${String(
         d.getSeconds(),
-      ).padStart(2, '0')}`;
+      )
+        .padStart(2, '0')}`;
     },
     toggleMenu(post) {
       if (!this.userInfo) {
         this.toLogin = true;
         return;
       }
-      const updatedShowMenu = { ...post, showMenu: !post.showMenu };
+      const updatedShowMenu = {
+        ...post,
+        showMenu: !post.showMenu,
+      };
       this.posts.splice(this.posts.indexOf(post), 1, updatedShowMenu);
     },
     save(post) {
       // 切换收藏状态
-      const updatedPost = { ...post, isSaved: !post.isSaved };
+      const updatedPost = {
+        ...post,
+        isSaved: !post.isSaved,
+      };
       // 用更新后的 post 对象替换原先的 post 对象
       this.posts.splice(this.posts.indexOf(post), 1, updatedPost);
       this.userTelephone = this.userInfo.phone;
@@ -472,7 +515,8 @@ export default {
         postID: this.postID,
         isSaved: this.isSaved,
       })
-        .then(() => {})
+        .then(() => {
+        })
         .catch((err) => {
           console.error(err);
         });
@@ -483,7 +527,10 @@ export default {
         return;
       }
       // 切换点赞状态
-      const updatedPost = { ...post, isLiked: !post.isLiked };
+      const updatedPost = {
+        ...post,
+        isLiked: !post.isLiked,
+      };
       // 更新点赞数
       updatedPost.like += post.isLiked ? -1 : 1;
       // 用更新后的 post 对象替换原先的 post 对象
@@ -497,14 +544,18 @@ export default {
         postID: this.postID,
         isLiked: this.isLiked,
       })
-        .then(() => {})
+        .then(() => {
+        })
         .catch((err) => {
           console.error(err);
         });
     },
     updatebrowse(post) {
       // 切换浏览状态
-      const updatedPost = { ...post, browse: post.browse };
+      const updatedPost = {
+        ...post,
+        browse: post.browse,
+      };
       // 更新浏览次数
       updatedPost.browse = post.browse + 1;
       // 用更新后的 post 对象替换原先的 post 对象
@@ -516,7 +567,8 @@ export default {
         userTelephone: this.userTelephone,
         postID: this.postID,
       })
-        .then(() => {})
+        .then(() => {
+        })
         .catch((err) => {
           console.error(err);
         });
@@ -603,26 +655,32 @@ export default {
 
 <style lang='scss' scoped>
 @import '@/style/css/HomeView.css';
+
 .thumbnail-container {
   display: flex;
   flex-wrap: wrap;
 }
+
 .thumbnail-container div {
   width: calc(100% / 3);
   padding: 10px;
   box-sizing: border-box;
 }
+
 .b-card-title:hover {
   color: rgba(56, 104, 225, 0.9);
 }
+
 .page-container {
   display: flex;
 }
+
 .home-view {
   flex: 1;
   margin-left: 0px; /* Adjust the margin as needed */
   z-index: 1000;
 }
+
 .hots-bar {
   flex: 0;
   position: absolute;
@@ -633,12 +691,15 @@ export default {
   background-color: #409EFF;
   color: #fff;
 }
+
 .el-pagination.is-background .el-pager li:not(.active) {
   background-color: #e4e7ed;
 }
+
 .block {
   position: relative; /* 设置父容器为相对定位，为绝对定位的图片提供参考 */
 }
+
 .block .image {
   position: absolute; /* 将图片设置为绝对定位 */
   top: 0;

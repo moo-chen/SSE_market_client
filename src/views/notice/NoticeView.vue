@@ -1,7 +1,8 @@
 <template>
   <div>
     <b-nav pills>
-      <b-nav-item :active="noticesType==='unread'" @click="changeType('unread')">未读通知</b-nav-item>
+      <b-nav-item :active="noticesType==='unread'" @click="changeType('unread')">未读通知
+      </b-nav-item>
       <b-nav-item :active="noticesType==='read'" @click="changeType('read')">已读通知</b-nav-item>
     </b-nav>
     <!-- 通知列表 -->
@@ -242,7 +243,17 @@ export default {
       // 跳转到对应的帖子
       setTimeout(() => {
         if (nowNotice.type === 'pcomment') {
-          const link = this.$router.resolve({
+          // const link = this.$router.resolve({
+          //   name: 'postDetails',
+          //   query: {
+          //     id: nowNotice.postID,
+          //     partition: this.partition,
+          //     before: 'notice',
+          //     pcommentID: nowNotice.target,
+          //   },
+          // });
+          // window.open(link.href, '_blank');
+          this.$router.push({
             name: 'postDetails',
             query: {
               id: nowNotice.postID,
@@ -251,9 +262,19 @@ export default {
               pcommentID: nowNotice.target,
             },
           });
-          window.open(link.href, '_blank');
         } else if (nowNotice.type === 'ccomment') {
-          const link = this.$router.resolve({
+          // const link = this.$router.resolve({
+          //   name: 'postDetails',
+          //   query: {
+          //     id: nowNotice.postID,
+          //     partition: this.partition,
+          //     before: 'notice',
+          //     pcommentID: nowNotice.pcommentID,
+          //     ccommentID: nowNotice.target,
+          //   },
+          // });
+          // window.open(link.href, '_blank');
+          this.$router.push({
             name: 'postDetails',
             query: {
               id: nowNotice.postID,
@@ -263,7 +284,6 @@ export default {
               ccommentID: nowNotice.target,
             },
           });
-          window.open(link.href, '_blank');
         }
       }, 100);
     },
