@@ -5,7 +5,7 @@ const userRoutes = [
     path: '/register',
     name: 'register',
     meta: {
-      auth: true,
+      auth: false,
       keepAlive: false,
     },
     component: () => import('@/views/register/RegisterView.vue'),
@@ -14,7 +14,7 @@ const userRoutes = [
     path: '/login',
     name: 'login',
     meta: {
-      auth: true,
+      auth: false,
       keepAlive: false,
     },
     component: () => import('@/views/login/LoginView.vue'),
@@ -24,7 +24,7 @@ const userRoutes = [
     name: 'save',
     meta: {
       auth: true,
-      keepAlive: false,
+      keepAlive: true,
     },
     component: () => import('@/views/save/SaveView.vue'),
   },
@@ -33,7 +33,7 @@ const userRoutes = [
     name: 'history',
     meta: {
       auth: true,
-      keepAlive: false,
+      keepAlive: true,
     },
     component: () => import('@/views/history/HistoryView.vue'),
   },

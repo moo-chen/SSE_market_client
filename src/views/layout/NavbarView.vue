@@ -7,7 +7,7 @@
     <div class="video-container" v-if="$route.name == 'home' && (!this.$route.query.partitions ||
       this.$route.query.partitions == '主页')">
     <video autoplay loop muted playsinline>
-      <source src="../../assets/vedio/Background.mp4" type="video/mp4">
+      <source src="https://sse-market-source-1320172928.cos.ap-guangzhou.myqcloud.com/assets/vedio/Background.mp4" type="video/mp4">
     </video>
     <div class="overlay">
       <vue-typed-js :showCursor="false" :strings="['这是中山大学', '欢迎来到软工集市','今日火文等你看','SSE_market']">
@@ -161,7 +161,7 @@
             isNightStyle ? 'rgb(246, 155, 10)' : 'rgb(17, 167, 226)',
             'color': isNightStyle ? 'gray' : null}"
             style="font-size: 18px;">
-            <b-icon-clock-fill class="mr-3"></b-icon-clock-fill>历史记录
+            <b-icon-clock-fill class="mr-3"></b-icon-clock-fill>发帖历史
           </b-list-group-item>
           <b-list-group-item
           :style="{ 'font-size': '18px', 'display': 'flex', 'align-items': 'center',

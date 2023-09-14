@@ -23,43 +23,43 @@ export default {
     return {
       cards: [
         {
-          imageUrl: require('@/assets/image/daily.jpg'),
+          imageUrl: 'https://sse-market-source-1320172928.cos.ap-guangzhou.myqcloud.com/assets/image/daily.jpg',
           title: '日常吐槽',
           description: '言短情长，抒发心声。',
           linkLabel: '跳转分区',
         },
         {
-          imageUrl: require('@/assets/image/help.jpg'),
+          imageUrl: 'https://sse-market-source-1320172928.cos.ap-guangzhou.myqcloud.com/assets/image/help.jpg',
           title: '打听求助',
           description: '疑虑相询，忧难互助。',
           linkLabel: '跳转分区',
         },
         {
-          imageUrl: require('@/assets/image/love.jpg'),
+          imageUrl: 'https://sse-market-source-1320172928.cos.ap-guangzhou.myqcloud.com/assets/image/love.jpg',
           title: '恋爱交友',
           description: '情缘相连，同窗结友。',
           linkLabel: '跳转分区',
         },
         {
-          imageUrl: require('@/assets/image/study.jpg'),
+          imageUrl: 'https://sse-market-source-1320172928.cos.ap-guangzhou.myqcloud.com/assets/image/study.jpg',
           title: '学习交流',
           description: '知识碰撞，学术思辨。',
           linkLabel: '跳转分区',
         },
         {
-          imageUrl: require('@/assets/image/secondhand.jpg'),
+          imageUrl: 'https://sse-market-source-1320172928.cos.ap-guangzhou.myqcloud.com/assets/image/secondhand.jpg',
           title: '二手闲置',
           description: '物尽其用，旧物新归。',
           linkLabel: '跳转分区',
         },
         {
-          imageUrl: require('@/assets/image/else.jpg'),
+          imageUrl: 'https://sse-market-source-1320172928.cos.ap-guangzhou.myqcloud.com/assets/image/else.jpg',
           title: '其他',
           description: '畅所欲言，创意无限。',
           linkLabel: '跳转分区',
         },
         {
-          imageUrl: require('@/assets/image/recruit.jpg'),
+          imageUrl: 'https://sse-market-source-1320172928.cos.ap-guangzhou.myqcloud.com/assets/image/recruit.jpg',
           title: '求职招募',
           description: '梦想职路，共创未来。若有需要投稿求职信息，请投稿到邮箱：',
           linkLabel: '跳转分区',

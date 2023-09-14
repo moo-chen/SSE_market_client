@@ -52,7 +52,7 @@
   align-items: center;
   height: 200px; /* 设置高度以便撑开容器 */
   width: 300px;
-  background: url('@/assets/image/background3.jpg'); /* 设置背景图片 */
+  background: url('https://sse-market-source-1320172928.cos.ap-guangzhou.myqcloud.com/assets/image/background3.jpg'); /* 设置背景图片 */
   background-size: cover; /* 背景图片铺满整个div */
 }
 
@@ -65,7 +65,7 @@
   align-items: center;
   height: 200px; /* 设置高度以便撑开容器 */
   width: 300px;
-  background: url('@/assets/image/珠海校区背景.png'); /* 设置背景图片 */
+  background: url('https://sse-market-source-1320172928.cos.ap-guangzhou.myqcloud.com/assets/image/珠海校区背景.png'); /* 设置背景图片 */
   background-size: cover; /* 背景图片铺满整个div */
 }
 .register-button {
@@ -104,7 +104,7 @@
   align-items: center;
   height: 200px; /* 设置高度以便撑开容器 */
   width: 300px;
-  /* background: url('@/assets/image/珠海校区背景.png'); 
+  /* background: url('@/assets/image/珠海校区背景.png');
   background-size: cover;  */
 }
 

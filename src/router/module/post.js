@@ -18,6 +18,10 @@ const postRoutes = [
   {
     path: '/partitions',
     name: 'partitions',
+    meta: {
+      auth: true,
+      keepAlive: false,
+    },
     component: () => import('../../views/partitions/PartitionsView.vue'),
   },
   {
