@@ -308,15 +308,15 @@ export default {
       imagebox: [
         {
           id: 0,
-          idView: require('../assets/image/caraousel1.png'),
+          idView: 'https://sse-market-source-1320172928.cos.ap-guangzhou.myqcloud.com/assets/image/caraousel1.png',
         },
         {
           id: 1,
-          idView: require('../assets/image/caraousel2.png'),
+          idView: 'https://sse-market-source-1320172928.cos.ap-guangzhou.myqcloud.com/assets/image/caraousel2.png',
         },
         {
           id: 2,
-          idView: require('../assets/image/caraousel3.png'),
+          idView: 'https://sse-market-source-1320172928.cos.ap-guangzhou.myqcloud.com//assets/image/caraousel3.png',
         },
         // { id: 3, idView: require('../assets/image/caraousel4.png') },
       ],

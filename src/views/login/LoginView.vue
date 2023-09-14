@@ -146,7 +146,7 @@ export default {
 
 <style lang='scss' scoped>
 .login-view {
-  background-image: url('../../assets/image/background.jpg');
+  background-image: url('https://sse-market-source-1320172928.cos.ap-guangzhou.myqcloud.com/assets/image/background.jpg');
   background-size: cover;
   background-position: center;
   position: fixed;
