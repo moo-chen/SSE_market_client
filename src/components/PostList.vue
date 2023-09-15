@@ -25,7 +25,7 @@
         <video ref="videoPlayer" :src="video_path" style="margin-top: 10px; z-index: 1000;"
                controls></video>
       </div>
-      <b-button variant="primary" v-if="this.partition != '主页'" class="back_button"
+      <b-button variant="primary" v-if="this.partition !== '主页'" class="back_button"
                 @click="goback" style="margin-left: 60px;">
         <b-icon-reply class="mr-2"></b-icon-reply>
         返回
@@ -268,7 +268,27 @@ export default {
     LoginForm,
   },
   activated() {
+    console.log('PostList activated!');
+    if (localStorage.getItem('Partition')) {
+      this.partition = JSON.parse(localStorage.getItem('Partition'));
+    } else if (this.$route.query.partitions && this.$route.query.partitions !== '主页') {
+      // 检测partition是否有变
+      if (this.partition !== this.$route.query.partitions) {
+        this.totalItems = 0;
+        this.currentPage = 0;
+        this.posts = [];
+      }
+      this.partition = this.$route.query.partitions;
+      // 将partition保存在本地缓存中
+      localStorage.setItem('Partition', JSON.stringify(this.$route.query.partitions));
+    } else {
+      this.partition = '主页';
+      this.totalItems = 0;
+      this.currentPage = 0;
+      this.posts = [];
+    }
     // 返回到页面的时候刷新一下
+    this.PostNum();
     this.browsePosts();
   },
   computed: {
@@ -303,6 +323,7 @@ export default {
       music_path: '/山高水长.mp3',
       video_path: '/宣传片.mp4',
       posts: [],
+      partition: '',
       fileList: [],
       hotposts: [],
       imagebox: [
