@@ -61,7 +61,7 @@ export default {
         {
           imageUrl: 'https://sse-market-source-1320172928.cos.ap-guangzhou.myqcloud.com/assets/image/recruit.jpg',
           title: '求职招募',
-          description: '梦想职路，共创未来。若有需要投稿求职信息，请投稿到邮箱：',
+          description: '梦想职路，共创未来。若有需要投稿，请投稿到邮箱:zhouyt69@mail.sysu.edu.cn',
           linkLabel: '跳转分区',
         },
       ],
