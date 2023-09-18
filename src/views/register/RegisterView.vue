@@ -54,8 +54,10 @@
                       :state="validateState('email')"
                     ></b-form-input>
                     <!-- 发送邮箱验证码 -->
-                    <b-input-group-append>
-                      <b-button @click='validateEmail' variant='outline-primary' block>发送验证码
+                    <b-input-group-append width="150px">
+                      <b-button v-show="timeshow===true" disabled variant='outline-primary' >{{ time }}秒后重新获取
+                      </b-button>
+                      <b-button @click='validateEmail' v-show="timeshow===false" variant='outline-primary' >发送验证码
                       </b-button>
                     </b-input-group-append>
                   </b-input-group>
@@ -127,6 +129,8 @@ export default {
   // data 函数用于定义组件的数据。它返回一个对象，其中包含组件的各种数据属性和初始值。
   data() {
     return {
+      time: 60,
+      timeshow: false,
       user: {
         name: '',
         phone: '',
@@ -206,6 +210,15 @@ export default {
             variant: 'primary',
             solid: true,
           });
+          this.timeshow = true;
+          this.time = 60;
+          const setTimeoutS = setInterval(() => {
+            this.time -= 1;
+            if (this.time <= 0) {
+              clearInterval(setTimeoutS);
+              this.timeshow = false;
+            }
+          }, 1000);
         })
         .catch((err) => {
           this.$bvToast.toast(err.response.data.msg, {
