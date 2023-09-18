@@ -1,3 +1,4 @@
+<!-- eslint-disable max-len -->
 <template>
   <div class="identityValidate-view">
     <div class='identityValidate' @keydown.enter="modifyPassword">
@@ -25,7 +26,9 @@
             ></b-form-input>
           </b-form-group>
           <b-form-group>
-            <b-button @click='validateEmail' variant='outline-primary' block>获取验证码</b-button>
+            <b-button @click='validateEmail' v-show="timeshow===false" variant='outline-primary' block>获取验证码</b-button>
+            <b-button v-show="timeshow===true" disabled variant='outline-primary' block>{{ time }}秒后重新获取
+            </b-button>
             <b-button @click='identityValidate' variant='outline-primary' block>修改密码</b-button>
           </b-form-group>
         </b-form>
@@ -44,6 +47,8 @@ import customValidator from '@/helper/validator';
 export default {
   data() {
     return {
+      timeshow: false,
+      time: 60,
       user: {
         email: '',
         valiCode: '',
@@ -87,6 +92,15 @@ export default {
           variant: 'primary',
           solid: true,
         });
+        this.timeshow = true;
+        this.time = 60;
+        const setTimeoutS = setInterval(() => {
+          this.time -= 1;
+          if (this.time <= 0) {
+            clearInterval(setTimeoutS);
+            this.timeshow = false;
+          }
+        }, 1000);
       }).catch((err) => {
         this.$bvToast.toast(err.response.data.msg, {
           title: '发送邮箱错误',
