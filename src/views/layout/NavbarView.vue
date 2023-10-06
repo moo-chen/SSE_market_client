@@ -85,12 +85,12 @@
     <b-row no-gutters v-if="this.$route.name != 'register' && this.$route.name != 'modifyPassword'
       && this.$route.name != 'identityValidate' && this.$route.name != 'deleteMe'
         && $route.name !== 'login'"
-           class="d-flex " style="position:fixed;z-index: 1001;">
+           class="d-flex mb-5" style="position:fixed;z-index: 1001;">
       <b-col class="col-lg-12">
         <b-list-group flush class="list-group"
                       :style="{ marginTop: $route.name == 'home' &&
       (!this.$route.query.partitions || this.$route.query.partitions == '主页') ?
-        (scrollPosition < 400 ? `${60-scrollPosition}px` : '-300px') : '120px',
+        (scrollPosition < 400 ? `${60-scrollPosition}px` : '-300px') : '10px',
         'background-color': isNightStyle ? 'rgb(50, 50, 50)' : null,
         'border-right': isNightStyle ? '1px solid rgb(50, 50, 50)' :
           '1px solid rgb(237, 235, 235)' }">
