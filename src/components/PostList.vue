@@ -232,7 +232,7 @@
                 {{ index + 1 }}</span>
             </template>
             <template v-if="hotpost.title.length > 8">
-              {{ hotpost.title.substring(0, 8) }}...
+              {{ hotpost.title.substring(0, 8) }}
             </template>
             <template v-else>
               {{ hotpost.title }}
