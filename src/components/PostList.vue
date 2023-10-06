@@ -618,10 +618,25 @@ export default {
         postID: this.postID,
       })
         .then(() => {
-          this.$router.go(0);
+          this.$bvToast.toast('帖子删除成功', {
+            title: '系统提醒',
+            variant: 'primary',
+            solid: true,
+          });
+          setTimeout(() => {
+            this.$router.go(0);
+          }, 2000);
         })
         .catch((err) => {
-          console.error(err);
+          console.log(err);
+          this.$bvToast.toast('未找到该帖子', {
+            title: '数据异常',
+            variant: 'danger',
+            solid: true,
+          });
+          setTimeout(() => {
+            this.$router.go(0);
+          }, 2000);
         });
     },
     submitReport(post) {

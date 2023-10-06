@@ -549,6 +549,7 @@ export default {
       postID: this.post.postID,
     })
       .then((post) => {
+        console.error(post);
         this.post.postID = post.data.PostID;
         this.post.author = post.data.UserName;
         this.post.authorTelephone = post.data.UserTelephone;
@@ -839,6 +840,14 @@ export default {
         })
         .catch((err) => {
           console.error(err);
+          this.$bvToast.toast(err.response.data.msg, {
+            title: '数据异常',
+            variant: 'danger',
+            solid: true,
+          });
+          setTimeout(() => {
+            this.$router.go(0);
+          }, 2000);
         });
     },
     ccommentdelete(SubComment) {
@@ -850,6 +859,14 @@ export default {
         })
         .catch((err) => {
           console.error(err);
+          this.$bvToast.toast(err.response.data.msg, {
+            title: '数据异常',
+            variant: 'danger',
+            solid: true,
+          });
+          setTimeout(() => {
+            this.$router.go(0);
+          }, 2000);
         });
     },
     submitReport(type, idnum) {
