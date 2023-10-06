@@ -6,13 +6,13 @@
         v-model="textarea"
         maxlength="50"
         show-word-limit
-        style="margin-left: 100px;"
+        style="margin-left: 10px;"
     >
     </el-input>
     <div style="padding-bottom: 15px;" />
     <el-upload
         class="upload-demo"
-        style="margin-left: 100px;"
+        style="margin-left: 10px;"
         :action="uploadZipActionURL"
         :on-remove="handleRemove"
         :on-success="handleUploadSuccess"
@@ -28,7 +28,7 @@
       <div slot="tip" class="el-upload__tip">只能上传zip文件,且不超过10MB</div>
     </el-upload>
     <div style="padding-bottom: 15px;" />
-    <el-button type="primary" style="margin-left: 100px;" @click="submitfeedback">提交反馈</el-button>
+    <el-button type="primary" style="margin-left: 10px;" @click="submitfeedback">提交反馈</el-button>
   </div>
 </template>
 

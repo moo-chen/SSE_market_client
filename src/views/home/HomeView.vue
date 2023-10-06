@@ -20,9 +20,9 @@ export default {
     next();
   },
   methods: {
-    goback() {
-      this.$router.replace({ name: 'partitions' });
-    },
+    // goback() {
+    //   this.$router.replace({ name: 'partitions' });
+    // },
   },
 };
 
