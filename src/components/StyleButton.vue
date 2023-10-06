@@ -118,7 +118,7 @@ export default {
 
 <style lang='scss' scoped>
 div.button {
-  margin-left: 1200px;
+  margin-left: 10px;
   display: inline-block;
   position: relative;
   height: 40px;

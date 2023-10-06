@@ -3,7 +3,7 @@
           'min-height': $route.name == 'home' ? '300vh' : '100vh'}">
     <navbar/>
     <b-container>
-      <keep-alive >
+      <keep-alive class="ml-auto">
         <router-view v-if="this.$route.meta.keepAlive" :style="{ marginTop: $route.name == 'home' &&
           (!this.$route.query.partitions || this.$route.query.partitions == '主页')
               ? '20px' : '120px', marginLeft: $route.name == 'home' &&
@@ -15,14 +15,15 @@
           (!this.$route.query.partitions || this.$route.query.partitions == '主页')
               ? '20px' : '120px', marginLeft: $route.name == 'home' &&
           (!this.$route.query.partitions || this.$route.query.partitions == '主页')
-              ? '-120px' : '0px'}"></router-view>
+              ? '-120px' : '0px'}"
+                   class="ml-auto"></router-view>
     </b-container>
   </div>
 </template>
 
 <script>
 import Navbar from './views/layout/NavbarView.vue';
-import DevicePixelRatio from './utils/devicePixelRatio';
+// import DevicePixelRatio from './utils/devicePixelRatio';
 
 export default {
   components: { Navbar },
@@ -38,7 +39,7 @@ export default {
     return {};
   },
   created() {
-    new DevicePixelRatio().init();
+    // new DevicePixelRatio().init();
     if (typeof localStorage !== 'undefined') {
       if (!localStorage.getItem('Style')) {
         localStorage.setItem('Style', JSON.stringify('day'));
