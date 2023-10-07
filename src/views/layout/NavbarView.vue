@@ -81,152 +81,12 @@
         </div>
       </div>
     </b-navbar>
-    <!--   侧边栏 -->
-    <b-row no-gutters v-if="this.$route.name != 'register' && this.$route.name != 'modifyPassword'
-      && this.$route.name != 'identityValidate' && this.$route.name != 'deleteMe'
-        && $route.name !== 'login'"
-           class="d-flex mb-5" style="position:fixed;z-index: 1001;">
-      <b-col class="col-lg-12">
-        <b-list-group flush class="list-group"
-                      :style="{ marginTop: $route.name == 'home' &&
-      (!this.$route.query.partitions || this.$route.query.partitions == '主页') ?
-        (scrollPosition < 400 ? `${60-scrollPosition}px` : '-300px') : '10px',
-        'background-color': isNightStyle ? 'rgb(50, 50, 50)' : null,
-        'border-right': isNightStyle ? '1px solid rgb(50, 50, 50)' :
-          '1px solid rgb(237, 235, 235)' }">
-          <b-list-group-item to="/" :style="{ 'background-color': $route.path !== '/' ?
-            isNightStyle ? 'rgb(70, 70, 70)' : null :
-            isNightStyle ? 'rgb(246, 155, 10)' : 'rgb(17, 167, 226)',
-            'color': isNightStyle ? 'gray' : null}"
-                             style="font-size: 18px; display: flex; align-items: center;"
-                             @click="togglePartitions()" class="click" ref="parent">
-            <b-icon-house-fill class="mr-3"></b-icon-house-fill>
-            主页
-            <b-icon-caret-right-fill v-if="!showPartitions" style="margin-left: auto;">
-            </b-icon-caret-right-fill>
-            <b-icon-caret-down-fill v-if="showPartitions" style="margin-left: auto;">
-            </b-icon-caret-down-fill>
-          </b-list-group-item>
-          <b-list-group-item v-if="showPartitions" to="/partitions" class="click"
-                             :style="{ 'background-color': $route.path !== '/partitions' ?
-            isNightStyle ? 'rgb(50, 50, 50)' : null :
-            isNightStyle ? 'rgb(246, 155, 10)' : 'rgb(17, 167, 226)',
-            'color': isNightStyle ? 'gray' : null}"
-                             style="font-size: 18px;">
-            <b-icon-grid1x2-fill class="mr-3"></b-icon-grid1x2-fill>
-            分区选择
-          </b-list-group-item>
-          <b-list-group-item @click="showPostForm()"
-                             :style="{ 'background-color': isNightStyle ? 'rgb(50, 50, 50)' : null,
-              'color': isNightStyle ? 'gray' : null}"
-                             style="font-size: 18px;" class="click">
-            <b-icon-pencil-fill class="mr-3"></b-icon-pencil-fill>
-            发帖
-          </b-list-group-item>
-          <b-modal v-model='PostFormVisible' title='发帖' ok-only ok-title="取消发帖"
-                   modal-class="custom-modal">
-            <PostForm :mode="'post'"/>
-          </b-modal>
-          <b-list-group-item @click="toNotifications()"
-                             :style="{ 'background-color': $route.path !== '/notice' ?
-            isNightStyle ? 'rgb(50, 50, 50)' : null :
-            isNightStyle ? 'rgb(246, 155, 10)' : 'rgb(17, 167, 226)',
-            'color': isNightStyle ? 'gray' : null }"
-                             style="font-size: 18px;" class="click">
-            <b-icon-bell-fill class="mr-3"></b-icon-bell-fill>
-            通知
-            <span v-if="noticesNum!=0"
-                  class="badge badge-danger ml-2 pop">{{ noticesNum }}</span>
-          </b-list-group-item>
-          <b-list-group-item @click="toFeedback()"
-                             :style="{ 'background-color': $route.path !== '/feedback' ?
-            isNightStyle ? 'rgb(50, 50, 50)' : null
-            : isNightStyle ? 'rgb(246, 155, 10)' : 'rgb(17, 167, 226)',
-            'color': isNightStyle ? 'gray' : null}"
-                             style="font-size: 18px;" class="click">
-            <b-icon-envelope-fill class="mr-3"></b-icon-envelope-fill>
-            反馈
-          </b-list-group-item>
-          <b-modal v-model='FeedbackVisible' title='反馈' ok-only ok-title="取消反馈"
-                   modal-class="custom-modal">
-          </b-modal>
-          <b-list-group-item
-            :style="{ 'font-size': '18px', 'display': 'flex', 'align-items': 'center',
-        'background-color': showProfiles ? 'rgb(245, 245, 245)' : '' ,
-        'background-color': isNightStyle ? 'rgb(50, 50, 50)' : null,
-        'color': isNightStyle ? 'gray' : null}"
-            @click="toggleProfiles" class="click">
-            <b-icon-person-circle class="mr-3"></b-icon-person-circle>
-            我的
-            <b-icon-caret-right-fill v-if="!showProfiles" style="margin-left: auto;">
-            </b-icon-caret-right-fill>
-            <b-icon-caret-down-fill v-if="showProfiles" style="margin-left: auto;">
-            </b-icon-caret-down-fill>
-          </b-list-group-item>
-          <b-list-group-item class="click" v-if="showProfiles" to="/profile"
-                             :style="{ 'background-color': $route.path !== '/profile' ?
-            isNightStyle ? 'rgb(50, 50, 50)' : null :
-            isNightStyle ? 'rgb(246, 155, 10)' : 'rgb(17, 167, 226)',
-            'color': isNightStyle ? 'gray' : null}"
-                             style="font-size: 18px;">
-            <b-icon-table class="mr-3"></b-icon-table>
-            个人信息
-          </b-list-group-item>
-          <b-list-group-item v-if="showProfiles" to="/save" class="click"
-                             :style="{ 'background-color': $route.path !== '/save' ?
-            isNightStyle ? 'rgb(50, 50, 50)' : null :
-            isNightStyle ? 'rgb(246, 155, 10)' : 'rgb(17, 167, 226)',
-            'color': isNightStyle ? 'gray' : null}"
-                             style="font-size: 18px;">
-            <b-icon-star-fill class="mr-3"></b-icon-star-fill>
-            我的收藏
-          </b-list-group-item>
-          <b-list-group-item v-if="showProfiles" to="/history" class="click"
-                             :style="{ 'background-color': $route.path !== '/history' ?
-            isNightStyle ? 'rgb(50, 50, 50)' : null :
-            isNightStyle ? 'rgb(246, 155, 10)' : 'rgb(17, 167, 226)',
-            'color': isNightStyle ? 'gray' : null}"
-                             style="font-size: 18px;">
-            <b-icon-clock-fill class="mr-3"></b-icon-clock-fill>
-            发帖历史
-          </b-list-group-item>
-          <b-list-group-item
-            :style="{ 'font-size': '18px', 'display': 'flex', 'align-items': 'center',
-          'background-color': showSettings ? 'rgb(245, 245, 245)' : '' ,
-          'background-color': isNightStyle ? 'rgb(50, 50, 50)' : null,
-          'color': isNightStyle ? 'gray' : null}"
-            @click="toggleSettings" class="click" >
-            <b-icon-gear-fill class="mr-3"></b-icon-gear-fill>
-            设置
-            <b-icon-caret-right-fill v-if="!showSettings" style="margin-left: auto;">
-            </b-icon-caret-right-fill>
-            <b-icon-caret-down-fill v-if="showSettings" style="margin-left: auto;">
-            </b-icon-caret-down-fill>
-          </b-list-group-item>
-          <b-list-group-item v-if="showSettings" class="click"
-                             @click="toModifyPassword()" style="font-size: 18px;"
-                             :style="{ 'background-color': isNightStyle ? 'rgb(50, 50, 50)' : null,
-            'color': isNightStyle ? 'gray' : null}">
-            <b-icon-lock-fill class="mr-3"></b-icon-lock-fill>
-            修改密码
-          </b-list-group-item>
-          <b-list-group-item v-if="showSettings" class="click"
-                             @click="toDeleteUser()" style="font-size: 18px;"
-                             :style="{ 'background-color': isNightStyle ? 'rgb(50, 50, 50)' : null,
-            'color': isNightStyle ? 'gray' : null}">
-            <b-icon-x-circle-fill class="mr-3"></b-icon-x-circle-fill>
-            注销账号
-          </b-list-group-item>
-        </b-list-group>
-      </b-col>
-    </b-row>
   </div>
 </template>
 
 <script>
 
 import { mapState, mapActions } from 'vuex';
-import PostForm from '@/components/PostForm.vue';
 import LoginForm from '@/components/LoginForm.vue';
 import StyleButton from '@/components/StyleButton.vue';
 import store from '@/store';
@@ -235,7 +95,7 @@ export default {
   // 获取在浏览器缓存中的包含用户信息的token，userInfo中包含用户的name和telephone
   // 所以要从前端返回用户信息时，一般采用telephone(因为name不唯一，id又无法从前端直接获取)
   components: {
-    PostForm,
+    // PostForm,
     LoginForm,
     StyleButton,
   },

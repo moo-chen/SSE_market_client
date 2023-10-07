@@ -12,7 +12,7 @@
   border: none;
   background-color: #f8f9fa;
   max-width: 1200px;
-  margin-left: 200px;
+  /*margin-left: 200px;*/
 }
 
 .author-box {
@@ -46,7 +46,7 @@
 
 .login-section {
   position: absolute;
-  margin-left: 1150px;
+  /*margin-left: 1150px;*/
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -59,7 +59,7 @@
 .audio-section {
   position: absolute;
   margin-top:250px;
-  margin-left: 1150px;
+  /*margin-left: 1150px;*/
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -98,7 +98,7 @@
 .video-section {
   position: absolute;
   margin-top:300px;
-  margin-left: 1150px;
+  /*margin-left: 1150px;*/
   display: flex;
   flex-direction: column;
   align-items: center;
