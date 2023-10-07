@@ -1,40 +1,54 @@
 <template>
   <div id='app' :style="{ 'background-color': isNightStyle ? 'rgb(25,25,25)' : 'white',
-          'min-height': $route.name == 'home' ? '300vh' : '100vh'}">
-    <b-col class="ml-0">
+          'min-height': $route.name == 'home' ? '300vh' : '100vh', 'min-width': '1500px'}">
+    <b-row class="d-flex justify-content-center" style="background: black">
       <navbar/>
-    </b-col>
-    <b-container>
-      <transition name="fade-right" mode="out-in">
-        <keep-alive class="ml-auto">
-          <router-view v-if="this.$route.meta.keepAlive"
-                       :style="{ marginTop: $route.name == 'home' &&
+    </b-row>
+    <b-row class="d-flex justify-content-center"
+           :style="{ 'background-color': isNightStyle ? 'rgb(25,25,25)' : 'white'}">
+      <b-col class="col-lg-12 mr-5"
+             :style="{ 'background-color': isNightStyle ? 'rgb(25,25,25)' : 'white',
+          'max-width': '300px'}">
+        <sidebar/>
+      </b-col>
+      <b-col :style="{ 'background-color': isNightStyle ? 'rgb(25,25,25)' : 'white',
+          'max-width': '1200px'}">
+        <b-container>
+          <transition name="fade-right" mode="out-in">
+            <keep-alive>
+              <router-view v-if="this.$route.meta.keepAlive"
+                           :style="{ marginTop: $route.name == 'home' &&
           (!this.$route.query.partitions || this.$route.query.partitions == '主页')
               ? '20px' : '120px', marginLeft: $route.name == 'home' &&
           (!this.$route.query.partitions || this.$route.query.partitions == '主页')
               ? '-120px' : '0px'}">
-          </router-view>
-        </keep-alive>
-      </transition>
-      <transition name="fade-right" mode="out-in">
-        <router-view v-if="!this.$route.meta.keepAlive"
-                     :style="{ marginTop: $route.name == 'home' &&
+              </router-view>
+            </keep-alive>
+          </transition>
+          <transition name="fade-right" mode="out-in">
+            <router-view v-if="!this.$route.meta.keepAlive"
+                         :style="{ marginTop: $route.name == 'home' &&
           (!this.$route.query.partitions || this.$route.query.partitions == '主页')
               ? '20px' : '120px', marginLeft: $route.name == 'home' &&
           (!this.$route.query.partitions || this.$route.query.partitions == '主页')
-              ? '-120px' : '0px'}"
-                     class="ml-auto"></router-view>
-      </transition>
-    </b-container>
+              ? '-120px' : '0px'}"></router-view>
+          </transition>
+        </b-container>
+      </b-col>
+    </b-row>
   </div>
 </template>
 
 <script>
 import Navbar from './views/layout/NavbarView.vue';
 // import DevicePixelRatio from './utils/devicePixelRatio';
+import Sidebar from './views/layout/SidebarView.vue';
 
 export default {
-  components: { Navbar },
+  components: {
+    Navbar,
+    Sidebar,
+  },
   computed: {
     isNightStyle() {
       if (JSON.parse(localStorage.getItem('Style')) === 'night') {
