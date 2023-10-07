@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-nav pills>
+    <b-nav tabs >
       <b-nav-item :active="noticesType==='unread'" @click="changeType('unread')">未读通知
       </b-nav-item>
       <b-nav-item :active="noticesType==='read'" @click="changeType('read')">已读通知</b-nav-item>

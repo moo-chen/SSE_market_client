@@ -1,7 +1,7 @@
 <template>
   <div id='app' :style="{ 'background-color': isNightStyle ? 'rgb(25,25,25)' : 'white',
           'min-height': $route.name == 'home' ? '300vh' : '100vh', 'min-width': '1500px'}">
-    <b-row class="d-flex justify-content-center" style="background: black">
+    <b-row class="d-flex justify-content-center no-gutters" style="background: black">
       <navbar/>
     </b-row>
     <b-row class="d-flex justify-content-center"

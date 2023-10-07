@@ -12,7 +12,7 @@
          : `${scrollPosition+120}px`,
         'background-color': isNightStyle ? 'rgb(50, 50, 50)' : null,
         'border': isNightStyle ? '1px solid rgb(50, 50, 50)' :
-          '1px solid rgb(237, 235, 235)' }">
+          '1px solid rgb(237, 235, 235)' ,'paddingBottom':'1200px'}">
         <b-list-group-item to="/" :style="{ 'background-color': $route.path !== '/' ?
             isNightStyle ? 'rgb(70, 70, 70)' : null :
             isNightStyle ? 'rgb(246, 155, 10)' : 'rgb(17, 167, 226)',

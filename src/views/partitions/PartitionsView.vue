@@ -1,15 +1,18 @@
 <template>
-  <div class='container' style="margin-left:150px">
+  <div class='container'>
     <div class='row'>
       <div class='col-md-4' v-for='(card, index) in cards' :key='index'>
-        <div class='card'>
-          <img :src="card.imageUrl" class="card-img-top" alt=".." />
+        <div class='card'
+             :style="{ 'background-color': isNightStyle ? 'rgb(25,25,25)' : 'white'
+             ,'color': 'grey'}">
+          <img :src="card.imageUrl" class="card-img-top" alt=".."/>
           <div class='card-body'>
             <h5 class='card-title'>{{ card.title }}</h5>
             <p class='card-text'>{{ card.description }}</p>
-            <a :href='card.linkUrl' class='btn btn-primary'
-            @click="$router.push({ name: 'home', query: { partitions: card.title } })">
-            {{ card.linkLabel }}</a>
+            <a :href='card.linkUrl'
+               :class="isNightStyle ? 'btn btn-outline-warning':'btn btn-primary'"
+               @click="$router.push({ name: 'home', query: { partitions: card.title } })">
+              {{ card.linkLabel }}</a>
           </div>
         </div>
       </div>
@@ -66,6 +69,14 @@ export default {
         },
       ],
     };
+  },
+  methods: {
+    isNightStyle() {
+      if (JSON.parse(localStorage.getItem('Style')) === 'night') {
+        return true;
+      }
+      return false;
+    },
   },
 };
 </script>
