@@ -1,12 +1,13 @@
 <template>
   <div>
-    <b-button variant="primary" class="back_button"
-              @click="goback" style="margin-left: 60px;">
+    <b-button :variant ="isNightStyle ? 'outline-warning':'primary'"
+              class="back_button" style="margin-left: -100px"
+              @click="goback">
       <b-icon-reply class="mr-2"></b-icon-reply>
       返回
     </b-button>
-    <div class='postDetails' style="margin-left:200px">
-      <b-card class='mx-auto my-5' style="max-width: 1500px;"
+    <div class='postDetails' style="margin-right: 200px">
+      <b-card class='mx-auto my-5' style="max-width: 1500px"
               :style="{ 'background-color': isNightStyle ? 'rgb(50,50,50)' : 'white',
           'color': isNightStyle ? 'gray' : null}">
         <div class="text-muted" style="margin-left:850px;" @click.stop>
@@ -129,7 +130,7 @@
         </div>
       </b-card>
       <b-button @click="post.showCommentForm
-            = !post.showCommentForm" variant="primary">
+            = !post.showCommentForm" :variant ="isNightStyle ? 'outline-warning':'primary'">
         {{ post.showCommentForm ? '隐藏评论' : '评论' }}
       </b-button>
       <!--显示帖子评论窗口-->
@@ -151,19 +152,20 @@
             />
           </div>
         </div>
-        <b-button @click="pcommentPost" variant="primary">提交评论</b-button>
+        <b-button @click="pcommentPost"
+                  :variant ="isNightStyle ? 'outline-warning':'primary'">提交评论</b-button>
       </div>
     </div>
 
     <!--显示和发表帖子评论、评论的评论-->
-    <div class='comment' style="margin-left: 200px">
+    <div class='comment' style="margin-right: 200px">
       <!--排序-->
       <div class="d-flex justify-content-end">
         <b-button @click="sortkind='Date';comments=sortcomments(comments)"
-                  variant="primary" class="mr-2 btn-sm">按时间排序
+                  :variant ="isNightStyle ? 'outline-warning':'primary'" class="mr-2 btn-sm">按时间排序
         </b-button>
         <b-button @click="sortkind='heat';comments=sortcomments(comments)"
-                  variant="primary" class="btn-sm">按热度排序
+                  :variant ="isNightStyle ? 'outline-warning':'primary'" class="btn-sm">按热度排序
         </b-button>
       </div>
       <transition-group name="comment-list" tag="div">
@@ -191,7 +193,8 @@
                 <div class="text-muted">{{ formatDate(comment.commentTime) }}</div>
                 <b-button @click="comment.showReplyForm
             = !comment.showReplyForm" class="mr-2 btn-sm"
-                          variant="primary" style="margin-top:10px">
+                          :variant ="isNightStyle ? 'outline-warning':'primary'"
+                          style="margin-top:10px">
                   {{ comment.showReplyForm ? '隐藏评论' : '评论' }}
                 </b-button>
                 <div class='text-muted' style='margin-left: 820px' @click.stop>
@@ -263,7 +266,7 @@
                         />
                       </div>
                     </div>
-                    <b-button type="submit" variant="primary">
+                    <b-button type="submit" :variant ="isNightStyle ? 'outline-warning':'primary'">
                       提交评论
                     </b-button>
                   </form>
@@ -372,7 +375,8 @@
                           />
                         </div>
                       </div>
-                      <b-button type="submit" variant="primary">
+                      <b-button type="submit"
+                                :variant ="isNightStyle ? 'outline-warning':'primary'">
                         提交回复
                       </b-button>
                     </form>

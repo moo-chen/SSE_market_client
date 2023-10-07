@@ -1,5 +1,5 @@
 <template>
-  <div class='login-view'>
+  <div class='login-view' >
     <div class='login' @keydown.enter='login'>
       <b-row class='mt-5'>
         <b-col md='8' offset-md='2' lg='6' offset-lg='3'>

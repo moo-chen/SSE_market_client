@@ -1,6 +1,6 @@
 <template>
   <div class='page-container'>
-    <b-col class="ml-5 mr-5">
+    <b-col class="ml-4">
       <div class='home-view'>
         <b-modal v-model='toLogin' title='登录' ok-only ok-title="取消登录"
                  modal-class="custom-modal">
@@ -8,7 +8,7 @@
         </b-modal>
         <div class="login-section" v-if="this.$route.name == 'home' && partition == '主页'
           && !userInfo">
-          <b-button variant="primary" @click="toLogin = true"
+          <b-button :variant ="isNightStyle ? 'outline-warning':'primary'" @click="toLogin = true"
                     style="margin-top:100px;width: 150px;border-radius: 20px;">
             立即登录
           </b-button>
@@ -17,8 +17,10 @@
             <a href="#" onclick="window.open('/register', '_blank');">立即注册！</a>
           </div>
         </div>
-        <b-button variant="primary" v-if="this.partition !== '主页'" class="back_button"
-                  @click="goback" style="margin-left: 60px;">
+        <b-button :variant ="isNightStyle ? 'outline-warning':'primary'"
+                  v-if="this.partition !== '主页'" class="back_button"
+                  style="margin-left: -100px"
+                  @click="goback">
           <b-icon-reply class="mr-2"></b-icon-reply>
           返回
         </b-button>
