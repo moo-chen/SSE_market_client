@@ -233,14 +233,14 @@
               <span style="font-weight: bold;"
                     :style="{ 'color': isNightStyle ? 'gray' : 'black'}">
                 {{ index + 1 }}</span>
-              </template>
-              <template v-if="hotpost.title.length > 8">
-                {{ hotpost.title.substring(0, 8) }}...
-              </template>
-              <template v-else>
-                {{ hotpost.title }}
-              </template>
-              <span style="float: right;" class="badge badge-danger ml-2 pop">
+            </template>
+            <template v-if="hotpost.title.length > 8">
+              {{ hotpost.title.substring(0, 8) }}
+            </template>
+            <template v-else>
+              {{ hotpost.title }}
+            </template>
+            <span style="float: right;" class="badge badge-danger ml-2 pop">
               {{ Math.floor(hotpost.heat) }}
             </span>
             </div>
