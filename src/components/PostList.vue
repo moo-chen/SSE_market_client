@@ -94,11 +94,27 @@
                 <b-row class='mt-0'>
                   <b-col md='4' class='mb-2'>
                     <b-avatar :src="post.authorAvatar" size="4rem" class="mr-2"></b-avatar>
-                    <div class='author-box' @click.stop
-                         :style="{ 'background-color': isNightStyle ?
-                  'rgb(246, 155, 10)' : 'rgb(17, 167, 226)' }">
+                    <div class="author-box" @click.stop
+                      :style="{ 'background-color': isNightStyle ?
+                      'rgb(246, 155, 10)' : 'rgb(17, 167, 226)' }">
                       {{ post.author }}
                     </div>
+                    <span
+                    :class="{
+                    'badge': true, 'badge-pill': true,
+                    'badge-primary': post.authorTitle === '菜鸟',
+                    'badge-success': post.authorTitle === '大虾',
+                    'badge-danger': post.authorTitle === '码农',
+                    'badge-custom': post.authorTitle === '程序猿',
+                    'badge-warning': post.authorTitle === '工程师',
+                    'badge-info': post.authorTitle === '大牛',
+                    'badge-custom2': post.authorTitle === '专家',
+                    'badge-secondary': post.authorTitle === '大神',
+                    'badge-dark': post.authorTitle === '祖师爷' // 添加一个自定义样式类
+                    }"
+                    style="margin-left: 10px">
+                    {{ post.authorTitle }}
+                    </span>
                   </b-col>
                 </b-row>
                 <b-card-title>{{ post.title }}</b-card-title>
@@ -438,6 +454,33 @@ export default {
         },
       });
     },
+    getUserTitle(userScore) {
+      if (userScore < 100) {
+        return '菜鸟';
+      }
+      if (userScore >= 100 && userScore < 300) {
+        return '大虾';
+      }
+      if (userScore >= 300 && userScore < 600) {
+        return '码农';
+      }
+      if (userScore >= 600 && userScore < 1000) {
+        return '程序猿';
+      }
+      if (userScore >= 1000 && userScore < 2000) {
+        return '工程师';
+      }
+      if (userScore >= 2000 && userScore < 3000) {
+        return '大牛';
+      }
+      if (userScore >= 3000 && userScore < 4000) {
+        return '专家';
+      }
+      if (userScore >= 4000 && userScore < 5000) {
+        return '大神';
+      }
+      return '祖师爷';
+    },
     // 查询满足要求的帖子数量
     async PostNum() {
       try {
@@ -478,6 +521,7 @@ export default {
           .map((post) => ({
             id: post.PostID,
             author: post.UserName,
+            authorTitle: this.getUserTitle(post.UserScore),
             authorTelephone: post.UserTelephone,
             authorAvatar: post.UserAvatar,
             title: post.Title,
@@ -750,4 +794,16 @@ export default {
   height: 100%; /* 图片高度占满父容器 */
   object-fit: cover; /* 按比例缩放图片，以覆盖整个容器 */
 }
+
+/* 添加一个自定义样式类 */
+.badge-custom {
+  background-color: #ff6600; /* 橙色背景 */
+  color: #fff; /* 白色文字颜色 */
+}
+
+.badge-custom2 {
+  background-color: #c428eb; /* 橙色背景 */
+  color: #fff; /* 白色文字颜色 */
+}
+
 </style>

@@ -51,6 +51,22 @@
                   'rgb(246, 155, 10)' : 'rgb(17, 167, 226)' }">
           {{ post.author }}
         </div>
+        <span
+          :class="{
+          'badge': true, 'badge-pill': true,
+          'badge-primary': post.authorTitle === '菜鸟',
+          'badge-success': post.authorTitle === '大虾',
+          'badge-danger': post.authorTitle === '码农',
+          'badge-custom': post.authorTitle === '程序猿',
+          'badge-warning': post.authorTitle === '工程师',
+          'badge-info': post.authorTitle === '大牛',
+          'badge-custom2': post.authorTitle === '专家',
+          'badge-secondary': post.authorTitle === '大神',
+          'badge-dark': post.authorTitle === '祖师爷' // 添加一个自定义样式类
+          }"
+          style="margin-left: 10px">
+          {{ post.authorTitle }}
+        </span>
         <b-card-title>{{ post.title }}</b-card-title>
         <b-card-text>{{ post.content }}</b-card-text>
         <div v-if="fileListGet.length > 0" class="photo-viewer">
@@ -179,7 +195,24 @@
                 <b-avatar :src="comment.authorAvatar" size="2rem"></b-avatar>
               </div>
               <div>
+                <div class="d-flex align-items-center">
                 <div class="font-weight-bold">{{ comment.author }}</div>
+                <span
+                  :class="{
+                  'badge': true, 'badge-pill': true,
+                  'badge-primary': comment.authorTitle === '菜鸟',
+                  'badge-success': comment.authorTitle === '大虾',
+                  'badge-danger': comment.authorTitle === '码农',
+                  'badge-custom': comment.authorTitle === '程序猿',
+                  'badge-warning': comment.authorTitle === '工程师',
+                  'badge-info': comment.authorTitle === '大牛',
+                  'badge-custom2': comment.authorTitle === '专家',
+                  'badge-secondary': comment.authorTitle === '大神',
+                  'badge-dark': comment.authorTitle === '祖师爷' // 添加一个自定义样式类
+                  }"
+                  style="margin-left: 10px">
+                  {{ comment.authorTitle }}
+                </span></div>
                 <div>{{ comment.content }}</div>
                 <!--显示每个评论的点赞和回复数-->
                 <div class='d-flex justify-content-between align-items-center mt-3'>
@@ -292,7 +325,24 @@
                           <b-avatar :src="subComment.authorAvatar" size="2rem"></b-avatar>
                         </div>
                         <div>
+                          <div class="d-flex align-items-center">
                           <div class="font-weight-bold">{{ subComment.author }}</div>
+                          <span
+                            :class="{
+                            'badge': true, 'badge-pill': true,
+                            'badge-primary': subComment.authorTitle === '菜鸟',
+                            'badge-success': subComment.authorTitle === '大虾',
+                            'badge-danger': subComment.authorTitle === '码农',
+                            'badge-custom': subComment.authorTitle === '程序猿',
+                            'badge-warning': subComment.authorTitle === '工程师',
+                            'badge-info': subComment.authorTitle === '大牛',
+                            'badge-custom2': subComment.authorTitle === '专家',
+                            'badge-secondary': subComment.authorTitle === '大神',
+                            'badge-dark': subComment.authorTitle === '祖师爷' // 添加一个自定义样式类
+                            }"
+                            style="margin-left: 10px">
+                            {{ subComment.authorTitle }}
+                          </span></div>
                           <div v-if="subComment.userTargetName !== ''">
                             <span style="color: cadetblue">回复@{{
                                 subComment.userTargetName
@@ -476,6 +526,7 @@ export default {
       post: {
         postID: 0,
         author: '',
+        authorTitle: '',
         authorTelephone: '',
         title: '',
         content: '',
@@ -556,6 +607,7 @@ export default {
         console.error(post);
         this.post.postID = post.data.PostID;
         this.post.author = post.data.UserName;
+        this.post.authorTitle = this.getUserTitle(post.data.UserScore);
         this.post.authorTelephone = post.data.UserTelephone;
         this.post.authorAvatar = post.data.UserAvatar;
         this.post.title = post.data.Title;
@@ -698,6 +750,33 @@ export default {
       const replacedUrl = file.replace('/resized/', '/uploads/');
       this.dialogImageUrl = replacedUrl;
       this.dialogVisible = true;
+    },
+    getUserTitle(userScore) {
+      if (userScore < 100) {
+        return '菜鸟';
+      }
+      if (userScore >= 100 && userScore < 300) {
+        return '大虾';
+      }
+      if (userScore >= 300 && userScore < 600) {
+        return '码农';
+      }
+      if (userScore >= 600 && userScore < 1000) {
+        return '程序猿';
+      }
+      if (userScore >= 1000 && userScore < 2000) {
+        return '工程师';
+      }
+      if (userScore >= 2000 && userScore < 3000) {
+        return '大牛';
+      }
+      if (userScore >= 3000 && userScore < 4000) {
+        return '专家';
+      }
+      if (userScore >= 4000 && userScore < 5000) {
+        return '大神';
+      }
+      return '祖师爷';
     },
     len,
     ...mapActions('postModule', { postShowDetails: 'showDetails' }),
@@ -909,12 +988,16 @@ export default {
         const comments = data.map((pcomment) => ({
           pcommentID: pcomment.PcommentID,
           author: pcomment.Author,
+          authorTitle: this.getUserTitle(pcomment.AuthorScore),
           authorAvatar: pcomment.AuthorAvatar,
           authorTelephone: pcomment.AuthorTelephone,
           commentTime: pcomment.CommentTime,
           content: pcomment.Content,
           likeNum: pcomment.LikeNum,
-          subComments: pcomment.SubComments,
+          subComments: pcomment.SubComments.map((subComment) => ({
+            ...subComment,
+            authorTitle: this.getUserTitle(subComment.authorScore),
+          })),
           isLiked: pcomment.IsLiked,
           showMenu: false,
           showReplyForm: false,
@@ -1086,4 +1169,16 @@ export default {
   border-radius: 5px;
   background: #fff;
 }
+
+/* 添加一个自定义样式类 */
+.badge-custom {
+  background-color: #ff6600; /* 橙色背景 */
+  color: #fff; /* 白色文字颜色 */
+}
+
+.badge-custom2 {
+  background-color: #c428eb; /* 橙色背景 */
+  color: #fff; /* 白色文字颜色 */
+}
+
 </style>
