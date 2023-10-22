@@ -16,6 +16,24 @@ const routes = [
     },
     component: () => import('../views/home/HomeView.vue'),
   },
+  {
+    path: '/filemanage',
+    name: 'filemanage',
+    meta: {
+      auth: true,
+      keepAlive: false,
+    },
+    component: () => import('../views/file/FileManageView.vue'),
+  },
+  {
+    path: '/course',
+    name: 'course',
+    meta: {
+      auth: true,
+      keepAlive: true,
+    },
+    component: () => import('../views/course/CourseView.vue'),
+  },
   ...userRoutes, // 引入userRoutes中的路由
   ...postRoutes, // 引入postRoutes中的路由
 ];

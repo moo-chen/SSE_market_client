@@ -13,6 +13,7 @@
         'background-color': isNightStyle ? 'rgb(50, 50, 50)' : null,
         'border': isNightStyle ? '1px solid rgb(50, 50, 50)' :
           '1px solid rgb(237, 235, 235)' ,'paddingBottom':'1200px'}">
+        <!--     主页   -->
         <b-list-group-item to="/" :style="{ 'background-color': $route.path !== '/' ?
             isNightStyle ? 'rgb(70, 70, 70)' : null :
             isNightStyle ? 'rgb(246, 155, 10)' : 'rgb(17, 167, 226)',
@@ -26,6 +27,7 @@
           <b-icon-caret-down-fill v-if="showPartitions" style="margin-left: auto;">
           </b-icon-caret-down-fill>
         </b-list-group-item>
+        <!--     分区   -->
         <b-list-group-item v-if="showPartitions" to="/partitions" class="click"
                            :style="{ 'background-color': $route.path !== '/partitions' ?
             isNightStyle ? 'rgb(50, 50, 50)' : null :
@@ -35,6 +37,19 @@
           <b-icon-grid1x2-fill class="mr-3"></b-icon-grid1x2-fill>
           分区选择
         </b-list-group-item>
+        <!-- 课程专区 -->
+        <b-list-group-item
+          to="/course"
+          class="click"
+          :style="{ 'background-color': $route.path !== '/profile' ?
+            isNightStyle ? 'rgb(50, 50, 50)' : null :
+            isNightStyle ? 'rgb(246, 155, 10)' : 'rgb(17, 167, 226)',
+            'color': isNightStyle ? 'gray' : null}"
+          style="font-size: 18px;">
+          <b-icon-people-fill class="mr-3"></b-icon-people-fill>
+          课程专区
+        </b-list-group-item>
+        <!--     发帖   -->
         <b-list-group-item @click="showPostForm()"
                            :style="{ 'background-color': isNightStyle ? 'rgb(50, 50, 50)' : null,
               'color': isNightStyle ? 'gray' : null}"
@@ -46,6 +61,7 @@
                  modal-class="custom-modal">
           <PostForm :mode="'post'"/>
         </b-modal>
+        <!--     通知   -->
         <b-list-group-item @click="toNotifications()"
                            :style="{ 'background-color': $route.path !== '/notice' ?
             isNightStyle ? 'rgb(50, 50, 50)' : null :
@@ -57,6 +73,7 @@
           <span v-if="noticesNum!=0"
                 class="badge badge-danger ml-2 pop">{{ noticesNum }}</span>
         </b-list-group-item>
+        <!--     反馈   -->
         <b-list-group-item @click="toFeedback()"
                            :style="{ 'background-color': $route.path !== '/feedback' ?
             isNightStyle ? 'rgb(50, 50, 50)' : null
@@ -69,6 +86,7 @@
         <b-modal v-model='FeedbackVisible' title='反馈' ok-only ok-title="取消反馈"
                  modal-class="custom-modal">
         </b-modal>
+        <!--     我的   -->
         <b-list-group-item
           :style="{ 'font-size': '18px', 'align-items': 'center',
         'background-color': showProfiles ? 'rgb(245, 245, 245)' : '' ,
@@ -82,6 +100,7 @@
           <b-icon-caret-down-fill v-if="showProfiles" style="margin-left: auto;">
           </b-icon-caret-down-fill>
         </b-list-group-item>
+        <!--     个人信息   -->
         <b-list-group-item class="click" v-if="showProfiles" to="/profile"
                            :style="{ 'background-color': $route.path !== '/profile' ?
             isNightStyle ? 'rgb(50, 50, 50)' : null :
@@ -91,6 +110,7 @@
           <b-icon-table class="mr-3"></b-icon-table>
           个人信息
         </b-list-group-item>
+        <!--我的收藏-->
         <b-list-group-item v-if="showProfiles" to="/save" class="click"
                            :style="{ 'background-color': $route.path !== '/save' ?
             isNightStyle ? 'rgb(50, 50, 50)' : null :
@@ -100,6 +120,7 @@
           <b-icon-star-fill class="mr-3"></b-icon-star-fill>
           我的收藏
         </b-list-group-item>
+        <!--发帖历史-->
         <b-list-group-item v-if="showProfiles" to="/history" class="click"
                            :style="{ 'background-color': $route.path !== '/history' ?
             isNightStyle ? 'rgb(50, 50, 50)' : null :
@@ -109,6 +130,7 @@
           <b-icon-clock-fill class="mr-3"></b-icon-clock-fill>
           发帖历史
         </b-list-group-item>
+        <!--设置-->
         <b-list-group-item
           :style="{ 'font-size': '18px', 'align-items': 'center',
           'background-color': showSettings ? 'rgb(245, 245, 245)' : '' ,
@@ -122,6 +144,7 @@
           <b-icon-caret-down-fill v-if="showSettings" style="margin-left: auto;">
           </b-icon-caret-down-fill>
         </b-list-group-item>
+        <!--修改密码-->
         <b-list-group-item v-if="showSettings" class="click"
                            @click="toModifyPassword()" style="font-size: 18px;"
                            :style="{ 'background-color': isNightStyle ? 'rgb(50, 50, 50)' : null,
@@ -129,6 +152,7 @@
           <b-icon-lock-fill class="mr-3"></b-icon-lock-fill>
           修改密码
         </b-list-group-item>
+        <!--注销账号-->
         <b-list-group-item v-if="showSettings" class="click"
                            @click="toDeleteUser()" style="font-size: 18px;"
                            :style="{ 'background-color': isNightStyle ? 'rgb(50, 50, 50)' : null,

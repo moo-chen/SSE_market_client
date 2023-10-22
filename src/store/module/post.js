@@ -19,11 +19,11 @@ const postModule = {
     },
 
     browse(context, {
-      userTelephone, partition, searchinfo, limit, offset, searchsort,
+      userTelephone, partition, searchinfo, tag, limit, offset, searchsort,
     }) {
       return new Promise((resolve, reject) => {
         postService.browse({
-          userTelephone, partition, searchinfo, limit, offset, searchsort,
+          userTelephone, partition, searchinfo, tag, limit, offset, searchsort,
         }).then((res) => {
           resolve(res);
         }).catch((err) => {
