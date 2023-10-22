@@ -119,6 +119,7 @@ const userModule = {
           context.commit('SET_TOKEN', res.data.data.token);
           return userService.info();
         }).then((res) => {
+          console.log(res.data.data.user);
           // 保存用户信息
           context.commit('SET_USERINFO', res.data.data.user);
           resolve(res);

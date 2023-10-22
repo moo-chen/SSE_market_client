@@ -71,6 +71,8 @@ export default {
     };
   },
   methods: {
+  },
+  computed: {
     isNightStyle() {
       if (JSON.parse(localStorage.getItem('Style')) === 'night') {
         return true;

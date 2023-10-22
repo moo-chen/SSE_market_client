@@ -1,6 +1,7 @@
 <template>
   <div class='page-container'>
     <b-col class="ml-4">
+      <p>当前分区:{{ partition }}</p>
       <div class='home-view'>
         <b-modal v-model='toLogin' title='登录' ok-only ok-title="取消登录"
                  modal-class="custom-modal">
@@ -8,7 +9,7 @@
         </b-modal>
         <div class="login-section" v-if="this.$route.name == 'home' && partition == '主页'
           && !userInfo">
-          <b-button :variant ="isNightStyle ? 'outline-warning':'primary'" @click="toLogin = true"
+          <b-button :variant="isNightStyle ? 'outline-warning':'primary'" @click="toLogin = true"
                     style="margin-top:100px;width: 150px;border-radius: 20px;">
             立即登录
           </b-button>
@@ -17,8 +18,9 @@
             <a href="#" onclick="window.open('/register', '_blank');">立即注册！</a>
           </div>
         </div>
-        <b-button :variant ="isNightStyle ? 'outline-warning':'primary'"
-                  v-if="this.partition !== '主页'" class="back_button"
+        <b-button :variant="isNightStyle ? 'outline-warning':'primary'"
+                  v-if="this.partition !== '主页' && this.partition !== '课程专区'"
+                  class="back_button"
                   style="margin-left: -100px"
                   @click="goback">
           <b-icon-reply class="mr-2"></b-icon-reply>
@@ -31,16 +33,16 @@
                       @click="() => { showDetails(post); updatebrowse(post) }"
                       :style="{ 'background-color': isNightStyle ? 'rgb(50,50,50)' : 'white',
               'color': isNightStyle ? 'gray' : null }"
-                      style="width:900px">
-                <div class='text-muted' style='margin-left: 820px' @click.stop>
+                      style="max-width:900px;min-width: 700px">
+                <div class='text-muted float-right' @click.stop>
                   <b-icon icon='three-dots-vertical' @click.stop='toggleMenu(post)'></b-icon>
                 </div>
                 <b-list-group
                   v-if='post.showMenu'
+                  class="float-right"
                   style='
                 width: 100px;
                 height: 1.25rem;
-                margin-left: 850px;
                 margin-top: -20px;
                 font-size: 0.9rem;
               '
@@ -98,6 +100,8 @@
                       :style="{ 'background-color': isNightStyle ?
                       'rgb(246, 155, 10)' : 'rgb(17, 167, 226)' }">
                       {{ post.author }}
+                      <span v-if="post.authorIdentity==='teacher'"
+                            class="badge badge-primary font-weight-light">教师</span>
                     </div>
                     <span
                     :class="{
@@ -118,7 +122,7 @@
                   </b-col>
                 </b-row>
                 <b-card-title>{{ post.title }}</b-card-title>
-                <b-card-text>{{ post.content }}</b-card-text>
+                <b-card-text class="pre">{{ post.content }}</b-card-text>
                 <div v-if="fileListGet.length > 0" class="photo-viewer">
                   <div class="thumbnail-container">
                     <template v-if="fileListGet(post).length === 4">
@@ -251,14 +255,14 @@
               <span style="font-weight: bold;"
                     :style="{ 'color': isNightStyle ? 'gray' : 'black'}">
                 {{ index + 1 }}</span>
-            </template>
-            <template v-if="hotpost.title.length > 8">
-              {{ hotpost.title.substring(0, 8) }}
-            </template>
-            <template v-else>
-              {{ hotpost.title }}
-            </template>
-            <span style="float: right;" class="badge badge-danger ml-2 pop">
+              </template>
+              <template v-if="hotpost.title.length > 8">
+                {{ hotpost.title.substring(0, 8) }}
+              </template>
+              <template v-else>
+                {{ hotpost.title }}
+              </template>
+              <span style="float: right;" class="badge badge-danger ml-2 pop">
               {{ Math.floor(hotpost.heat) }}
             </span>
             </div>
@@ -380,6 +384,9 @@ export default {
       toLogin: false,
     };
   },
+  props: {
+    tag: String,
+  },
   created() {
     if (typeof localStorage !== 'undefined') {
       if (!localStorage.getItem('Style')) {
@@ -490,7 +497,7 @@ export default {
           // 游客访问
           this.userTelephone = '00000000000';
         }
-        this.searchsort = this.$route.name;
+        this.searchsort = 'home';
         const { data } = await this.getPostNum({
           userTelephone: this.userTelephone,
           partition: this.partition,
@@ -511,6 +518,7 @@ export default {
           userTelephone: this.userTelephone,
           partition: this.partition,
           searchinfo: this.searchinfo,
+          tag: this.$props.tag,
           searchsort: this.searchsort,
           limit: this.pageSize,
           offset: (this.currentPage - 1) * this.pageSize,
@@ -524,6 +532,7 @@ export default {
             authorTitle: this.getUserTitle(post.UserScore),
             authorTelephone: post.UserTelephone,
             authorAvatar: post.UserAvatar,
+            authorIdentity: post.UserIdentity,
             title: post.Title,
             content: post.Content,
             like: post.Like,
@@ -806,4 +815,8 @@ export default {
   color: #fff; /* 白色文字颜色 */
 }
 
+.pre {
+  white-space: pre-wrap;
+  word-wrap: anywhere;
+}
 </style>
