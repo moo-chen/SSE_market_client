@@ -253,7 +253,9 @@
                 <div>
                   <div class="font-weight-bold">
                     {{ comment.author }}
-                    <span v-if="comment.authorIdentity==='teacher'" class="badge badge-primary font-weight-light">教师</span>
+                    <span v-if="comment.authorIdentity==='teacher'"
+                          class="badge badge-primary font-weight-light">
+                      教师</span>
                     <span
                       :class="{
                   'badge': true, 'badge-pill': true,

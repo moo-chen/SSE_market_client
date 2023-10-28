@@ -149,7 +149,7 @@ export default {
       // 提取 fileList 中的所有 url，并连接成一个字符串
       this.posts.photos = this.fileList.map((file) => file.url)
         .join('|');
-      this.posts.tagList = this.tagitems.join('|');
+      this.posts.tagList = this.tagitems;
       // 请求
       const loadingInstance = this.$loading({ fullscreen: true, lock: true, text: '正在发帖中...' });
       this.Post(this.posts)

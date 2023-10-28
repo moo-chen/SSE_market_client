@@ -203,6 +203,11 @@ export default {
       if (this.$v.user.$anyError) {
         return;
       }
+      this.$bvToast.toast('已发送验证码请求', {
+        title: '系统提醒',
+        variant: 'primary',
+        solid: true,
+      });
       this.userValidate(this.user)
         .then(() => {
           this.$bvToast.toast('已发送验证码，请将邮箱发送的验证码输入以完成注册验证', {
@@ -235,11 +240,23 @@ export default {
       if (this.$v.user.$anyError) {
         return;
       }
-      this.user.password = this.setPassword(this.user.password, this.key);
-      this.user.password2 = this.setPassword(this.user.password2, this.key);
-      console.error(this.user);
+      // console.error(this.user);
+      this.$bvToast.toast('已发送注册请求，请稍等', {
+        title: '系统提醒',
+        variant: 'primary',
+        solid: true,
+      });
       // 请求
-      this.userRegister(this.user)
+      this.userRegister({
+        name: this.user.name,
+        phone: this.user.phone,
+        password: this.setPassword(this.user.password, this.key),
+        password2: this.setPassword(this.user.password2, this.key),
+        email: this.user.email,
+        valiCode: this.user.valiCode,
+        CDKey: this.user.CDKey,
+        mode: this.user.mode,
+      })
         .then(() => {
           // 这里写从后端成功返回数据后的操作
           this.$bvToast.toast('注册成功,请登录', {
