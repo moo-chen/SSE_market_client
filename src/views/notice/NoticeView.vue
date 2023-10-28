@@ -18,13 +18,16 @@
                     'color': isNightStyle ? 'gray' : null}">
           <div class="d-flex align-items-center">
             <!-- 头像 -->
-            <b-avatar v-if="notice.type==='pcomment'|| notice.type==='ccomment'"
+            <b-avatar v-if="notice.type==='pcomment'
+            || notice.type==='ccomment'
+            || notice.type==='post'"
                       :src="notice.senderAvatar" size="2rem" class="mr-2"></b-avatar>
             <!-- 发送者名字和通知内容 -->
             <div class="d-flex flex-column justify-content-center">
               <small class="text-muted">{{ formatDate(notice.time) }}</small>
               <div class="d-flex align-items-center justify-content-between">
-              <span v-if="notice.type==='pcomment'|| notice.type==='ccomment'"
+              <span v-if="notice.type==='pcomment'
+              || notice.type==='ccomment' || notice.type==='post'"
                     STYLE="color: #409EFF" class="mr-2">{{ notice.senderName }}</span>
                 <span v-else STYLE="color:saddlebrown" class="mr-2">系统通知：</span>
                 <!-- 内容和类型 -->
@@ -34,6 +37,7 @@
                       style="color: red">警告，你的账号出现违规：</span>
                 <span v-if="notice.type === 'sue'">你的举报已得到处理：</span>
                 <span v-if="notice.type === 'feedback'">你的反馈已得到处理回复：</span>
+                <span v-if="notice.type === 'post'">在你的专区发帖：</span>
                 <span style="color: gray">
                 {{
                     notice.content.length > 5 ?
@@ -62,13 +66,14 @@
     <b-modal v-if="currentNotice" v-model="modalVisible" hide-footer @hide="markAsRead">
       <div class="d-flex align-items-center">
         <!-- 头像 -->
-        <b-avatar v-if="currentNotice.type==='pcomment'|| currentNotice.type==='ccomment'"
+        <b-avatar v-if="currentNotice.type==='pcomment'
+        || currentNotice.type==='ccomment'|| currentNotice.type==='post'"
                   :src="currentNotice.senderAvatar" size="2rem" class="mr-2"></b-avatar>
         <div class="flex-grow-1">
           <!-- 标题 -->
           <div class="d-flex justify-content-between align-items-center">
             <span v-if="currentNotice.type==='pcomment'
-            || currentNotice.type==='ccomment'"
+            || currentNotice.type==='ccomment'||currentNotice.type==='post'"
                   STYLE="color: #409EFF">{{ currentNotice.senderName }}</span>
             <span v-else STYLE="color:saddlebrown">系统通知：</span>
             <small class="text-muted">{{ formatDate(currentNotice.time) }}</small>
@@ -83,6 +88,9 @@
                   style="color: red">警告，你的账号出现违规： </span>
             <span v-if="currentNotice.type === 'sue'">你的举报已得到处理： </span>
             <span v-if="currentNotice.type === 'feedback'">你的反馈已得到处理回复： </span>
+            <span v-if="currentNotice.type === 'post'"
+                  style="font-size: 20px" class="postjump"
+                  @click="showDetails" @keydown.enter="showDetails">在你的专区发帖：</span>
             <span class="preview mb-1" style="color:gray">{{ currentNotice.content }}</span>
           </div>
         </div>
@@ -284,6 +292,16 @@ export default {
               ccommentID: nowNotice.target,
             },
           });
+        } else if (nowNotice.type === 'post') {
+          const link = this.$router.resolve({
+            name: 'postDetails',
+            query: {
+              id: nowNotice.postID,
+              partition: this.partition,
+              before: 'notice',
+            },
+          });
+          window.open(link.href, '_blank');
         }
       }, 100);
     },

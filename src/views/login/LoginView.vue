@@ -123,9 +123,11 @@ export default {
         localStorage.removeItem('email');
         localStorage.removeItem('password');
       }
-      this.user.password = this.setPassword(this.user.password, '16bit secret key');
-      console.error(this.user);
-      this.userlogin(this.user)
+      // console.error(this.user);
+      this.userlogin({
+        email: this.user.email,
+        password: this.setPassword(this.user.password, '16bit secret key'),
+      })
         .then(() => {
           this.$router.replace({ name: 'home' });
         })
